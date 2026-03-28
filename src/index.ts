@@ -222,7 +222,17 @@ function updateStateFromHeaders(headers: Record<string, string | string[] | unde
     state.tokens.reset = isNaN(d.getTime()) ? Date.now() + parseFloat(trr) * 1000 : d.getTime();
   }
 
+  // Track threshold crossings
+  const prevShouldQueue = shouldQueue();
   state.lastUpdated = Date.now();
+  const nowShouldQueue = shouldQueue();
+  if (nowShouldQueue && !prevShouldQueue) {
+    const reason = state.overall === 'rejected'
+      ? `Status changed to rejected`
+      : `5h utilization crossed ${(THRESHOLD*100).toFixed(0)}% (now ${(state.fiveHour.utilization*100).toFixed(0)}%)`;
+    recordRateLimitEvent('threshold_crossed', reason);
+    log('warn', `⚠️ Threshold crossed — queueing enabled: ${reason}`);
+  }
 
   const active = getActiveWindow();
   const symbol = active.utilization >= THRESHOLD ? '🔴' : active.utilization >= THRESHOLD * 0.7 ? '🟡' : '🟢';
@@ -408,6 +418,39 @@ interface RequestLog {
   tokensSaved?: number;
 }
 
+// ── Rate limit event tracking ───────────────────────────────────────────────
+
+interface RateLimitEvent {
+  timestamp: number;
+  type: 'queued' | '429' | 'rejected' | 'threshold_crossed';
+  model?: string;
+  utilization5h: number;
+  utilization7d: number;
+  remainingRequests: number;
+  remainingTokens: number;
+  queueDepth: number;
+  triggerReason: string;
+}
+
+const rateLimitEvents: RateLimitEvent[] = [];
+const MAX_EVENTS = 500;
+
+function recordRateLimitEvent(type: RateLimitEvent['type'], reason: string, model?: string) {
+  const event: RateLimitEvent = {
+    timestamp: Date.now(),
+    type,
+    model,
+    utilization5h: state.fiveHour.utilization,
+    utilization7d: state.sevenDay.utilization,
+    remainingRequests: state.requests.remaining === Infinity ? -1 : state.requests.remaining,
+    remainingTokens: state.tokens.remaining === Infinity ? -1 : state.tokens.remaining,
+    queueDepth: queue.length,
+    triggerReason: reason,
+  };
+  rateLimitEvents.push(event);
+  if (rateLimitEvents.length > MAX_EVENTS) rateLimitEvents.shift();
+}
+
 const recentRequests: RequestLog[] = [];
 const MAX_REQUEST_LOG = 200;
 
@@ -467,21 +510,26 @@ function analyzeResponseChunks(chunks: Buffer[]): Partial<RequestLog> {
     const json = JSON.parse(full);
     return extractUsage(json);
   } catch {
-    // Streaming SSE: parse all events to find usage data
-    const lines = full.split('\n');
-    for (const line of lines) {
-      if (!line.startsWith('data: ')) continue;
+    // Streaming SSE: events are split by \n\n, data lines by \n
+    // Reconstruct complete events from potentially fragmented chunks
+    const events = full.split('\n\n');
+    for (const event of events) {
+      // Each SSE event can have multiple lines; collect all data: lines
+      let dataStr = '';
+      for (const line of event.split('\n')) {
+        if (line.startsWith('data: ')) dataStr += line.slice(6);
+        else if (line.startsWith('data:')) dataStr += line.slice(5);
+      }
+      if (!dataStr) continue;
       try {
-        const event = JSON.parse(line.slice(6));
-        // message_start has input token usage
-        if (event.type === 'message_start' && event.message?.usage) {
-          info.inputTokens = event.message.usage.input_tokens;
-          if (event.message.usage.cache_read_input_tokens) info.cacheRead = event.message.usage.cache_read_input_tokens;
-          if (event.message.usage.cache_creation_input_tokens) info.cacheCreation = event.message.usage.cache_creation_input_tokens;
+        const parsed = JSON.parse(dataStr);
+        if (parsed.type === 'message_start' && parsed.message?.usage) {
+          info.inputTokens = parsed.message.usage.input_tokens;
+          if (parsed.message.usage.cache_read_input_tokens) info.cacheRead = parsed.message.usage.cache_read_input_tokens;
+          if (parsed.message.usage.cache_creation_input_tokens) info.cacheCreation = parsed.message.usage.cache_creation_input_tokens;
         }
-        // message_delta has output token usage (comes at the end)
-        if (event.type === 'message_delta' && event.usage) {
-          info.outputTokens = event.usage.output_tokens;
+        if (parsed.type === 'message_delta' && parsed.usage) {
+          info.outputTokens = parsed.usage.output_tokens;
         }
       } catch {}
     }
@@ -536,6 +584,7 @@ function forwardRequest(req: IncomingMessage, res: ServerResponse, body: Buffer)
         state.total429s++;
         const retryAfter = proxyRes.headers['retry-after'];
         log('warn', `🚫 429 from Anthropic! retry-after=${retryAfter}s queue=${queue.length}`);
+        recordRateLimitEvent('429', `Upstream 429, retry-after=${retryAfter}s, 5h=${(state.fiveHour.utilization*100).toFixed(0)}%`, entry.model);
 
         if (retryAfter) {
           const resetMs = Date.now() + parseFloat(retryAfter) * 1000;
@@ -740,6 +789,13 @@ const server = createServer((req, res) => {
     return;
   }
 
+  // Rate limit events
+  if (path === '/events' && req.method === 'GET') {
+    res.writeHead(200, { 'content-type': 'application/json' });
+    res.end(JSON.stringify(rateLimitEvents.slice(-100).reverse()));
+    return;
+  }
+
   // Proxy all other requests
   const chunks: Buffer[] = [];
   req.on('data', (chunk: Buffer) => chunks.push(chunk));
@@ -751,6 +807,8 @@ const server = createServer((req, res) => {
         state.totalRejected++;
         const resetDelay = getResetDelay();
         log('warn', `🚫 Queue full (${MAX_QUEUE}), rejecting request`);
+        // Extract model from body for tracking
+        try { const j = JSON.parse(body.toString()); recordRateLimitEvent('rejected', `Queue full (${MAX_QUEUE}), 5h=${(state.fiveHour.utilization*100).toFixed(0)}%`, j.model); } catch { recordRateLimitEvent('rejected', `Queue full (${MAX_QUEUE})`); }
         res.writeHead(429, {
           'content-type': 'application/json',
           'retry-after': String(Math.ceil(resetDelay / 1000)),
@@ -763,7 +821,13 @@ const server = createServer((req, res) => {
       }
 
       const active = getActiveWindow();
-      log('info', `⏸ Queuing request (utilization=${(active.utilization * 100).toFixed(0)}% > ${(THRESHOLD * 100).toFixed(0)}% threshold, ${queue.length + 1} in queue)`);
+      const reason = state.overall === 'rejected'
+        ? `Anthropic rejected, 5h=${(state.fiveHour.utilization*100).toFixed(0)}%`
+        : state.requests.remaining <= 2
+          ? `RPM exhausted (${state.requests.remaining}/${state.requests.limit})`
+          : `5h utilization ${(active.utilization*100).toFixed(0)}% > ${(THRESHOLD*100).toFixed(0)}% threshold`;
+      try { const j = JSON.parse(body.toString()); recordRateLimitEvent('queued', reason, j.model); } catch { recordRateLimitEvent('queued', reason); }
+      log('info', `⏸ Queuing request (${reason}, ${queue.length + 1} in queue)`);
       new Promise<void>((resolve) => {
         queue.push({ req, res, body, resolve, queuedAt: Date.now() });
         scheduleDrain();

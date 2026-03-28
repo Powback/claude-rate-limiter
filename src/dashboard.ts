@@ -27,7 +27,7 @@ tr:hover { background:#15151f; }
 .savings .value { color:#22c55e; }
 #status-dot { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:6px; }
 .log { max-height:300px; overflow-y:auto; background:#0d0d14; border:1px solid #1e1e2e; border-radius:6px; padding:8px; }
-.log-entry { padding:3px 0; border-bottom:1px solid #111; display:grid; grid-template-columns:70px 180px 80px 80px 80px 80px 1fr; gap:4px; align-items:center; }
+.log-entry { padding:3px 0; border-bottom:1px solid #111; display:grid; grid-template-columns:70px 180px 80px 80px 80px 80px 80px; gap:4px; align-items:center; }
 .log-entry:last-child { border:none; }
 .mono { font-family:inherit; }
 </style>
@@ -72,8 +72,8 @@ tr:hover { background:#15151f; }
 
 <h2>Request Log</h2>
 <div class="log" id="request-log">
-  <div class="log-entry" style="font-weight:600;color:#888">
-    <span>Time</span><span>Model</span><span>Status</span><span>Latency</span><span>In</span><span>Out</span><span>Path</span>
+  <div class="log-entry" style="font-weight:600;color:#888;grid-template-columns:70px 180px 80px 80px 80px 80px 80px">
+    <span>Time</span><span>Model</span><span>Status</span><span>Latency</span><span>In</span><span>Out</span><span>Saved</span>
   </div>
 </div>
 
@@ -82,6 +82,13 @@ tr:hover { background:#15151f; }
   <thead><tr><th>Model</th><th>Requests</th><th>Input Tokens</th><th>Output Tokens</th><th>Cache Read</th><th>Avg Latency</th><th>Est. Cost</th></tr></thead>
   <tbody id="model-body"></tbody>
 </table>
+
+<h2>Rate Limit Events</h2>
+<div class="log" id="events-log">
+  <div class="log-entry" style="font-weight:600;color:#888;grid-template-columns:70px 100px 120px 60px 60px 1fr">
+    <span>Time</span><span>Type</span><span>Model</span><span>5h</span><span>Queue</span><span>Reason</span>
+  </div>
+</div>
 
 <script>
 const $ = id => document.getElementById(id);
@@ -98,10 +105,11 @@ function timeAgo(iso) {
 
 async function poll() {
   try {
-    const [health, stats, reqs] = await Promise.all([
+    const [health, stats, reqs, events] = await Promise.all([
       fetch('/health').then(r=>r.json()),
       fetch('/stats').then(r=>r.json()),
       fetch('/requests').then(r=>r.json()),
+      fetch('/events').then(r=>r.json()),
     ]);
 
     // Status
@@ -153,7 +161,8 @@ async function poll() {
       const latency = r.latencyMs ? r.latencyMs + 'ms' : '—';
       const inTok = r.inputTokens ? fmt(r.inputTokens) : '—';
       const outTok = r.outputTokens ? fmt(r.outputTokens) : '—';
-      row.innerHTML = '<span>'+time+'</span><span>'+model+'</span><span>'+status+'</span><span>'+latency+'</span><span>'+inTok+'</span><span>'+outTok+'</span><span style="color:#666;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+r.path+'</span>';
+      const saved = r.tokensSaved > 0 ? '<span class="green">-'+fmt(r.tokensSaved)+'</span>' : '—';
+      row.innerHTML = '<span>'+time+'</span><span>'+model+'</span><span>'+status+'</span><span>'+latency+'</span><span>'+inTok+'</span><span>'+outTok+'</span><span>'+saved+'</span>';
       log.appendChild(row);
     }
 
@@ -170,6 +179,27 @@ async function poll() {
       const tr = document.createElement('tr');
       tr.innerHTML = '<td colspan="6" style="text-align:right;color:#888">Estimated cost</td><td class="green">$'+stats.estimatedCostUsd.toFixed(4)+'</td>';
       tbody.appendChild(tr);
+    }
+    // Rate limit events
+    const elog = $('events-log');
+    const eheader = elog.children[0];
+    elog.innerHTML = '';
+    elog.appendChild(eheader);
+    if (events.length === 0) {
+      const empty = document.createElement('div');
+      empty.style.cssText = 'padding:12px;color:#444;text-align:center';
+      empty.textContent = 'No rate limit events yet';
+      elog.appendChild(empty);
+    }
+    for (const e of events.slice(0, 50)) {
+      const row = document.createElement('div');
+      row.className = 'log-entry';
+      row.style.gridTemplateColumns = '70px 100px 120px 60px 60px 1fr';
+      const time = new Date(e.timestamp).toLocaleTimeString();
+      const typeColor = e.type === '429' ? 'red' : e.type === 'rejected' ? 'red' : e.type === 'threshold_crossed' ? 'yellow' : 'purple';
+      const model = (e.model || '—').replace('claude-','').replace('-20251001','');
+      row.innerHTML = '<span>'+time+'</span><span class="'+typeColor+'">'+e.type+'</span><span>'+model+'</span><span>'+(e.utilization5h*100).toFixed(0)+'%</span><span>'+e.queueDepth+'</span><span style="color:#888">'+e.triggerReason+'</span>';
+      elog.appendChild(row);
     }
   } catch(e) { console.error('Poll error:', e); }
 }
