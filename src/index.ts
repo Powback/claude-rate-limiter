@@ -318,26 +318,55 @@ function rewriteRequest(body: Buffer): Buffer {
       const origCount = json.tools.length;
       json.tools = json.tools.filter((t: any) => KEEP_TOOLS.has(t.name));
 
-      // Trim Bash description — 10K chars of git commit rules → essential only
-      const bashTool = json.tools.find((t: any) => t.name === 'Bash');
-      if (bashTool && bashTool.description && bashTool.description.length > 2000) {
-        bashTool.description = `Execute bash commands. Working directory persists between calls.
-Use dedicated tools when possible: Read (not cat), Edit (not sed), Write (not echo), Glob (not find), Grep (not grep).
-Use && to chain dependent commands. Use parallel tool calls for independent commands.
-Timeout: 120s default, 600s max. Use run_in_background for long commands.
-For git: prefer new commits over amending. Don't skip hooks. Don't force-push without permission.`;
-      }
+      // Replace ALL tool descriptions with minimal versions
+      const SLIM_TOOLS: Record<string, string> = {
+        Bash: `Execute bash commands. Working dir persists. Timeout: 120s default, 600s max. Use run_in_background for long commands. Use && to chain. Prefer dedicated tools (Read/Edit/Write/Glob/Grep) over shell equivalents.`,
+        Read: `Read file contents. Supports images, PDFs (use pages param), notebooks. Use offset/limit for large files.`,
+        Edit: `Replace exact strings in files. old_string must be unique. Read the file first. Preserves indentation.`,
+        Write: `Create new files or full rewrites. Read existing files first. Prefer Edit for modifications.`,
+        Glob: `Find files by pattern (e.g. "**/*.ts", "src/**/*.tsx"). Returns paths sorted by modification time.`,
+        Grep: `Search file contents with regex. Modes: files_with_matches (default), content, count. Use -i for case insensitive. Use glob/type params to filter.`,
+        Agent: `Launch subagent for complex tasks. Types: general-purpose (default), Explore (codebase search), Plan (architecture). Use run_in_background:true for independent work.`,
+        Skill: `Execute a skill/slash command (e.g. "commit", "review-pr"). Only use for skills listed in system messages.`,
+        WebSearch: `Search the web. Returns links and summaries. Include sources in response.`,
+        WebFetch: `Fetch a URL and return its content.`,
+      };
 
-      // Trim Agent description
-      const agentTool = json.tools.find((t: any) => t.name === 'Agent');
-      if (agentTool && agentTool.description && agentTool.description.length > 2000) {
-        agentTool.description = `Launch a subagent for complex tasks. Available types: general-purpose (default), Explore (codebase search), Plan (architecture).
-Use for parallelizing independent queries or protecting context from large results.
-Provide clear, complete prompts. Set run_in_background:true for independent work.
-Use subagent_type parameter to select agent type.`;
+      for (const tool of json.tools) {
+        const slim = SLIM_TOOLS[tool.name];
+        if (slim && tool.description && tool.description.length > slim.length * 1.5) {
+          tool.description = slim;
+          stripped = true;
+        }
       }
 
       if (json.tools.length < origCount) stripped = true;
+    }
+
+    // 3. Strip system-reminder bloat from user messages
+    if (Array.isArray(json.messages)) {
+      for (const msg of json.messages) {
+        if (msg.role !== 'user') continue;
+        if (typeof msg.content === 'string') {
+          const before = msg.content.length;
+          // Remove task tool nag reminders
+          msg.content = msg.content.replace(/<system-reminder>\s*The task tools haven't been used recently[\s\S]*?<\/system-reminder>/g, '');
+          // Remove verbose MCP server instructions
+          msg.content = msg.content.replace(/<system-reminder>\s*# MCP Server Instructions[\s\S]*?<\/system-reminder>/g, '');
+          // Remove skill availability reminders (keep the list, strip the verbose preamble)
+          msg.content = msg.content.replace(/The following skills are available[\s\S]*?(?=\n- \w)/g, 'Skills: ');
+          if (msg.content.length < before) stripped = true;
+        } else if (Array.isArray(msg.content)) {
+          for (const block of msg.content) {
+            if (block.type !== 'text' || !block.text) continue;
+            const before = block.text.length;
+            block.text = block.text.replace(/<system-reminder>\s*The task tools haven't been used recently[\s\S]*?<\/system-reminder>/g, '');
+            block.text = block.text.replace(/<system-reminder>\s*# MCP Server Instructions[\s\S]*?<\/system-reminder>/g, '');
+            block.text = block.text.replace(/The following skills are available[\s\S]*?(?=\n- \w)/g, 'Skills: ');
+            if (block.text.length < before) stripped = true;
+          }
+        }
+      }
     }
 
     if (stripped) {
