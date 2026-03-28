@@ -2,7 +2,7 @@
 
 Rate-limit-aware reverse proxy for the Anthropic API. Strips bloat from Claude Code's default system prompt, queues requests when approaching limits, and provides a live dashboard.
 
-**Saves ~21K tokens per request (83% reduction) and prevents 429 errors in multi-agent setups.**
+**Saves 21-33K tokens per request and prevents 429 errors in multi-agent setups.**
 
 ## The Problem
 
@@ -150,15 +150,24 @@ services:
 
 That's it. All Claude CLI processes spawned in the agents container will route through the proxy.
 
+## Benchmarks (real production data)
+
+| Agent Type | Original | After Stripping | Reduction | Tokens Saved |
+|------------|----------|-----------------|-----------|--------------|
+| Fresh Sonnet task agent | 123K chars | 18K chars | **84%** | ~26K tokens |
+| Fresh Opus 1M agent | 229K chars | 95K chars | **58%** | ~33K tokens |
+| Resumed agent with history | Larger | Larger | 40-58% | ~33K tokens |
+
+The fixed overhead (system prompt + tools) is always stripped by ~98%. For fresh agents this dominates. For agents with long conversation histories, the history is the bulk of the request and can't be stripped — but you still save ~33K tokens of bloat per turn.
+
 ## Cost Impact
 
 For 6 concurrent Opus agents (~1 turn/min each):
 
-| Scenario | Tokens/hr | Cost/hr | Cost/month |
+| Scenario | Saved/turn | Saved/hr | Saved/month |
 |----------|-----------|---------|------------|
-| No proxy | 1.8M | $27.70 | $19,947 |
-| **With proxy** | **250K** | **$3.75** | **$2,700** |
-| Savings | — | — | **~$17,000/month** |
+| Opus (33K saved/turn) | ~33K tokens | ~2M tokens | ~$43K input cost saved |
+| Sonnet (26K saved/turn) | ~26K tokens | ~1.6M tokens | ~$7K input cost saved |
 
 ## How It Works
 
