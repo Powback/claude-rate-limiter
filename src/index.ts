@@ -19,6 +19,7 @@
 
 import { createServer, IncomingMessage, ServerResponse } from 'node:http';
 import { request as httpsRequest } from 'node:https';
+import { DASHBOARD_HTML } from './dashboard.js';
 
 // ── Config ──────────────────────────────────────────────────────────────────
 
@@ -402,6 +403,9 @@ interface RequestLog {
   streaming?: boolean;
   systemPromptLength?: number;
   messageCount?: number;
+  originalSize?: number;
+  strippedSize?: number;
+  tokensSaved?: number;
 }
 
 const recentRequests: RequestLog[] = [];
@@ -507,12 +511,15 @@ function forwardRequest(req: IncomingMessage, res: ServerResponse, body: Buffer)
   headers['host'] = upstream.host;
 
   const startTime = Date.now();
+  const originalSize = body.length;
   const reqInfo = analyzeRequestBody(body, path);
-  const entry: RequestLog = { timestamp: startTime, method: req.method || 'POST', path, ...reqInfo };
+  const entry: RequestLog = { timestamp: startTime, method: req.method || 'POST', path, ...reqInfo, originalSize };
 
   // Rewrite request — strip system prompt bloat + useless tools
   body = rewriteRequest(body);
   headers['content-length'] = String(body.length);
+  entry.strippedSize = body.length;
+  entry.tokensSaved = Math.round((originalSize - body.length) / 4);
 
   const proxyReq = httpsRequest(
     {
@@ -590,6 +597,13 @@ function forwardRequest(req: IncomingMessage, res: ServerResponse, body: Buffer)
 
 const server = createServer((req, res) => {
   const path = req.url || '/';
+
+  // Dashboard
+  if ((path === '/' || path === '/dashboard') && req.method === 'GET') {
+    res.writeHead(200, { 'content-type': 'text/html' });
+    res.end(DASHBOARD_HTML);
+    return;
+  }
 
   // Health endpoint
   if (path === '/health' && req.method === 'GET') {
