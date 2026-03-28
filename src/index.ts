@@ -230,6 +230,131 @@ function updateStateFromHeaders(headers: Record<string, string | string[] | unde
   log('info', `${symbol} Utilization: 5h=${(state.fiveHour.utilization * 100).toFixed(0)}% 7d=${(state.sevenDay.utilization * 100).toFixed(0)}%${rpmInfo}${tpmInfo} [${state.representativeClaim}] status=${state.overall}`);
 }
 
+// ── Request rewriting — strip bloat from system prompt + tools ──────────────
+
+const STRIP_ENABLED = process.env.STRIP_BLOAT !== 'false'; // on by default
+const KEEP_TOOLS = new Set((process.env.KEEP_TOOLS || 'Bash,Read,Edit,Write,Glob,Grep,Agent,Skill,WebSearch,WebFetch').split(','));
+// System prompt blocks larger than this are considered "default bloat" and replaced
+const BLOAT_THRESHOLD = parseInt(process.env.BLOAT_THRESHOLD || '3000', 10);
+
+// Stats
+let totalTokensSaved = 0;
+let totalRequestsStripped = 0;
+
+// Minimal system prompt — replaces the 51K Claude Code default
+const SLIM_SYSTEM = `You are Claude, an AI coding assistant. Be concise and direct.
+
+# Tools
+Use dedicated tools over Bash when possible: Read (not cat), Edit (not sed), Write (not echo), Glob (not find), Grep (not grep/rg).
+Call multiple independent tools in parallel. Chain dependent calls sequentially with &&.
+
+# Code
+- Read before modifying. Don't add features beyond what's asked.
+- No speculative abstractions, unnecessary error handling, or backwards-compat hacks.
+- Don't add comments/docstrings to unchanged code.
+- Avoid security vulnerabilities (injection, XSS, etc).
+
+# Safety
+- Confirm before destructive ops (rm -rf, force-push, drop tables, deleting branches).
+- Don't push, create PRs, or send messages without explicit permission.
+- Never skip git hooks or bypass signing unless asked.
+
+# Style
+- No emojis unless asked. Short responses. Lead with action, not reasoning.
+- Reference code as file_path:line_number. PRs as owner/repo#123.`;
+
+function rewriteRequest(body: Buffer): Buffer {
+  if (!STRIP_ENABLED) return body;
+
+  try {
+    const json = JSON.parse(body.toString());
+    if (!json.messages) return body; // Not a messages API call
+    let stripped = false;
+    const origSize = body.length;
+
+    // 1. Replace system prompt with slim version
+    if (json.system) {
+      const blocks = Array.isArray(json.system) ? json.system : [{ type: 'text', text: json.system }];
+
+      // Keep billing header (block 0) and any user-appended system prompts
+      // Replace the massive Claude Code instructions with our slim version
+      const newBlocks: any[] = [];
+      let replacedDefault = false;
+      for (const block of blocks) {
+        const text = block.text || '';
+        // Keep billing/metadata headers (short, start with x- or contain version info)
+        if (text.includes('x-anthropic-billing-header') || text.includes('billing-header')) {
+          newBlocks.push(block);
+          continue;
+        }
+        // Keep short blocks — these are user/app system prompts, persona prompts, etc.
+        if (text.length < BLOAT_THRESHOLD) {
+          newBlocks.push(block);
+          continue;
+        }
+        // Large block — this is default Claude Code / SDK bloat.
+        // Detection: any block over BLOAT_THRESHOLD chars that we haven't already
+        // replaced is assumed to be default instructions. This works regardless of
+        // prompt version because Anthropic's default is always massive (10K+ chars)
+        // while user system prompts are typically short.
+        if (!replacedDefault) {
+          const slim: any = { type: 'text', text: SLIM_SYSTEM };
+          if (block.cache_control) slim.cache_control = block.cache_control;
+          newBlocks.push(slim);
+          replacedDefault = true;
+          stripped = true;
+          log('debug', `✂️ Replaced default system block: ${text.length} → ${SLIM_SYSTEM.length} chars`);
+        } else {
+          // Additional large blocks (auto memory, environment dump, etc.) — drop entirely
+          stripped = true;
+          log('debug', `✂️ Dropped system block: ${text.length} chars (${text.slice(0, 40)}...)`);
+        }
+      }
+      json.system = newBlocks;
+    }
+
+    // 2. Strip useless tools
+    if (Array.isArray(json.tools)) {
+      const origCount = json.tools.length;
+      json.tools = json.tools.filter((t: any) => KEEP_TOOLS.has(t.name));
+
+      // Trim Bash description — 10K chars of git commit rules → essential only
+      const bashTool = json.tools.find((t: any) => t.name === 'Bash');
+      if (bashTool && bashTool.description && bashTool.description.length > 2000) {
+        bashTool.description = `Execute bash commands. Working directory persists between calls.
+Use dedicated tools when possible: Read (not cat), Edit (not sed), Write (not echo), Glob (not find), Grep (not grep).
+Use && to chain dependent commands. Use parallel tool calls for independent commands.
+Timeout: 120s default, 600s max. Use run_in_background for long commands.
+For git: prefer new commits over amending. Don't skip hooks. Don't force-push without permission.`;
+      }
+
+      // Trim Agent description
+      const agentTool = json.tools.find((t: any) => t.name === 'Agent');
+      if (agentTool && agentTool.description && agentTool.description.length > 2000) {
+        agentTool.description = `Launch a subagent for complex tasks. Available types: general-purpose (default), Explore (codebase search), Plan (architecture).
+Use for parallelizing independent queries or protecting context from large results.
+Provide clear, complete prompts. Set run_in_background:true for independent work.
+Use subagent_type parameter to select agent type.`;
+      }
+
+      if (json.tools.length < origCount) stripped = true;
+    }
+
+    if (stripped) {
+      const newBody = Buffer.from(JSON.stringify(json));
+      const saved = origSize - newBody.length;
+      const savedTokens = Math.round(saved / 4);
+      totalTokensSaved += savedTokens;
+      totalRequestsStripped++;
+      log('info', `✂️ Stripped ${(saved / 1024).toFixed(1)}KB (~${savedTokens} tokens): ${origSize} → ${newBody.length} chars [total saved: ~${totalTokensSaved} tokens across ${totalRequestsStripped} requests]`);
+      return newBody;
+    }
+    return body;
+  } catch {
+    return body; // Parse error — forward as-is
+  }
+}
+
 // ── Proxy ───────────────────────────────────────────────────────────────────
 
 // ── Request analysis ────────────────────────────────────────────────────────
@@ -356,6 +481,10 @@ function forwardRequest(req: IncomingMessage, res: ServerResponse, body: Buffer)
   const reqInfo = analyzeRequestBody(body, path);
   const entry: RequestLog = { timestamp: startTime, method: req.method || 'POST', path, ...reqInfo };
 
+  // Rewrite request — strip system prompt bloat + useless tools
+  body = rewriteRequest(body);
+  headers['content-length'] = String(body.length);
+
   const proxyReq = httpsRequest(
     {
       hostname: upstream.hostname,
@@ -466,6 +595,8 @@ const server = createServer((req, res) => {
         queued: state.totalQueued,
         rejected: state.totalRejected,
         upstream429s: state.total429s,
+        tokensSaved: totalTokensSaved,
+        requestsStripped: totalRequestsStripped,
       },
       lastUpdated: state.lastUpdated ? new Date(state.lastUpdated).toISOString() : null,
     }));
