@@ -501,35 +501,30 @@ function analyzeRequestBody(body: Buffer, path: string): Partial<RequestLog> {
   } catch { return {}; }
 }
 
-function analyzeResponseChunks(chunks: Buffer[]): Partial<RequestLog> {
-  const full = Buffer.concat(chunks).toString();
+function analyzeResponseText(text: string): Partial<RequestLog> {
   const info: Partial<RequestLog> = {};
 
   try {
     // Non-streaming: single JSON response
-    const json = JSON.parse(full);
+    const json = JSON.parse(text);
     return extractUsage(json);
   } catch {
-    // Streaming SSE: events are split by \n\n, data lines by \n
-    // Reconstruct complete events from potentially fragmented chunks
-    const events = full.split('\n\n');
-    for (const event of events) {
-      // Each SSE event can have multiple lines; collect all data: lines
-      let dataStr = '';
-      for (const line of event.split('\n')) {
-        if (line.startsWith('data: ')) dataStr += line.slice(6);
-        else if (line.startsWith('data:')) dataStr += line.slice(5);
-      }
-      if (!dataStr) continue;
+    // Streaming SSE: find all "data: {json}" lines using regex
+    // This handles any chunking/fragmentation since we have the full text
+    const dataRegex = /^data: (.+)$/gm;
+    let match;
+    while ((match = dataRegex.exec(text)) !== null) {
       try {
-        const parsed = JSON.parse(dataStr);
+        const parsed = JSON.parse(match[1]);
         if (parsed.type === 'message_start' && parsed.message?.usage) {
           info.inputTokens = parsed.message.usage.input_tokens;
           if (parsed.message.usage.cache_read_input_tokens) info.cacheRead = parsed.message.usage.cache_read_input_tokens;
           if (parsed.message.usage.cache_creation_input_tokens) info.cacheCreation = parsed.message.usage.cache_creation_input_tokens;
+          log('debug', `📊 SSE message_start: in=${info.inputTokens} cache_read=${info.cacheRead || 0} cache_create=${info.cacheCreation || 0}`);
         }
         if (parsed.type === 'message_delta' && parsed.usage) {
           info.outputTokens = parsed.usage.output_tokens;
+          log('debug', `📊 SSE message_delta: out=${info.outputTokens}`);
         }
       } catch {}
     }
@@ -554,6 +549,8 @@ function forwardRequest(req: IncomingMessage, res: ServerResponse, body: Buffer)
 
   for (const [key, value] of Object.entries(req.headers)) {
     if (key === 'host' || key === 'connection') continue;
+    // Strip accept-encoding so we get uncompressed responses we can parse
+    if (key === 'accept-encoding') continue;
     if (value) headers[key] = Array.isArray(value) ? value.join(', ') : value;
   }
   headers['host'] = upstream.host;
@@ -600,10 +597,11 @@ function forwardRequest(req: IncomingMessage, res: ServerResponse, body: Buffer)
       // Forward status + headers to client
       res.writeHead(proxyRes.statusCode || 502, proxyRes.headers);
 
-      // Capture response body for analysis while streaming to client
-      const resChunks: Buffer[] = [];
+      // Capture response body for analysis while streaming to client.
+      // SSE chunks can arrive fragmented — buffer the full text to parse events.
+      let responseText = '';
       proxyRes.on('data', (chunk: Buffer) => {
-        resChunks.push(chunk);
+        responseText += chunk.toString();
         res.write(chunk);
       });
 
@@ -611,8 +609,8 @@ function forwardRequest(req: IncomingMessage, res: ServerResponse, body: Buffer)
         res.end();
         entry.latencyMs = Date.now() - startTime;
 
-        // Extract usage from response
-        const resInfo = analyzeResponseChunks(resChunks);
+        // Extract usage from the complete response text
+        const resInfo = analyzeResponseText(responseText);
         Object.assign(entry, resInfo);
 
         // Log the request
