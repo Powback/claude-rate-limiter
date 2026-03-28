@@ -1,0 +1,13 @@
+# Standalone usage example.
+# For Powpanion integration, add rate-limiter service to Powpanion's docker-compose.yml instead.
+services:
+  rate-limiter:
+    build: .
+    ports:
+      - "3128:3128"
+    environment:
+      - PORT=3128
+      - QUEUE_THRESHOLD=0.85
+      - MAX_QUEUE_SIZE=100
+      - LOG_LEVEL=info
+    restart: unless-stopped

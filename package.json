@@ -1,0 +1,19 @@
+{
+  "name": "claude-rate-limiter",
+  "version": "0.1.0",
+  "description": "Rate-limit-aware reverse proxy for the Anthropic API. Reads x-ratelimit-* headers and queues requests to prevent 429s in multi-agent setups.",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts"
+  },
+  "keywords": ["anthropic", "claude", "rate-limit", "proxy", "multi-agent"],
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "tsx": "^4.19.0",
+    "@types/node": "^22.0.0"
+  }
+}

@@ -1,0 +1,423 @@
+// ============================================================================
+// claude-rate-limiter — Rate-limit-aware reverse proxy for the Anthropic API
+// ============================================================================
+//
+// Sits between Claude CLI/SDK and api.anthropic.com. Reads Anthropic's unified
+// rate limit headers and queues requests when utilization is high.
+//
+// Usage:
+//   ANTHROPIC_BASE_URL=http://localhost:3128 claude ...
+//
+// Anthropic's unified rate limit system uses:
+//   anthropic-ratelimit-unified-status: allowed | rejected
+//   anthropic-ratelimit-unified-5h-utilization: 0.0–1.0
+//   anthropic-ratelimit-unified-5h-reset: <epoch seconds>
+//   anthropic-ratelimit-unified-7d-utilization: 0.0–1.0
+//   anthropic-ratelimit-unified-7d-reset: <epoch seconds>
+//   anthropic-ratelimit-unified-representative-claim: five_hour | seven_day
+//   anthropic-ratelimit-unified-fallback-percentage: 0.0–1.0
+
+import { createServer, IncomingMessage, ServerResponse } from 'node:http';
+import { request as httpsRequest } from 'node:https';
+
+// ── Config ──────────────────────────────────────────────────────────────────
+
+const PORT = parseInt(process.env.PORT || '3128', 10);
+const UPSTREAM = process.env.ANTHROPIC_API_URL || 'https://api.anthropic.com';
+const THRESHOLD = parseFloat(process.env.QUEUE_THRESHOLD || '0.85'); // queue when utilization > 85%
+const LOG_LEVEL = process.env.LOG_LEVEL || 'info';
+const MAX_QUEUE = parseInt(process.env.MAX_QUEUE_SIZE || '100', 10);
+
+const upstream = new URL(UPSTREAM);
+
+// ── Rate limit state ────────────────────────────────────────────────────────
+
+interface WindowState {
+  utilization: number;  // 0.0–1.0
+  reset: number;        // epoch ms
+  status: string;       // allowed | rejected
+}
+
+interface MinuteState {
+  limit: number;        // max per minute
+  remaining: number;    // remaining in current window
+  reset: number;        // epoch ms
+}
+
+interface RateLimitState {
+  // Unified (5h / 7d utilization-based)
+  overall: string;                    // allowed | rejected
+  fiveHour: WindowState;
+  sevenDay: WindowState;
+  representativeClaim: string;        // five_hour | seven_day
+  fallbackPercentage: number;         // 0.0–1.0
+
+  // Per-minute (classic RPM / TPM)
+  requests: MinuteState;
+  tokens: MinuteState;
+
+  // Stats
+  totalForwarded: number;
+  totalQueued: number;
+  totalRejected: number;
+  total429s: number;
+  lastUpdated: number;
+}
+
+const state: RateLimitState = {
+  overall: 'unknown',
+  fiveHour: { utilization: 0, reset: 0, status: 'unknown' },
+  sevenDay: { utilization: 0, reset: 0, status: 'unknown' },
+  representativeClaim: '',
+  fallbackPercentage: 0,
+  requests: { limit: Infinity, remaining: Infinity, reset: 0 },
+  tokens: { limit: Infinity, remaining: Infinity, reset: 0 },
+  totalForwarded: 0,
+  totalQueued: 0,
+  totalRejected: 0,
+  total429s: 0,
+  lastUpdated: 0,
+};
+
+// ── Queue ───────────────────────────────────────────────────────────────────
+
+interface QueuedRequest {
+  req: IncomingMessage;
+  res: ServerResponse;
+  body: Buffer;
+  resolve: () => void;
+  queuedAt: number;
+}
+
+const queue: QueuedRequest[] = [];
+let drainTimer: ReturnType<typeof setTimeout> | null = null;
+
+function getActiveWindow(): WindowState {
+  // Use the representative claim to determine which window is limiting
+  return state.representativeClaim === 'seven_day' ? state.sevenDay : state.fiveHour;
+}
+
+function shouldQueue(): boolean {
+  // If we've never seen headers, let it through
+  if (state.lastUpdated === 0) return false;
+
+  // If Anthropic said "rejected", definitely queue
+  if (state.overall === 'rejected') return true;
+
+  // Check unified utilization windows
+  const active = getActiveWindow();
+  if (active.utilization >= THRESHOLD) return true;
+  const other = state.representativeClaim === 'seven_day' ? state.fiveHour : state.sevenDay;
+  if (other.utilization >= THRESHOLD) return true;
+
+  // Check per-minute limits (RPM / TPM)
+  const now = Date.now();
+  if (state.requests.remaining <= 2 && now < state.requests.reset) return true;
+  if (state.tokens.remaining <= 1000 && now < state.tokens.reset) return true;
+
+  return false;
+}
+
+function getResetDelay(): number {
+  const now = Date.now();
+
+  // Per-minute resets are shorter — prefer those if active
+  if (state.requests.remaining <= 2 && state.requests.reset > now) {
+    return state.requests.reset - now;
+  }
+  if (state.tokens.remaining <= 1000 && state.tokens.reset > now) {
+    return state.tokens.reset - now;
+  }
+
+  // Fall back to unified window reset
+  const active = getActiveWindow();
+  if (active.reset > now) return active.reset - now;
+  return 30_000;
+}
+
+function scheduleDrain() {
+  if (drainTimer || queue.length === 0) return;
+
+  // When utilization is high, wait for a fraction of the reset window
+  // Don't wait for the full reset — trickle requests through
+  const resetDelay = getResetDelay();
+  // Release one request every few seconds to gradually bring utilization down
+  const delay = Math.min(resetDelay, Math.max(2000, resetDelay / Math.max(queue.length, 1)));
+
+  log('info', `⏳ Queue: ${queue.length} waiting, next release in ${(delay / 1000).toFixed(1)}s (reset in ${(resetDelay / 1000).toFixed(0)}s)`);
+
+  drainTimer = setTimeout(() => {
+    drainTimer = null;
+    drainQueue();
+  }, delay);
+}
+
+function drainQueue() {
+  // Release one at a time — the response will update our utilization state
+  if (queue.length > 0) {
+    const item = queue.shift()!;
+    state.totalQueued++;
+    const waitedMs = Date.now() - item.queuedAt;
+    log('info', `▶ Releasing queued request (waited ${(waitedMs / 1000).toFixed(1)}s, ${queue.length} remaining)`);
+    item.resolve();
+  }
+  // Schedule next drain if there are more
+  if (queue.length > 0) scheduleDrain();
+}
+
+// ── Header parsing ──────────────────────────────────────────────────────────
+
+function updateStateFromHeaders(headers: Record<string, string | string[] | undefined>) {
+  const get = (name: string): string | undefined => {
+    const v = headers[name];
+    return Array.isArray(v) ? v[0] : v;
+  };
+
+  const overallStatus = get('anthropic-ratelimit-unified-status');
+  if (!overallStatus) return; // Not an Anthropic rate-limited response
+
+  state.overall = overallStatus;
+
+  // 5-hour window
+  const h5Status = get('anthropic-ratelimit-unified-5h-status');
+  const h5Util = get('anthropic-ratelimit-unified-5h-utilization');
+  const h5Reset = get('anthropic-ratelimit-unified-5h-reset');
+  if (h5Status) state.fiveHour.status = h5Status;
+  if (h5Util) state.fiveHour.utilization = parseFloat(h5Util);
+  if (h5Reset) state.fiveHour.reset = parseInt(h5Reset, 10) * 1000; // epoch seconds → ms
+
+  // 7-day window
+  const d7Status = get('anthropic-ratelimit-unified-7d-status');
+  const d7Util = get('anthropic-ratelimit-unified-7d-utilization');
+  const d7Reset = get('anthropic-ratelimit-unified-7d-reset');
+  if (d7Status) state.sevenDay.status = d7Status;
+  if (d7Util) state.sevenDay.utilization = parseFloat(d7Util);
+  if (d7Reset) state.sevenDay.reset = parseInt(d7Reset, 10) * 1000;
+
+  // Meta
+  const claim = get('anthropic-ratelimit-unified-representative-claim');
+  const fallback = get('anthropic-ratelimit-unified-fallback-percentage');
+  if (claim) state.representativeClaim = claim;
+  if (fallback) state.fallbackPercentage = parseFloat(fallback);
+
+  // Per-minute limits (classic RPM / TPM)
+  const rl = get('anthropic-ratelimit-requests-limit');
+  const rr = get('anthropic-ratelimit-requests-remaining');
+  const rrr = get('anthropic-ratelimit-requests-reset');
+  const tl = get('anthropic-ratelimit-tokens-limit');
+  const tr = get('anthropic-ratelimit-tokens-remaining');
+  const trr = get('anthropic-ratelimit-tokens-reset');
+
+  if (rl) state.requests.limit = parseInt(rl, 10);
+  if (rr) state.requests.remaining = parseInt(rr, 10);
+  if (rrr) {
+    const d = new Date(rrr);
+    state.requests.reset = isNaN(d.getTime()) ? Date.now() + parseFloat(rrr) * 1000 : d.getTime();
+  }
+  if (tl) state.tokens.limit = parseInt(tl, 10);
+  if (tr) state.tokens.remaining = parseInt(tr, 10);
+  if (trr) {
+    const d = new Date(trr);
+    state.tokens.reset = isNaN(d.getTime()) ? Date.now() + parseFloat(trr) * 1000 : d.getTime();
+  }
+
+  state.lastUpdated = Date.now();
+
+  const active = getActiveWindow();
+  const symbol = active.utilization >= THRESHOLD ? '🔴' : active.utilization >= THRESHOLD * 0.7 ? '🟡' : '🟢';
+  const rpmInfo = state.requests.limit < Infinity ? ` rpm=${state.requests.remaining}/${state.requests.limit}` : '';
+  const tpmInfo = state.tokens.limit < Infinity ? ` tpm=${state.tokens.remaining}/${state.tokens.limit}` : '';
+  log('info', `${symbol} Utilization: 5h=${(state.fiveHour.utilization * 100).toFixed(0)}% 7d=${(state.sevenDay.utilization * 100).toFixed(0)}%${rpmInfo}${tpmInfo} [${state.representativeClaim}] status=${state.overall}`);
+}
+
+// ── Proxy ───────────────────────────────────────────────────────────────────
+
+function forwardRequest(req: IncomingMessage, res: ServerResponse, body: Buffer) {
+  const path = req.url || '/';
+  const headers: Record<string, string> = {};
+
+  for (const [key, value] of Object.entries(req.headers)) {
+    if (key === 'host' || key === 'connection') continue;
+    if (value) headers[key] = Array.isArray(value) ? value.join(', ') : value;
+  }
+  headers['host'] = upstream.host;
+
+  const proxyReq = httpsRequest(
+    {
+      hostname: upstream.hostname,
+      port: upstream.port || 443,
+      path,
+      method: req.method,
+      headers,
+    },
+    (proxyRes) => {
+      updateStateFromHeaders(proxyRes.headers as Record<string, string | string[] | undefined>);
+
+      if (proxyRes.statusCode === 429) {
+        state.total429s++;
+        const retryAfter = proxyRes.headers['retry-after'];
+        log('warn', `🚫 429 from Anthropic! retry-after=${retryAfter}s queue=${queue.length}`);
+
+        if (retryAfter) {
+          const resetMs = Date.now() + parseFloat(retryAfter) * 1000;
+          state.fiveHour.reset = Math.max(state.fiveHour.reset, resetMs);
+          state.fiveHour.utilization = 1.0;
+          state.overall = 'rejected';
+        }
+      }
+
+      state.totalForwarded++;
+
+      // Forward status + headers + body/stream to client
+      res.writeHead(proxyRes.statusCode || 502, proxyRes.headers);
+      proxyRes.pipe(res);
+
+      proxyRes.on('end', () => {
+        if (queue.length > 0) drainQueue();
+      });
+    },
+  );
+
+  proxyReq.on('error', (err) => {
+    log('error', `Upstream error: ${err.message}`);
+    if (!res.headersSent) {
+      res.writeHead(502, { 'content-type': 'application/json' });
+      res.end(JSON.stringify({ error: 'upstream_error', message: err.message }));
+    }
+  });
+
+  if (body.length > 0) proxyReq.write(body);
+  proxyReq.end();
+}
+
+// ── HTTP server ─────────────────────────────────────────────────────────────
+
+const server = createServer((req, res) => {
+  const path = req.url || '/';
+
+  // Health endpoint
+  if (path === '/health' && req.method === 'GET') {
+    const active = getActiveWindow();
+    res.writeHead(200, { 'content-type': 'application/json' });
+    res.end(JSON.stringify({
+      status: state.overall || 'unknown',
+      upstream: UPSTREAM,
+      queue: queue.length,
+      threshold: THRESHOLD,
+      shouldQueue: shouldQueue(),
+      rateLimit: {
+        fiveHour: {
+          utilization: state.fiveHour.utilization,
+          status: state.fiveHour.status,
+          resetsAt: state.fiveHour.reset ? new Date(state.fiveHour.reset).toISOString() : null,
+        },
+        sevenDay: {
+          utilization: state.sevenDay.utilization,
+          status: state.sevenDay.status,
+          resetsAt: state.sevenDay.reset ? new Date(state.sevenDay.reset).toISOString() : null,
+        },
+        representativeClaim: state.representativeClaim,
+        fallbackPercentage: state.fallbackPercentage,
+        perMinute: {
+          requests: { remaining: state.requests.remaining === Infinity ? null : state.requests.remaining, limit: state.requests.limit === Infinity ? null : state.requests.limit, resetsAt: state.requests.reset ? new Date(state.requests.reset).toISOString() : null },
+          tokens: { remaining: state.tokens.remaining === Infinity ? null : state.tokens.remaining, limit: state.tokens.limit === Infinity ? null : state.tokens.limit, resetsAt: state.tokens.reset ? new Date(state.tokens.reset).toISOString() : null },
+        },
+      },
+      stats: {
+        forwarded: state.totalForwarded,
+        queued: state.totalQueued,
+        rejected: state.totalRejected,
+        upstream429s: state.total429s,
+      },
+      lastUpdated: state.lastUpdated ? new Date(state.lastUpdated).toISOString() : null,
+    }));
+    return;
+  }
+
+  // Metrics (Prometheus-style)
+  if (path === '/metrics' && req.method === 'GET') {
+    const lines = [
+      `# HELP claude_proxy_forwarded_total Total requests forwarded`,
+      `# TYPE claude_proxy_forwarded_total counter`,
+      `claude_proxy_forwarded_total ${state.totalForwarded}`,
+      `# HELP claude_proxy_queued_total Total requests delayed by queue`,
+      `# TYPE claude_proxy_queued_total counter`,
+      `claude_proxy_queued_total ${state.totalQueued}`,
+      `# HELP claude_proxy_rejected_total Total requests rejected (queue full)`,
+      `# TYPE claude_proxy_rejected_total counter`,
+      `claude_proxy_rejected_total ${state.totalRejected}`,
+      `# HELP claude_proxy_upstream_429s_total 429 responses from Anthropic`,
+      `# TYPE claude_proxy_upstream_429s_total counter`,
+      `claude_proxy_upstream_429s_total ${state.total429s}`,
+      `# HELP claude_proxy_queue_depth Current queue depth`,
+      `# TYPE claude_proxy_queue_depth gauge`,
+      `claude_proxy_queue_depth ${queue.length}`,
+      `# HELP claude_proxy_utilization_5h Current 5-hour utilization (0–1)`,
+      `# TYPE claude_proxy_utilization_5h gauge`,
+      `claude_proxy_utilization_5h ${state.fiveHour.utilization}`,
+      `# HELP claude_proxy_utilization_7d Current 7-day utilization (0–1)`,
+      `# TYPE claude_proxy_utilization_7d gauge`,
+      `claude_proxy_utilization_7d ${state.sevenDay.utilization}`,
+    ];
+    res.writeHead(200, { 'content-type': 'text/plain' });
+    res.end(lines.join('\n') + '\n');
+    return;
+  }
+
+  // Proxy all other requests
+  const chunks: Buffer[] = [];
+  req.on('data', (chunk: Buffer) => chunks.push(chunk));
+  req.on('end', () => {
+    const body = Buffer.concat(chunks);
+
+    if (shouldQueue()) {
+      if (queue.length >= MAX_QUEUE) {
+        state.totalRejected++;
+        const resetDelay = getResetDelay();
+        log('warn', `🚫 Queue full (${MAX_QUEUE}), rejecting request`);
+        res.writeHead(429, {
+          'content-type': 'application/json',
+          'retry-after': String(Math.ceil(resetDelay / 1000)),
+        });
+        res.end(JSON.stringify({
+          type: 'error',
+          error: { type: 'rate_limit_error', message: `Rate limiter queue full (${MAX_QUEUE}). Retry after reset window.` },
+        }));
+        return;
+      }
+
+      const active = getActiveWindow();
+      log('info', `⏸ Queuing request (utilization=${(active.utilization * 100).toFixed(0)}% > ${(THRESHOLD * 100).toFixed(0)}% threshold, ${queue.length + 1} in queue)`);
+      new Promise<void>((resolve) => {
+        queue.push({ req, res, body, resolve, queuedAt: Date.now() });
+        scheduleDrain();
+      }).then(() => {
+        forwardRequest(req, res, body);
+      });
+      return;
+    }
+
+    forwardRequest(req, res, body);
+  });
+});
+
+server.listen(PORT, '0.0.0.0', () => {
+  log('info', `🚀 claude-rate-limiter listening on :${PORT}`);
+  log('info', `   Upstream: ${UPSTREAM}`);
+  log('info', `   Queue threshold: ${(THRESHOLD * 100).toFixed(0)}% utilization`);
+  log('info', `   Max queue: ${MAX_QUEUE}`);
+  log('info', ``);
+  log('info', `   Usage: ANTHROPIC_BASE_URL=http://localhost:${PORT} claude ...`);
+});
+
+// ── Logging ─────────────────────────────────────────────────────────────────
+
+const LEVELS: Record<string, number> = { debug: 0, info: 1, warn: 2, error: 3 };
+
+function log(level: string, msg: string) {
+  if ((LEVELS[level] ?? 1) < (LEVELS[LOG_LEVEL] ?? 1)) return;
+  const ts = new Date().toISOString().slice(11, 19);
+  const prefix = level === 'error' ? '\x1b[31m' : level === 'warn' ? '\x1b[33m' : level === 'debug' ? '\x1b[90m' : '';
+  const reset = prefix ? '\x1b[0m' : '';
+  console.log(`${prefix}[${ts}] ${msg}${reset}`);
+}
