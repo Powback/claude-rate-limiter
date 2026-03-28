@@ -232,6 +232,116 @@ function updateStateFromHeaders(headers: Record<string, string | string[] | unde
 
 // ── Proxy ───────────────────────────────────────────────────────────────────
 
+// ── Request analysis ────────────────────────────────────────────────────────
+
+interface RequestLog {
+  timestamp: number;
+  method: string;
+  path: string;
+  model?: string;
+  inputTokens?: number;
+  outputTokens?: number;
+  cacheCreation?: number;
+  cacheRead?: number;
+  statusCode?: number;
+  latencyMs?: number;
+  streaming?: boolean;
+  systemPromptLength?: number;
+  messageCount?: number;
+}
+
+const recentRequests: RequestLog[] = [];
+const MAX_REQUEST_LOG = 200;
+
+import { writeFileSync, mkdirSync, existsSync } from 'node:fs';
+
+const LOG_DIR = process.env.LOG_DIR || './logs';
+if (!existsSync(LOG_DIR)) mkdirSync(LOG_DIR, { recursive: true });
+
+function analyzeRequestBody(body: Buffer, path: string): Partial<RequestLog> {
+  try {
+    const json = JSON.parse(body.toString());
+    const info: Partial<RequestLog> = {};
+    if (json.model) info.model = json.model;
+    if (json.stream !== undefined) info.streaming = json.stream;
+    if (json.system) {
+      info.systemPromptLength = typeof json.system === 'string'
+        ? json.system.length
+        : JSON.stringify(json.system).length;
+
+      // Dump system prompt to file for analysis
+      const ts = new Date().toISOString().replace(/[:.]/g, '-');
+      const promptFile = `${LOG_DIR}/system-prompt-${ts}.txt`;
+      const content = typeof json.system === 'string'
+        ? json.system
+        : Array.isArray(json.system)
+          ? json.system.map((b: any) => b.text || JSON.stringify(b)).join('\n---\n')
+          : JSON.stringify(json.system, null, 2);
+      writeFileSync(promptFile, content);
+      log('debug', `📝 System prompt saved: ${promptFile} (${info.systemPromptLength} chars)`);
+    }
+    if (Array.isArray(json.messages)) info.messageCount = json.messages.length;
+
+    // Dump full request for analysis (redact API key)
+    const ts = new Date().toISOString().replace(/[:.]/g, '-');
+    const reqFile = `${LOG_DIR}/request-${ts}.json`;
+    const redacted = { ...json };
+    // Don't save full message content — just metadata
+    if (Array.isArray(redacted.messages)) {
+      redacted.messages = redacted.messages.map((m: any) => ({
+        role: m.role,
+        contentLength: typeof m.content === 'string' ? m.content.length : JSON.stringify(m.content).length,
+        contentPreview: typeof m.content === 'string' ? m.content.slice(0, 100) : '(structured)',
+      }));
+    }
+    writeFileSync(reqFile, JSON.stringify(redacted, null, 2));
+
+    return info;
+  } catch { return {}; }
+}
+
+function analyzeResponseChunks(chunks: Buffer[]): Partial<RequestLog> {
+  const full = Buffer.concat(chunks).toString();
+  const info: Partial<RequestLog> = {};
+
+  try {
+    // Non-streaming: single JSON response
+    const json = JSON.parse(full);
+    return extractUsage(json);
+  } catch {
+    // Streaming SSE: parse all events to find usage data
+    const lines = full.split('\n');
+    for (const line of lines) {
+      if (!line.startsWith('data: ')) continue;
+      try {
+        const event = JSON.parse(line.slice(6));
+        // message_start has input token usage
+        if (event.type === 'message_start' && event.message?.usage) {
+          info.inputTokens = event.message.usage.input_tokens;
+          if (event.message.usage.cache_read_input_tokens) info.cacheRead = event.message.usage.cache_read_input_tokens;
+          if (event.message.usage.cache_creation_input_tokens) info.cacheCreation = event.message.usage.cache_creation_input_tokens;
+        }
+        // message_delta has output token usage (comes at the end)
+        if (event.type === 'message_delta' && event.usage) {
+          info.outputTokens = event.usage.output_tokens;
+        }
+      } catch {}
+    }
+    return info;
+  }
+}
+
+function extractUsage(json: any): Partial<RequestLog> {
+  const info: Partial<RequestLog> = {};
+  if (json.usage) {
+    if (json.usage.input_tokens) info.inputTokens = json.usage.input_tokens;
+    if (json.usage.output_tokens) info.outputTokens = json.usage.output_tokens;
+    if (json.usage.cache_creation_input_tokens) info.cacheCreation = json.usage.cache_creation_input_tokens;
+    if (json.usage.cache_read_input_tokens) info.cacheRead = json.usage.cache_read_input_tokens;
+  }
+  return info;
+}
+
 function forwardRequest(req: IncomingMessage, res: ServerResponse, body: Buffer) {
   const path = req.url || '/';
   const headers: Record<string, string> = {};
@@ -241,6 +351,10 @@ function forwardRequest(req: IncomingMessage, res: ServerResponse, body: Buffer)
     if (value) headers[key] = Array.isArray(value) ? value.join(', ') : value;
   }
   headers['host'] = upstream.host;
+
+  const startTime = Date.now();
+  const reqInfo = analyzeRequestBody(body, path);
+  const entry: RequestLog = { timestamp: startTime, method: req.method || 'POST', path, ...reqInfo };
 
   const proxyReq = httpsRequest(
     {
@@ -267,12 +381,36 @@ function forwardRequest(req: IncomingMessage, res: ServerResponse, body: Buffer)
       }
 
       state.totalForwarded++;
+      entry.statusCode = proxyRes.statusCode;
 
-      // Forward status + headers + body/stream to client
+      // Forward status + headers to client
       res.writeHead(proxyRes.statusCode || 502, proxyRes.headers);
-      proxyRes.pipe(res);
+
+      // Capture response body for analysis while streaming to client
+      const resChunks: Buffer[] = [];
+      proxyRes.on('data', (chunk: Buffer) => {
+        resChunks.push(chunk);
+        res.write(chunk);
+      });
 
       proxyRes.on('end', () => {
+        res.end();
+        entry.latencyMs = Date.now() - startTime;
+
+        // Extract usage from response
+        const resInfo = analyzeResponseChunks(resChunks);
+        Object.assign(entry, resInfo);
+
+        // Log the request
+        recentRequests.push(entry);
+        if (recentRequests.length > MAX_REQUEST_LOG) recentRequests.shift();
+
+        const model = entry.model || '?';
+        const tokens = entry.inputTokens || entry.outputTokens
+          ? `in=${entry.inputTokens || '?'} out=${entry.outputTokens || '?'}${entry.cacheRead ? ` cache_read=${entry.cacheRead}` : ''}${entry.cacheCreation ? ` cache_create=${entry.cacheCreation}` : ''}`
+          : '';
+        log('info', `📡 ${path} ${model} ${entry.latencyMs}ms ${tokens}`);
+
         if (queue.length > 0) drainQueue();
       });
     },
@@ -361,6 +499,70 @@ const server = createServer((req, res) => {
     ];
     res.writeHead(200, { 'content-type': 'text/plain' });
     res.end(lines.join('\n') + '\n');
+    return;
+  }
+
+  // Recent requests log
+  if (path === '/requests' && req.method === 'GET') {
+    res.writeHead(200, { 'content-type': 'application/json' });
+    res.end(JSON.stringify(recentRequests.slice(-50).reverse()));
+    return;
+  }
+
+  // Aggregate stats
+  if (path === '/stats' && req.method === 'GET') {
+    const byModel: Record<string, { count: number; inputTokens: number; outputTokens: number; cacheRead: number; cacheCreation: number; avgLatencyMs: number; totalLatencyMs: number }> = {};
+    const byPath: Record<string, number> = {};
+    let totalInput = 0, totalOutput = 0, totalCacheRead = 0, totalCacheCreation = 0;
+
+    for (const r of recentRequests) {
+      // By model
+      const m = r.model || 'unknown';
+      if (!byModel[m]) byModel[m] = { count: 0, inputTokens: 0, outputTokens: 0, cacheRead: 0, cacheCreation: 0, avgLatencyMs: 0, totalLatencyMs: 0 };
+      byModel[m].count++;
+      byModel[m].inputTokens += r.inputTokens || 0;
+      byModel[m].outputTokens += r.outputTokens || 0;
+      byModel[m].cacheRead += r.cacheRead || 0;
+      byModel[m].cacheCreation += r.cacheCreation || 0;
+      byModel[m].totalLatencyMs += r.latencyMs || 0;
+
+      // By path
+      byPath[r.path] = (byPath[r.path] || 0) + 1;
+
+      totalInput += r.inputTokens || 0;
+      totalOutput += r.outputTokens || 0;
+      totalCacheRead += r.cacheRead || 0;
+      totalCacheCreation += r.cacheCreation || 0;
+    }
+
+    for (const m of Object.values(byModel)) {
+      m.avgLatencyMs = m.count > 0 ? Math.round(m.totalLatencyMs / m.count) : 0;
+    }
+
+    // Estimate cost (Anthropic pricing March 2026)
+    const PRICING: Record<string, { input: number; output: number; cacheRead: number; cacheCreation: number }> = {
+      'claude-opus-4-6': { input: 15, output: 75, cacheRead: 1.5, cacheCreation: 18.75 },
+      'claude-sonnet-4-6': { input: 3, output: 15, cacheRead: 0.3, cacheCreation: 3.75 },
+      'claude-haiku-4-5-20251001': { input: 0.8, output: 4, cacheRead: 0.08, cacheCreation: 1 },
+    };
+    let estimatedCost = 0;
+    for (const [model, stats] of Object.entries(byModel)) {
+      const p = Object.entries(PRICING).find(([k]) => model.includes(k))?.[1]
+        || (model.includes('opus') ? PRICING['claude-opus-4-6'] : model.includes('haiku') ? PRICING['claude-haiku-4-5-20251001'] : PRICING['claude-sonnet-4-6']);
+      estimatedCost += (stats.inputTokens / 1_000_000) * p.input
+        + (stats.outputTokens / 1_000_000) * p.output
+        + (stats.cacheRead / 1_000_000) * p.cacheRead
+        + (stats.cacheCreation / 1_000_000) * p.cacheCreation;
+    }
+
+    res.writeHead(200, { 'content-type': 'application/json' });
+    res.end(JSON.stringify({
+      window: `last ${recentRequests.length} requests`,
+      byModel,
+      byPath,
+      totals: { requests: recentRequests.length, inputTokens: totalInput, outputTokens: totalOutput, cacheRead: totalCacheRead, cacheCreation: totalCacheCreation },
+      estimatedCostUsd: Math.round(estimatedCost * 10000) / 10000,
+    }));
     return;
   }
 
