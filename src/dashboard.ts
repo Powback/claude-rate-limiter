@@ -312,9 +312,10 @@ function relTime(v) {
   return Math.floor(s/86400)+'d ago';
 }
 
-// Derive session status from lastActivity timestamp (epoch ms)
+// Derive session status from lastActivity or lastSeen timestamp (epoch ms or ISO string)
 function deriveStatus(s) {
-  const idle = Date.now() - (s.lastActivity || 0);
+  const lastTs = s.lastActivity || (s.lastSeen ? new Date(s.lastSeen).getTime() : 0);
+  const idle = Date.now() - lastTs;
   if (idle < 60_000) return 'active';
   if (idle < 30 * 60_000) return 'idle';
   return 'completed';
@@ -474,10 +475,11 @@ function renderSessionRow(s) {
   const tr = document.createElement('tr');
   tr.dataset.id = s.id;
   if (s.id === selectedSessionId) tr.classList.add('selected');
-  const shortId = s.id ? s.id.slice(0, 12) + '…' : '—';
-  // Sessions don't have a task name — show model + start time as identifier
-  const startLabel = s.startTime ? new Date(s.startTime).toLocaleString([], {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) : '';
-  const task = esc(s.task || s.title || s.description || (startLabel ? 'Session ' + startLabel : '(session)'));
+  const shortId = s.id ? s.id.slice(0, 12) + (s.id.length > 12 ? '…' : '') : '—';
+  // Support both old (startTime) and new (firstSeen) field names
+  const startRef = s.startTime || s.firstSeen;
+  const startLabel = startRef ? new Date(startRef).toLocaleString([], {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) : '';
+  const task = esc(s.task || s.title || s.description || s.taskDescription || (startLabel ? 'Session ' + startLabel : '(session)'));
   const inTok = s.totalInputTokens ?? s.inputTokens ?? 0;
   const outTok = s.totalOutputTokens ?? s.outputTokens ?? 0;
   const cacheR = s.totalCacheRead ?? s.cacheRead ?? 0;
@@ -491,7 +493,7 @@ function renderSessionRow(s) {
     '<td style="color:#888;font-size:11px">'+esc(shortModel(s.model))+'</td>'+
     '<td style="text-align:right;color:#888;font-size:12px">'+msgCount+'</td>'+
     '<td class="token-cell">'+tokenHtml+'</td>'+
-    '<td class="time-cell">'+relTime(s.lastActivity ?? s.updatedAt ?? s.startedAt)+'</td>';
+    '<td class="time-cell">'+relTime(s.lastActivity ?? s.updatedAt ?? s.startedAt ?? s.lastSeen)+'</td>';
   tr.onclick = () => openSession(s.id);
   return tr;
 }
@@ -528,7 +530,7 @@ function filterSessions() {
     const matchStatus = sessionFilter === 'all' || status.startsWith(sessionFilter);
     const matchSearch = !q ||
       (s.id || '').toLowerCase().includes(q) ||
-      (s.task || s.title || s.description || '').toLowerCase().includes(q) ||
+      (s.task || s.title || s.description || s.taskDescription || '').toLowerCase().includes(q) ||
       (s.model || '').toLowerCase().includes(q);
     return matchStatus && matchSearch;
   });
@@ -606,19 +608,20 @@ async function refreshPanel(id) {
 }
 
 function renderPanel(session) {
-  // Header
+  // Header — support both old (startTime) and new (firstSeen) field names
   $('panel-sid').textContent = session.id || '';
-  const startLabel = session.startTime ? new Date(session.startTime).toLocaleString([], {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) : '';
-  $('panel-task').textContent = session.task || session.title || session.description || (startLabel ? 'Session ' + startLabel : '(session)');
+  const startRef = session.startTime || session.firstSeen;
+  const startLabel = startRef ? new Date(startRef).toLocaleString([], {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) : '';
+  $('panel-task').textContent = session.task || session.title || session.description || session.taskDescription || (startLabel ? 'Session ' + startLabel : '(session)');
   const status = session.status || deriveStatus(session);
   const metaParts = [];
   if (session.model) metaParts.push('<span style="color:#8b5cf6">'+esc(shortModel(session.model))+'</span>');
-  if (session.startTime) metaParts.push('Started '+relTime(session.startTime));
+  if (startRef) metaParts.push('Started '+relTime(startRef));
   metaParts.push(statusBadge(status));
   $('panel-meta').innerHTML = metaParts.join('<span style="color:#333"> · </span>');
 
-  // Stats bar — use totalInputTokens / totalOutputTokens from session
-  const convs = session.conversations || session.messages || [];
+  // Stats bar — support both old (conversations) and new (requests) array field names
+  const convs = session.conversations || session.messages || session.requests || [];
   const totalIn  = session.totalInputTokens  ?? session.inputTokens  ?? convs.reduce((a,c) => a+(c.inputTokens||0), 0);
   const totalOut = session.totalOutputTokens ?? session.outputTokens ?? convs.reduce((a,c) => a+(c.outputTokens||0), 0);
   const reqCount = session.requestCount ?? session.conversationCount ?? convs.length;
@@ -633,10 +636,32 @@ function renderPanel(session) {
   renderMessages();
 }
 
-// Each ConversationEntry becomes two synthetic messages (user turn + assistant turn)
+// Each ConversationEntry becomes two synthetic messages (user turn + assistant turn).
+// For new RequestLog entries (cch-based sessions), show request metadata as a single bubble.
 function conversationsToMessages(convs) {
   const msgs = [];
   for (const c of convs) {
+    // New RequestLog format — no lastUserMessage, but has inputTokens/statusCode
+    if (!c.lastUserMessage && !c.lastAssistantResponse) {
+      const model = shortModel(c.model || '');
+      const parts = [];
+      if (model && model !== '?') parts.push('Model: ' + model);
+      if (c.statusCode) parts.push('Status: ' + c.statusCode);
+      if (c.inputTokens) parts.push('In: ' + fmt(c.inputTokens));
+      if (c.outputTokens) parts.push('Out: ' + fmt(c.outputTokens));
+      if (c.cacheRead) parts.push('Cache: ' + fmt(c.cacheRead));
+      if (c.latencyMs) parts.push('Latency: ' + (c.latencyMs/1000).toFixed(1) + 's');
+      if (c.messageCount) parts.push('Messages: ' + c.messageCount);
+      if (parts.length > 0) {
+        msgs.push({
+          role: 'assistant', content: parts.join(' · '),
+          timestamp: c.timestamp, inputTokens: c.inputTokens,
+          outputTokens: c.outputTokens, latencyMs: c.latencyMs,
+        });
+      }
+      continue;
+    }
+    // Old ConversationEntry format
     if (c.lastUserMessage) {
       msgs.push({
         role: 'user', content: c.lastUserMessage,
