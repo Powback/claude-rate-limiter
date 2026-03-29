@@ -1,0 +1,599 @@
+{
+  "byType": {
+    "agent": [
+      "agent-9f2e9504-bc1f-46ef-9cb9-b60291665aa2",
+      "agent-e3436e34-b864-4624-aca3-a5fea94c1047",
+      "agent-e956ffcf-2817-4afb-9bc8-46798f613f06",
+      "agent-db8e5d93-c8aa-429a-8218-c6c39b928ba4",
+      "agent-252bc7f6-a587-428c-b48d-536b8383065c",
+      "agent-1883a423-b7b4-448f-9491-009c4511376a",
+      "agent-5bae9ee0-e2bd-4ae9-ad62-c6affae29a9f",
+      "agent-d3732413-8112-415d-9e26-ffb72556503e",
+      "agent-fec07cda-bd27-4b23-b344-c9964bca587d",
+      "agent-1268b20f-9c91-4d99-b5be-11b48b35a32e",
+      "agent-bbb4e144-df74-4b96-91d6-5a75bbef900c",
+      "agent-8a980b6f-f131-439e-b6ac-eb87abee19ea",
+      "agent-20d21e03-d47d-496d-a096-2e37ef0b1dcb",
+      "agent-f1bb80f2-6a96-4cb5-8b8b-c4b5c8c9f19c",
+      "agent-1e35774c-c4d3-4da6-b57c-3bed36c86ebd",
+      "agent-b25bd4ba-14d8-477a-ae2b-d33aa9707d8e",
+      "agent-d2487c74-7583-41a6-a419-2033d0baa70f"
+    ],
+    "knowledge": [
+      "2c36fc50-1ba0-4b2d-bca4-a7fa60e79d2b",
+      "d9ce47f9-306a-44f2-a8b9-2dadef0ba520",
+      "7d8481c5-9e3b-4fa1-94d4-649cb597720f",
+      "3af6465e-7a42-4c77-b4cf-fceb2834cd89",
+      "ae51461f-9d7e-4721-a3bc-916fa910fe5f",
+      "7fc29773-1841-4698-ab52-9e30189b6bcd",
+      "e9012ecb-5606-40c5-9816-9b949b073490",
+      "5a78918f-f96e-41c2-a8e7-0ac8355900ae",
+      "c72a4959-a450-400f-9771-ba6ec7cb6f47",
+      "16dca1e1-2ac1-4706-ba4e-232a853b92e0",
+      "82bd0995-a734-4640-ba97-a97df29550d0",
+      "693fed92-bba3-4a48-a40b-b14085746e6b",
+      "382e08cc-5ca0-4113-90ae-4705121f373b",
+      "d1fac597-6c4e-4de7-b8ae-fc30097c34f3",
+      "55b3a3bb-ec81-4183-b05f-a28c07f7591f",
+      "ff360807-532f-4744-b3d1-5265d30366e0",
+      "d43867a0-fe5c-433b-bcfc-12d88d68f6fb"
+    ],
+    "review": [
+      "review-9f2e9504-bc1f-46ef-9cb9-b60291665aa2",
+      "review-e3436e34-b864-4624-aca3-a5fea94c1047",
+      "review-e956ffcf-2817-4afb-9bc8-46798f613f06",
+      "review-db8e5d93-c8aa-429a-8218-c6c39b928ba4",
+      "review-252bc7f6-a587-428c-b48d-536b8383065c",
+      "review-1883a423-b7b4-448f-9491-009c4511376a",
+      "review-5bae9ee0-e2bd-4ae9-ad62-c6affae29a9f",
+      "review-d3732413-8112-415d-9e26-ffb72556503e",
+      "review-fec07cda-bd27-4b23-b344-c9964bca587d",
+      "review-1268b20f-9c91-4d99-b5be-11b48b35a32e",
+      "review-bbb4e144-df74-4b96-91d6-5a75bbef900c",
+      "review-8a980b6f-f131-439e-b6ac-eb87abee19ea",
+      "review-20d21e03-d47d-496d-a096-2e37ef0b1dcb",
+      "review-f1bb80f2-6a96-4cb5-8b8b-c4b5c8c9f19c",
+      "review-1e35774c-c4d3-4da6-b57c-3bed36c86ebd",
+      "review-b25bd4ba-14d8-477a-ae2b-d33aa9707d8e",
+      "review-d2487c74-7583-41a6-a419-2033d0baa70f"
+    ],
+    "skill": [
+      "skill-javascript"
+    ],
+    "reference": [
+      "b76a2396-0726-4c0b-94c6-b710161809c6",
+      "31b3e857-858e-4972-8fcd-c8288a204ed9",
+      "053faa57-d96c-48d6-8b94-ec1c4bbb8402",
+      "a980e734-effd-4c3f-85eb-ed5ccfb8bf06",
+      "a6c02304-52e3-45f5-bb55-05361fbb404f",
+      "a5378c98-9925-4599-821a-77336c0bfcac"
+    ]
+  },
+  "byDomain": {
+    "assistant_info": [
+      "agent-9f2e9504-bc1f-46ef-9cb9-b60291665aa2",
+      "review-9f2e9504-bc1f-46ef-9cb9-b60291665aa2",
+      "agent-e3436e34-b864-4624-aca3-a5fea94c1047",
+      "review-e3436e34-b864-4624-aca3-a5fea94c1047",
+      "agent-e956ffcf-2817-4afb-9bc8-46798f613f06",
+      "review-e956ffcf-2817-4afb-9bc8-46798f613f06",
+      "agent-db8e5d93-c8aa-429a-8218-c6c39b928ba4",
+      "3af6465e-7a42-4c77-b4cf-fceb2834cd89",
+      "review-db8e5d93-c8aa-429a-8218-c6c39b928ba4",
+      "agent-252bc7f6-a587-428c-b48d-536b8383065c",
+      "review-252bc7f6-a587-428c-b48d-536b8383065c",
+      "agent-1883a423-b7b4-448f-9491-009c4511376a",
+      "7fc29773-1841-4698-ab52-9e30189b6bcd",
+      "review-1883a423-b7b4-448f-9491-009c4511376a",
+      "agent-5bae9ee0-e2bd-4ae9-ad62-c6affae29a9f",
+      "e9012ecb-5606-40c5-9816-9b949b073490",
+      "review-5bae9ee0-e2bd-4ae9-ad62-c6affae29a9f",
+      "agent-d3732413-8112-415d-9e26-ffb72556503e",
+      "5a78918f-f96e-41c2-a8e7-0ac8355900ae",
+      "review-d3732413-8112-415d-9e26-ffb72556503e",
+      "agent-fec07cda-bd27-4b23-b344-c9964bca587d",
+      "c72a4959-a450-400f-9771-ba6ec7cb6f47",
+      "review-fec07cda-bd27-4b23-b344-c9964bca587d",
+      "agent-1268b20f-9c91-4d99-b5be-11b48b35a32e",
+      "16dca1e1-2ac1-4706-ba4e-232a853b92e0",
+      "review-1268b20f-9c91-4d99-b5be-11b48b35a32e",
+      "agent-bbb4e144-df74-4b96-91d6-5a75bbef900c",
+      "skill-javascript",
+      "review-bbb4e144-df74-4b96-91d6-5a75bbef900c",
+      "agent-8a980b6f-f131-439e-b6ac-eb87abee19ea",
+      "review-8a980b6f-f131-439e-b6ac-eb87abee19ea",
+      "agent-20d21e03-d47d-496d-a096-2e37ef0b1dcb",
+      "review-20d21e03-d47d-496d-a096-2e37ef0b1dcb",
+      "agent-f1bb80f2-6a96-4cb5-8b8b-c4b5c8c9f19c",
+      "review-f1bb80f2-6a96-4cb5-8b8b-c4b5c8c9f19c",
+      "agent-1e35774c-c4d3-4da6-b57c-3bed36c86ebd",
+      "review-1e35774c-c4d3-4da6-b57c-3bed36c86ebd",
+      "agent-b25bd4ba-14d8-477a-ae2b-d33aa9707d8e",
+      "review-b25bd4ba-14d8-477a-ae2b-d33aa9707d8e",
+      "agent-d2487c74-7583-41a6-a419-2033d0baa70f",
+      "review-d2487c74-7583-41a6-a419-2033d0baa70f"
+    ],
+    "general": [
+      "2c36fc50-1ba0-4b2d-bca4-a7fa60e79d2b",
+      "693fed92-bba3-4a48-a40b-b14085746e6b",
+      "b76a2396-0726-4c0b-94c6-b710161809c6",
+      "31b3e857-858e-4972-8fcd-c8288a204ed9",
+      "053faa57-d96c-48d6-8b94-ec1c4bbb8402",
+      "a980e734-effd-4c3f-85eb-ed5ccfb8bf06",
+      "a6c02304-52e3-45f5-bb55-05361fbb404f",
+      "a5378c98-9925-4599-821a-77336c0bfcac"
+    ],
+    "frontend": [
+      "d9ce47f9-306a-44f2-a8b9-2dadef0ba520",
+      "7d8481c5-9e3b-4fa1-94d4-649cb597720f",
+      "3af6465e-7a42-4c77-b4cf-fceb2834cd89",
+      "ae51461f-9d7e-4721-a3bc-916fa910fe5f",
+      "5a78918f-f96e-41c2-a8e7-0ac8355900ae",
+      "c72a4959-a450-400f-9771-ba6ec7cb6f47",
+      "16dca1e1-2ac1-4706-ba4e-232a853b92e0",
+      "82bd0995-a734-4640-ba97-a97df29550d0",
+      "382e08cc-5ca0-4113-90ae-4705121f373b",
+      "d1fac597-6c4e-4de7-b8ae-fc30097c34f3",
+      "55b3a3bb-ec81-4183-b05f-a28c07f7591f",
+      "ff360807-532f-4744-b3d1-5265d30366e0"
+    ],
+    "preferences": [
+      "7d8481c5-9e3b-4fa1-94d4-649cb597720f",
+      "5a78918f-f96e-41c2-a8e7-0ac8355900ae"
+    ],
+    "api": [
+      "7d8481c5-9e3b-4fa1-94d4-649cb597720f",
+      "5a78918f-f96e-41c2-a8e7-0ac8355900ae"
+    ],
+    "personal_info": [
+      "7fc29773-1841-4698-ab52-9e30189b6bcd",
+      "e9012ecb-5606-40c5-9816-9b949b073490",
+      "5a78918f-f96e-41c2-a8e7-0ac8355900ae",
+      "c72a4959-a450-400f-9771-ba6ec7cb6f47",
+      "16dca1e1-2ac1-4706-ba4e-232a853b92e0"
+    ],
+    "temporal_data": [
+      "ff360807-532f-4744-b3d1-5265d30366e0",
+      "d43867a0-fe5c-433b-bcfc-12d88d68f6fb"
+    ]
+  },
+  "byNodeId": {
+    "agent-9f2e9504-bc1f-46ef-9cb9-b60291665aa2": {
+      "file": "nodes/node-agent-9f2e9504-bc1f-46ef-9cb9-b60291665aa2.json",
+      "type": "agent",
+      "domains": [
+        "assistant_info"
+      ]
+    },
+    "2c36fc50-1ba0-4b2d-bca4-a7fa60e79d2b": {
+      "file": "nodes/node-2c36fc50-1ba0-4b2d-bca4-a7fa60e79d2b.json",
+      "type": "knowledge",
+      "domains": [
+        "general"
+      ]
+    },
+    "review-9f2e9504-bc1f-46ef-9cb9-b60291665aa2": {
+      "file": "nodes/node-review-9f2e9504-bc1f-46ef-9cb9-b60291665aa2.json",
+      "type": "review",
+      "domains": [
+        "assistant_info"
+      ]
+    },
+    "agent-e3436e34-b864-4624-aca3-a5fea94c1047": {
+      "file": "nodes/node-agent-e3436e34-b864-4624-aca3-a5fea94c1047.json",
+      "type": "agent",
+      "domains": [
+        "assistant_info"
+      ]
+    },
+    "d9ce47f9-306a-44f2-a8b9-2dadef0ba520": {
+      "file": "nodes/node-d9ce47f9-306a-44f2-a8b9-2dadef0ba520.json",
+      "type": "knowledge",
+      "domains": [
+        "frontend"
+      ]
+    },
+    "review-e3436e34-b864-4624-aca3-a5fea94c1047": {
+      "file": "nodes/node-review-e3436e34-b864-4624-aca3-a5fea94c1047.json",
+      "type": "review",
+      "domains": [
+        "assistant_info"
+      ]
+    },
+    "agent-e956ffcf-2817-4afb-9bc8-46798f613f06": {
+      "file": "nodes/node-agent-e956ffcf-2817-4afb-9bc8-46798f613f06.json",
+      "type": "agent",
+      "domains": [
+        "assistant_info"
+      ]
+    },
+    "7d8481c5-9e3b-4fa1-94d4-649cb597720f": {
+      "file": "nodes/node-7d8481c5-9e3b-4fa1-94d4-649cb597720f.json",
+      "type": "knowledge",
+      "domains": [
+        "preferences",
+        "api",
+        "frontend"
+      ]
+    },
+    "review-e956ffcf-2817-4afb-9bc8-46798f613f06": {
+      "file": "nodes/node-review-e956ffcf-2817-4afb-9bc8-46798f613f06.json",
+      "type": "review",
+      "domains": [
+        "assistant_info"
+      ]
+    },
+    "agent-db8e5d93-c8aa-429a-8218-c6c39b928ba4": {
+      "file": "nodes/node-agent-db8e5d93-c8aa-429a-8218-c6c39b928ba4.json",
+      "type": "agent",
+      "domains": [
+        "assistant_info"
+      ]
+    },
+    "3af6465e-7a42-4c77-b4cf-fceb2834cd89": {
+      "file": "nodes/node-3af6465e-7a42-4c77-b4cf-fceb2834cd89.json",
+      "type": "knowledge",
+      "domains": [
+        "assistant_info",
+        "frontend"
+      ]
+    },
+    "review-db8e5d93-c8aa-429a-8218-c6c39b928ba4": {
+      "file": "nodes/node-review-db8e5d93-c8aa-429a-8218-c6c39b928ba4.json",
+      "type": "review",
+      "domains": [
+        "assistant_info"
+      ]
+    },
+    "agent-252bc7f6-a587-428c-b48d-536b8383065c": {
+      "file": "nodes/node-agent-252bc7f6-a587-428c-b48d-536b8383065c.json",
+      "type": "agent",
+      "domains": [
+        "assistant_info"
+      ]
+    },
+    "ae51461f-9d7e-4721-a3bc-916fa910fe5f": {
+      "file": "nodes/node-ae51461f-9d7e-4721-a3bc-916fa910fe5f.json",
+      "type": "knowledge",
+      "domains": [
+        "frontend"
+      ]
+    },
+    "review-252bc7f6-a587-428c-b48d-536b8383065c": {
+      "file": "nodes/node-review-252bc7f6-a587-428c-b48d-536b8383065c.json",
+      "type": "review",
+      "domains": [
+        "assistant_info"
+      ]
+    },
+    "agent-1883a423-b7b4-448f-9491-009c4511376a": {
+      "file": "nodes/node-agent-1883a423-b7b4-448f-9491-009c4511376a.json",
+      "type": "agent",
+      "domains": [
+        "assistant_info"
+      ]
+    },
+    "7fc29773-1841-4698-ab52-9e30189b6bcd": {
+      "file": "nodes/node-7fc29773-1841-4698-ab52-9e30189b6bcd.json",
+      "type": "knowledge",
+      "domains": [
+        "personal_info",
+        "assistant_info"
+      ]
+    },
+    "review-1883a423-b7b4-448f-9491-009c4511376a": {
+      "file": "nodes/node-review-1883a423-b7b4-448f-9491-009c4511376a.json",
+      "type": "review",
+      "domains": [
+        "assistant_info"
+      ]
+    },
+    "agent-5bae9ee0-e2bd-4ae9-ad62-c6affae29a9f": {
+      "file": "nodes/node-agent-5bae9ee0-e2bd-4ae9-ad62-c6affae29a9f.json",
+      "type": "agent",
+      "domains": [
+        "assistant_info"
+      ]
+    },
+    "e9012ecb-5606-40c5-9816-9b949b073490": {
+      "file": "nodes/node-e9012ecb-5606-40c5-9816-9b949b073490.json",
+      "type": "knowledge",
+      "domains": [
+        "personal_info",
+        "assistant_info"
+      ]
+    },
+    "review-5bae9ee0-e2bd-4ae9-ad62-c6affae29a9f": {
+      "file": "nodes/node-review-5bae9ee0-e2bd-4ae9-ad62-c6affae29a9f.json",
+      "type": "review",
+      "domains": [
+        "assistant_info"
+      ]
+    },
+    "agent-d3732413-8112-415d-9e26-ffb72556503e": {
+      "file": "nodes/node-agent-d3732413-8112-415d-9e26-ffb72556503e.json",
+      "type": "agent",
+      "domains": [
+        "assistant_info"
+      ]
+    },
+    "5a78918f-f96e-41c2-a8e7-0ac8355900ae": {
+      "file": "nodes/node-5a78918f-f96e-41c2-a8e7-0ac8355900ae.json",
+      "type": "knowledge",
+      "domains": [
+        "personal_info",
+        "preferences",
+        "assistant_info",
+        "api",
+        "frontend"
+      ]
+    },
+    "review-d3732413-8112-415d-9e26-ffb72556503e": {
+      "file": "nodes/node-review-d3732413-8112-415d-9e26-ffb72556503e.json",
+      "type": "review",
+      "domains": [
+        "assistant_info"
+      ]
+    },
+    "agent-fec07cda-bd27-4b23-b344-c9964bca587d": {
+      "file": "nodes/node-agent-fec07cda-bd27-4b23-b344-c9964bca587d.json",
+      "type": "agent",
+      "domains": [
+        "assistant_info"
+      ]
+    },
+    "c72a4959-a450-400f-9771-ba6ec7cb6f47": {
+      "file": "nodes/node-c72a4959-a450-400f-9771-ba6ec7cb6f47.json",
+      "type": "knowledge",
+      "domains": [
+        "personal_info",
+        "assistant_info",
+        "frontend"
+      ]
+    },
+    "review-fec07cda-bd27-4b23-b344-c9964bca587d": {
+      "file": "nodes/node-review-fec07cda-bd27-4b23-b344-c9964bca587d.json",
+      "type": "review",
+      "domains": [
+        "assistant_info"
+      ]
+    },
+    "agent-1268b20f-9c91-4d99-b5be-11b48b35a32e": {
+      "file": "nodes/node-agent-1268b20f-9c91-4d99-b5be-11b48b35a32e.json",
+      "type": "agent",
+      "domains": [
+        "assistant_info"
+      ]
+    },
+    "16dca1e1-2ac1-4706-ba4e-232a853b92e0": {
+      "file": "nodes/node-16dca1e1-2ac1-4706-ba4e-232a853b92e0.json",
+      "type": "knowledge",
+      "domains": [
+        "personal_info",
+        "assistant_info",
+        "frontend"
+      ]
+    },
+    "review-1268b20f-9c91-4d99-b5be-11b48b35a32e": {
+      "file": "nodes/node-review-1268b20f-9c91-4d99-b5be-11b48b35a32e.json",
+      "type": "review",
+      "domains": [
+        "assistant_info"
+      ]
+    },
+    "agent-bbb4e144-df74-4b96-91d6-5a75bbef900c": {
+      "file": "nodes/node-agent-bbb4e144-df74-4b96-91d6-5a75bbef900c.json",
+      "type": "agent",
+      "domains": [
+        "assistant_info"
+      ]
+    },
+    "82bd0995-a734-4640-ba97-a97df29550d0": {
+      "file": "nodes/node-82bd0995-a734-4640-ba97-a97df29550d0.json",
+      "type": "knowledge",
+      "domains": [
+        "frontend"
+      ]
+    },
+    "skill-javascript": {
+      "file": "nodes/node-skill-javascript.json",
+      "type": "skill",
+      "domains": [
+        "assistant_info"
+      ]
+    },
+    "review-bbb4e144-df74-4b96-91d6-5a75bbef900c": {
+      "file": "nodes/node-review-bbb4e144-df74-4b96-91d6-5a75bbef900c.json",
+      "type": "review",
+      "domains": [
+        "assistant_info"
+      ]
+    },
+    "agent-8a980b6f-f131-439e-b6ac-eb87abee19ea": {
+      "file": "nodes/node-agent-8a980b6f-f131-439e-b6ac-eb87abee19ea.json",
+      "type": "agent",
+      "domains": [
+        "assistant_info"
+      ]
+    },
+    "693fed92-bba3-4a48-a40b-b14085746e6b": {
+      "file": "nodes/node-693fed92-bba3-4a48-a40b-b14085746e6b.json",
+      "type": "knowledge",
+      "domains": [
+        "general"
+      ]
+    },
+    "b76a2396-0726-4c0b-94c6-b710161809c6": {
+      "file": "nodes/node-b76a2396-0726-4c0b-94c6-b710161809c6.json",
+      "type": "reference",
+      "domains": [
+        "general"
+      ]
+    },
+    "review-8a980b6f-f131-439e-b6ac-eb87abee19ea": {
+      "file": "nodes/node-review-8a980b6f-f131-439e-b6ac-eb87abee19ea.json",
+      "type": "review",
+      "domains": [
+        "assistant_info"
+      ]
+    },
+    "agent-20d21e03-d47d-496d-a096-2e37ef0b1dcb": {
+      "file": "nodes/node-agent-20d21e03-d47d-496d-a096-2e37ef0b1dcb.json",
+      "type": "agent",
+      "domains": [
+        "assistant_info"
+      ]
+    },
+    "382e08cc-5ca0-4113-90ae-4705121f373b": {
+      "file": "nodes/node-382e08cc-5ca0-4113-90ae-4705121f373b.json",
+      "type": "knowledge",
+      "domains": [
+        "frontend"
+      ]
+    },
+    "31b3e857-858e-4972-8fcd-c8288a204ed9": {
+      "file": "nodes/node-31b3e857-858e-4972-8fcd-c8288a204ed9.json",
+      "type": "reference",
+      "domains": [
+        "general"
+      ]
+    },
+    "review-20d21e03-d47d-496d-a096-2e37ef0b1dcb": {
+      "file": "nodes/node-review-20d21e03-d47d-496d-a096-2e37ef0b1dcb.json",
+      "type": "review",
+      "domains": [
+        "assistant_info"
+      ]
+    },
+    "agent-f1bb80f2-6a96-4cb5-8b8b-c4b5c8c9f19c": {
+      "file": "nodes/node-agent-f1bb80f2-6a96-4cb5-8b8b-c4b5c8c9f19c.json",
+      "type": "agent",
+      "domains": [
+        "assistant_info"
+      ]
+    },
+    "d1fac597-6c4e-4de7-b8ae-fc30097c34f3": {
+      "file": "nodes/node-d1fac597-6c4e-4de7-b8ae-fc30097c34f3.json",
+      "type": "knowledge",
+      "domains": [
+        "frontend"
+      ]
+    },
+    "053faa57-d96c-48d6-8b94-ec1c4bbb8402": {
+      "file": "nodes/node-053faa57-d96c-48d6-8b94-ec1c4bbb8402.json",
+      "type": "reference",
+      "domains": [
+        "general"
+      ]
+    },
+    "review-f1bb80f2-6a96-4cb5-8b8b-c4b5c8c9f19c": {
+      "file": "nodes/node-review-f1bb80f2-6a96-4cb5-8b8b-c4b5c8c9f19c.json",
+      "type": "review",
+      "domains": [
+        "assistant_info"
+      ]
+    },
+    "agent-1e35774c-c4d3-4da6-b57c-3bed36c86ebd": {
+      "file": "nodes/node-agent-1e35774c-c4d3-4da6-b57c-3bed36c86ebd.json",
+      "type": "agent",
+      "domains": [
+        "assistant_info"
+      ]
+    },
+    "55b3a3bb-ec81-4183-b05f-a28c07f7591f": {
+      "file": "nodes/node-55b3a3bb-ec81-4183-b05f-a28c07f7591f.json",
+      "type": "knowledge",
+      "domains": [
+        "frontend"
+      ]
+    },
+    "a980e734-effd-4c3f-85eb-ed5ccfb8bf06": {
+      "file": "nodes/node-a980e734-effd-4c3f-85eb-ed5ccfb8bf06.json",
+      "type": "reference",
+      "domains": [
+        "general"
+      ]
+    },
+    "review-1e35774c-c4d3-4da6-b57c-3bed36c86ebd": {
+      "file": "nodes/node-review-1e35774c-c4d3-4da6-b57c-3bed36c86ebd.json",
+      "type": "review",
+      "domains": [
+        "assistant_info"
+      ]
+    },
+    "agent-b25bd4ba-14d8-477a-ae2b-d33aa9707d8e": {
+      "file": "nodes/node-agent-b25bd4ba-14d8-477a-ae2b-d33aa9707d8e.json",
+      "type": "agent",
+      "domains": [
+        "assistant_info"
+      ]
+    },
+    "ff360807-532f-4744-b3d1-5265d30366e0": {
+      "file": "nodes/node-ff360807-532f-4744-b3d1-5265d30366e0.json",
+      "type": "knowledge",
+      "domains": [
+        "temporal_data",
+        "frontend"
+      ]
+    },
+    "a6c02304-52e3-45f5-bb55-05361fbb404f": {
+      "file": "nodes/node-a6c02304-52e3-45f5-bb55-05361fbb404f.json",
+      "type": "reference",
+      "domains": [
+        "general"
+      ]
+    },
+    "review-b25bd4ba-14d8-477a-ae2b-d33aa9707d8e": {
+      "file": "nodes/node-review-b25bd4ba-14d8-477a-ae2b-d33aa9707d8e.json",
+      "type": "review",
+      "domains": [
+        "assistant_info"
+      ]
+    },
+    "agent-d2487c74-7583-41a6-a419-2033d0baa70f": {
+      "file": "nodes/node-agent-d2487c74-7583-41a6-a419-2033d0baa70f.json",
+      "type": "agent",
+      "domains": [
+        "assistant_info"
+      ]
+    },
+    "d43867a0-fe5c-433b-bcfc-12d88d68f6fb": {
+      "file": "nodes/node-d43867a0-fe5c-433b-bcfc-12d88d68f6fb.json",
+      "type": "knowledge",
+      "domains": [
+        "temporal_data"
+      ]
+    },
+    "a5378c98-9925-4599-821a-77336c0bfcac": {
+      "file": "nodes/node-a5378c98-9925-4599-821a-77336c0bfcac.json",
+      "type": "reference",
+      "domains": [
+        "general"
+      ]
+    },
+    "review-d2487c74-7583-41a6-a419-2033d0baa70f": {
+      "file": "nodes/node-review-d2487c74-7583-41a6-a419-2033d0baa70f.json",
+      "type": "review",
+      "domains": [
+        "assistant_info"
+      ]
+    }
+  },
+  "supersededBy": {
+    "d9ce47f9-306a-44f2-a8b9-2dadef0ba520": "7d8481c5-9e3b-4fa1-94d4-649cb597720f",
+    "7d8481c5-9e3b-4fa1-94d4-649cb597720f": "3af6465e-7a42-4c77-b4cf-fceb2834cd89",
+    "3af6465e-7a42-4c77-b4cf-fceb2834cd89": "ae51461f-9d7e-4721-a3bc-916fa910fe5f",
+    "7fc29773-1841-4698-ab52-9e30189b6bcd": "e9012ecb-5606-40c5-9816-9b949b073490",
+    "e9012ecb-5606-40c5-9816-9b949b073490": "5a78918f-f96e-41c2-a8e7-0ac8355900ae",
+    "ae51461f-9d7e-4721-a3bc-916fa910fe5f": "5a78918f-f96e-41c2-a8e7-0ac8355900ae",
+    "5a78918f-f96e-41c2-a8e7-0ac8355900ae": "c72a4959-a450-400f-9771-ba6ec7cb6f47",
+    "c72a4959-a450-400f-9771-ba6ec7cb6f47": "16dca1e1-2ac1-4706-ba4e-232a853b92e0",
+    "16dca1e1-2ac1-4706-ba4e-232a853b92e0": "82bd0995-a734-4640-ba97-a97df29550d0",
+    "2c36fc50-1ba0-4b2d-bca4-a7fa60e79d2b": "693fed92-bba3-4a48-a40b-b14085746e6b",
+    "82bd0995-a734-4640-ba97-a97df29550d0": "382e08cc-5ca0-4113-90ae-4705121f373b",
+    "382e08cc-5ca0-4113-90ae-4705121f373b": "d1fac597-6c4e-4de7-b8ae-fc30097c34f3",
+    "d1fac597-6c4e-4de7-b8ae-fc30097c34f3": "55b3a3bb-ec81-4183-b05f-a28c07f7591f",
+    "55b3a3bb-ec81-4183-b05f-a28c07f7591f": "ff360807-532f-4744-b3d1-5265d30366e0",
+    "ff360807-532f-4744-b3d1-5265d30366e0": "d43867a0-fe5c-433b-bcfc-12d88d68f6fb"
+  }
+}

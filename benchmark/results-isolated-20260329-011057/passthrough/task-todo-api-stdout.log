@@ -1,0 +1,24 @@
+Done! Created `todo-api.mjs` with:
+
+**Features:**
+- **GET /todos** — Returns all todos
+- **POST /todos** — Create a todo (needs `title` in body, optional `completed`)
+- **PUT /todos** — Update a todo (needs `id` and fields to update)
+- **DELETE /todos** — Delete a todo (needs `id` in body)
+
+**Implementation:**
+- In-memory storage with auto-incrementing IDs
+- JSON request/response handling
+- Proper HTTP status codes (200, 201, 400, 404, 405)
+- Error handling for invalid JSON
+- Timestamps on creation
+
+**Run it:**
+```bash
+node todo-api.mjs
+```
+
+Or with custom port:
+```bash
+PORT=8000 node todo-api.mjs
+```

@@ -1,0 +1,20 @@
+Warning: no stdin data received in 3s, proceeding without it. If piping from a slow command, redirect stdin explicitly: < /dev/null to skip, or wait longer.
+Done! I've created a complete Space Invaders game as a standalone HTML file. Here's what's included:
+
+**Features:**
+- **Canvas rendering** - Full 2D graphics with pixel-style sprites
+- **Keyboard controls** - Arrow keys/A/D to move, spacebar to shoot
+- **Scoring** - 100 points per enemy destroyed
+- **Lives system** - Start with 3 lives, lose one when hit or enemies reach the bottom
+- **Wave progression** - Each wave increases enemy count and speed
+- **Collision detection** - Bullets vs enemies and enemy bullets vs player
+- **Game states** - Menu, playing, and game over screens with final score/wave display
+
+**How to play:**
+1. Open `space-invaders.html` in a web browser
+2. Press SPACE to start
+3. Use arrow keys or A/D to move, SPACE to shoot
+4. Destroy all enemies to advance to the next wave
+5. Game ends when you lose all 3 lives
+
+The classic green-on-black retro aesthetic is built in with smooth gameplay at 60 FPS.

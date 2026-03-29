@@ -1,0 +1,20 @@
+{
+  "id": "c72a4959-a450-400f-9771-ba6ec7cb6f47",
+  "type": "knowledge",
+  "content": "chat.html: <!DOCTYPE html>",
+  "snippet": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>iMessage Chat</title>\n    <style>\n        * {\n            margin: 0;\n            padding: 0;\n            box-sizing: border-box;\n        }\n\n        body {\n            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;\n            background-color: #000;\n            height: 100vh;\n            display: flex;\n            flex-direction: column;\n            overflow: hidden;\n        }\n\n        .chat-container…",
+  "domains": [
+    "personal_info",
+    "assistant_info",
+    "frontend"
+  ],
+  "supersedes": [
+    "5a78918f-f96e-41c2-a8e7-0ac8355900ae"
+  ],
+  "related_to": [],
+  "refs": [
+    "/Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/isolated-passthrough/chat-ui/workdir/chat.html"
+  ],
+  "timestamp": 1774747261606,
+  "source": "session:fec07cda-bd27-4b23-b344-c9964bca587d"
+}

@@ -1,0 +1,14 @@
+Done! Created `/workspace/chat.html` with a fully functional iMessage-style chat UI.
+
+**Features included:**
+- **Dark theme** — Black background with dark gray accents
+- **Message bubbles** — Blue for sent (right), gray for received (left)
+- **Timestamps** — Shows time for each message
+- **Typing indicator** — Three animated dots when "other person" is typing
+- **Send button** — Arrow button, disabled when input is empty
+- **Auto-expanding textarea** — Grows as you type
+- **Keyboard support** — Enter to send, Shift+Enter for new line
+- **Smooth animations** — Messages slide in, typing indicator bounces
+- **Auto-responses** — Simulates replies from the other person
+
+Just open `chat.html` in a browser and start typing. It's completely self-contained with no external dependencies.

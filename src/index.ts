@@ -272,7 +272,10 @@ Call multiple independent tools in parallel. Chain dependent calls sequentially 
 
 # Style
 - No emojis unless asked. Short responses. Lead with action, not reasoning.
-- Reference code as file_path:line_number. PRs as owner/repo#123.`;
+- Reference code as file_path:line_number. PRs as owner/repo#123.
+
+# Working Directory
+Always write files relative to the current working directory, not absolute paths.`;
 
 function rewriteRequest(body: Buffer): Buffer {
   if (!STRIP_ENABLED) return body;

@@ -1,0 +1,17 @@
+{
+  "id": "7fc29773-1841-4698-ab52-9e30189b6bcd",
+  "type": "knowledge",
+  "content": "space-invaders.html: <!DOCTYPE html>",
+  "snippet": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Space Invaders</title>\n    <style>\n        body {\n            margin: 0;\n            padding: 0;\n            display: flex;\n            justify-content: center;\n            align-items: center;\n            min-height: 100vh;\n            background: #000;\n            font-family: Arial, sans-serif;\n        }\n        #gameContainer {\n            position: relative;\n            width: 800px;\n            height: 600px;\n            background: #000…",
+  "domains": [
+    "personal_info",
+    "assistant_info"
+  ],
+  "supersedes": [],
+  "related_to": [],
+  "refs": [
+    "/Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/isolated-passthrough/space-invaders/workdir/space-invaders.html"
+  ],
+  "timestamp": 1774747192593,
+  "source": "session:1883a423-b7b4-448f-9491-009c4511376a"
+}

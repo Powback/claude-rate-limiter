@@ -1,0 +1,24 @@
+{
+  "id": "review-252bc7f6-a587-428c-b48d-536b8383065c",
+  "type": "review",
+  "content": "calc.html: <!DOCTYPE html>",
+  "domains": [
+    "assistant_info"
+  ],
+  "supersedes": [],
+  "related_to": [
+    "agent-252bc7f6-a587-428c-b48d-536b8383065c"
+  ],
+  "refs": [
+    "calc.html"
+  ],
+  "metadata": {
+    "files_edited": 1,
+    "files_read": 0,
+    "commits": 0,
+    "skills": [],
+    "commit_messages": []
+  },
+  "timestamp": 1774747021679,
+  "source": "powgraph-stop"
+}

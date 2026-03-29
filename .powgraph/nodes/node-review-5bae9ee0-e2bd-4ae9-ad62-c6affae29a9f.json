@@ -1,0 +1,24 @@
+{
+  "id": "review-5bae9ee0-e2bd-4ae9-ad62-c6affae29a9f",
+  "type": "review",
+  "content": "snake.html: <!DOCTYPE html>",
+  "domains": [
+    "assistant_info"
+  ],
+  "supersedes": [],
+  "related_to": [
+    "agent-5bae9ee0-e2bd-4ae9-ad62-c6affae29a9f"
+  ],
+  "refs": [
+    "/Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/isolated-passthrough/snake-game/workdir/snake.html"
+  ],
+  "metadata": {
+    "files_edited": 1,
+    "files_read": 0,
+    "commits": 0,
+    "skills": [],
+    "commit_messages": []
+  },
+  "timestamp": 1774747221865,
+  "source": "powgraph-stop"
+}

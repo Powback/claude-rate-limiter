@@ -1,0 +1,13 @@
+{
+  "id": "agent-8a980b6f-f131-439e-b6ac-eb87abee19ea",
+  "type": "agent",
+  "content": "todo.js: complete(id) {",
+  "domains": [
+    "assistant_info"
+  ],
+  "supersedes": [],
+  "related_to": [],
+  "refs": [],
+  "timestamp": 1774747374905,
+  "source": "powgraph-stop"
+}

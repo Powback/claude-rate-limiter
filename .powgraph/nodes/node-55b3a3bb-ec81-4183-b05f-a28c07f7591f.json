@@ -1,0 +1,18 @@
+{
+  "id": "55b3a3bb-ec81-4183-b05f-a28c07f7591f",
+  "type": "knowledge",
+  "content": "todo.js: toJSON() {",
+  "snippet": "  toJSON() {\n    return JSON.stringify({\n      todos: this.todos,\n      nextId: this.nextId\n    });\n  }\n\n  static fromJSON(str) {\n    const data = JSON.parse(str);\n    const instance = new TodoList();\n    instance.todos = data.todos;\n    instance.nextId = data.nextId;\n    return instance;\n  }",
+  "domains": [
+    "frontend"
+  ],
+  "supersedes": [
+    "d1fac597-6c4e-4de7-b8ae-fc30097c34f3"
+  ],
+  "related_to": [],
+  "refs": [
+    "todo.js"
+  ],
+  "timestamp": 1774747411050,
+  "source": "session:1e35774c-c4d3-4da6-b57c-3bed36c86ebd"
+}

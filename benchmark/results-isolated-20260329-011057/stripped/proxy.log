@@ -1,0 +1,48 @@
+[01:15:52] 🚀 claude-rate-limiter listening on :3129
+[01:15:52]    Upstream: https://api.anthropic.com
+[01:15:52]    Queue threshold: 85% utilization
+[01:15:52]    Max queue: 100
+[01:15:52] 
+[01:15:52]    Usage: ANTHROPIC_BASE_URL=http://localhost:3129 claude ...
+[01:15:54] 📡 / ? 170ms 
+[01:15:55] ✂️ Stripped 81.0KB (~20749 tokens): 101780 → 18785 chars [total saved: ~20749 tokens across 1 requests]
+[01:15:55] 🟢 Utilization: 5h=20% 7d=9% [five_hour] status=allowed
+[01:16:18] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 23055ms in=10 out=4472 cache_create=5779
+[01:16:18] ✂️ Stripped 81.0KB (~20749 tokens): 118845 → 35850 chars [total saved: ~41498 tokens across 2 requests]
+[01:16:19] 🟢 Utilization: 5h=20% 7d=9% [five_hour] status=allowed
+[01:16:22] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 4158ms in=8 out=280 cache_read=5779 cache_create=4379
+[01:16:23] 📡 / ? 108ms 
+[01:16:23] ✂️ Stripped 81.0KB (~20744 tokens): 101690 → 18713 chars [total saved: ~62242 tokens across 3 requests]
+[01:16:24] 🟢 Utilization: 5h=20% 7d=9% [five_hour] status=allowed
+[01:16:41] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 18509ms in=10 out=3016 cache_create=5753
+[01:16:41] ✂️ Stripped 81.0KB (~20744 tokens): 114212 → 31235 chars [total saved: ~82986 tokens across 4 requests]
+[01:16:43] 🟢 Utilization: 5h=20% 7d=9% [five_hour] status=allowed
+[01:16:47] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 5219ms in=8 out=417 cache_read=5753 cache_create=2985
+[01:16:47] 📡 / ? 106ms 
+[01:16:48] ✂️ Stripped 81.0KB (~20746 tokens): 101609 → 18626 chars [total saved: ~103732 tokens across 5 requests]
+[01:16:48] 🟢 Utilization: 5h=20% 7d=9% [five_hour] status=allowed
+[01:16:56] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 8183ms in=10 out=1612 cache_create=5733
+[01:16:56] ✂️ Stripped 81.0KB (~20746 tokens): 107812 → 24829 chars [total saved: ~124478 tokens across 6 requests]
+[01:16:56] 🟢 Utilization: 5h=21% 7d=9% [five_hour] status=allowed
+[01:16:59] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 3053ms in=8 out=377 cache_read=5733 cache_create=1633
+[01:17:00] 📡 / ? 104ms 
+[01:17:00] ✂️ Stripped 81.0KB (~20744 tokens): 101624 → 18649 chars [total saved: ~145222 tokens across 7 requests]
+[01:17:01] 🟢 Utilization: 5h=21% 7d=9% [five_hour] status=allowed
+[01:17:23] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 23295ms in=10 out=3347 cache_create=5733
+[01:17:23] ✂️ Stripped 81.0KB (~20744 tokens): 116472 → 33497 chars [total saved: ~165966 tokens across 8 requests]
+[01:17:24] 🟢 Utilization: 5h=21% 7d=9% [five_hour] status=allowed
+[01:17:28] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 4484ms in=8 out=440 cache_read=5733 cache_create=3369
+[01:17:28] 📡 / ? 103ms 
+[01:17:29] ✂️ Stripped 81.0KB (~20744 tokens): 101625 → 18650 chars [total saved: ~186710 tokens across 9 requests]
+[01:17:30] 🟢 Utilization: 5h=21% 7d=9% [five_hour] status=allowed
+[01:17:56] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 27678ms in=10 out=4875 cache_create=5734
+[01:17:56] ✂️ Stripped 81.0KB (~20744 tokens): 122519 → 39544 chars [total saved: ~207454 tokens across 10 requests]
+[01:17:59] 🟢 Utilization: 5h=21% 7d=9% [five_hour] status=allowed
+[01:18:04] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 7562ms in=8 out=553 cache_read=5734 cache_create=4907
+[01:18:05] 📡 / ? 106ms 
+[01:18:05] ✂️ Stripped 81.1KB (~20751 tokens): 101760 → 18757 chars [total saved: ~228205 tokens across 11 requests]
+[01:18:06] 🟢 Utilization: 5h=21% 7d=9% [five_hour] status=allowed
+[01:18:21] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 15764ms in=10 out=3140 cache_create=5769
+[01:18:21] ✂️ Stripped 81.1KB (~20751 tokens): 115667 → 32664 chars [total saved: ~248956 tokens across 12 requests]
+[01:18:22] 🟢 Utilization: 5h=21% 7d=9% [five_hour] status=allowed
+[01:18:27] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 6532ms in=8 out=699 cache_read=5769 cache_create=3167

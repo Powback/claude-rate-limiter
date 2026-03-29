@@ -1,0 +1,24 @@
+{
+  "id": "review-fec07cda-bd27-4b23-b344-c9964bca587d",
+  "type": "review",
+  "content": "chat.html: <!DOCTYPE html>",
+  "domains": [
+    "assistant_info"
+  ],
+  "supersedes": [],
+  "related_to": [
+    "agent-fec07cda-bd27-4b23-b344-c9964bca587d"
+  ],
+  "refs": [
+    "/Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/isolated-passthrough/chat-ui/workdir/chat.html"
+  ],
+  "metadata": {
+    "files_edited": 1,
+    "files_read": 0,
+    "commits": 0,
+    "skills": [],
+    "commit_messages": []
+  },
+  "timestamp": 1774747267371,
+  "source": "powgraph-stop"
+}

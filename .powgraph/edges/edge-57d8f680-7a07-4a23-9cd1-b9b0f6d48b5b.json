@@ -1,0 +1,11 @@
+{
+  "id": "57d8f680-7a07-4a23-9cd1-b9b0f6d48b5b",
+  "from": "agent-5bae9ee0-e2bd-4ae9-ad62-c6affae29a9f",
+  "to": "e9012ecb-5606-40c5-9816-9b949b073490",
+  "type": "touched",
+  "metadata": {
+    "file": "/Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/isolated-passthrough/snake-game/workdir/snake.html",
+    "tool": "Write"
+  },
+  "timestamp": 1774747217267
+}

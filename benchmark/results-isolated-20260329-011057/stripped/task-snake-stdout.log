@@ -1,0 +1,18 @@
+Done! Created **snake.html** with a fully functional Snake game featuring:
+
+✅ **Canvas-based rendering** — 400×400 grid with visual feedback  
+✅ **Arrow key controls** — smooth directional movement with direction queue  
+✅ **Food spawning** — random placement avoiding the snake  
+✅ **Score tracking** — current score + persistent high score (localStorage)  
+✅ **Game over detection** — wall and self-collision handling  
+✅ **Restart button** — full game reset  
+
+**Bonus features:**
+- Start/Pause/Resume controls
+- Smooth 100ms game loop
+- Visual grid background
+- Color-coded snake head vs body
+- Final score display on game over
+- Responsive, styled UI with gradient background
+
+Just open the file in a browser and click **Start Game** to play!

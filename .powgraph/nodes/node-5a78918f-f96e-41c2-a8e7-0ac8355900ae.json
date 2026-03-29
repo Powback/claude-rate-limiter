@@ -1,0 +1,23 @@
+{
+  "id": "5a78918f-f96e-41c2-a8e7-0ac8355900ae",
+  "type": "knowledge",
+  "content": "todo-api.mjs: import http from 'http';",
+  "snippet": "import http from 'http';\nimport url from 'url';\n\nconst todos = new Map();\nlet nextId = 1;\n\nconst server = http.createServer(async (req, res) => {\n  const parsedUrl = url.parse(req.url, true);\n  const pathname = parsedUrl.pathname;\n  const method = req.method;\n\n  // Set CORS headers\n  res.setHeader('Content-Type', 'application/json');\n  res.setHeader('Access-Control-Allow-Origin', '*');\n  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');\n  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');\n\n  // Handle OPTIONS\n  if (method === 'OPTIONS') {\n    res.wri…",
+  "domains": [
+    "personal_info",
+    "preferences",
+    "assistant_info",
+    "api",
+    "frontend"
+  ],
+  "supersedes": [
+    "e9012ecb-5606-40c5-9816-9b949b073490",
+    "ae51461f-9d7e-4721-a3bc-916fa910fe5f"
+  ],
+  "related_to": [],
+  "refs": [
+    "/Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/isolated-passthrough/todo-api/workdir/todo-api.mjs"
+  ],
+  "timestamp": 1774747234001,
+  "source": "session:d3732413-8112-415d-9e26-ffb72556503e"
+}

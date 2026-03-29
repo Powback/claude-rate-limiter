@@ -1,0 +1,16 @@
+{
+  "id": "d9ce47f9-306a-44f2-a8b9-2dadef0ba520",
+  "type": "knowledge",
+  "content": "snake.html: <!DOCTYPE html>",
+  "snippet": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Snake Game</title>\n    <style>\n        * {\n            margin: 0;\n            padding: 0;\n            box-sizing: border-box;\n        }\n\n        body {\n            display: flex;\n            justify-content: center;\n            align-items: center;\n            min-height: 100vh;\n            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;\n        }\n\n       …",
+  "domains": [
+    "frontend"
+  ],
+  "supersedes": [],
+  "related_to": [],
+  "refs": [
+    "snake.html"
+  ],
+  "timestamp": 1774746932975,
+  "source": "session:e3436e34-b864-4624-aca3-a5fea94c1047"
+}

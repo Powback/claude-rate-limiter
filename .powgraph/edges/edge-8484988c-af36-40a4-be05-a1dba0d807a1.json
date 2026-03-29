@@ -1,0 +1,10 @@
+{
+  "id": "8484988c-af36-40a4-be05-a1dba0d807a1",
+  "from": "agent-b25bd4ba-14d8-477a-ae2b-d33aa9707d8e",
+  "to": "skill-javascript",
+  "type": "demonstrates",
+  "metadata": {
+    "confidence": 0.2
+  },
+  "timestamp": 1774747433802
+}

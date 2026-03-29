@@ -1,0 +1,11 @@
+{
+  "id": "6a3d369f-65dd-437b-ac81-d2f1f53304fd",
+  "from": "agent-1e35774c-c4d3-4da6-b57c-3bed36c86ebd",
+  "to": "a980e734-effd-4c3f-85eb-ed5ccfb8bf06",
+  "type": "consulted",
+  "metadata": {
+    "file": "todo.js",
+    "weight": 0.3
+  },
+  "timestamp": 1774747407852
+}

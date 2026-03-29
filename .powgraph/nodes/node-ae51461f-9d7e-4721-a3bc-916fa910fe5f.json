@@ -1,0 +1,18 @@
+{
+  "id": "ae51461f-9d7e-4721-a3bc-916fa910fe5f",
+  "type": "knowledge",
+  "content": "calc.html: <!DOCTYPE html>",
+  "snippet": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Scientific Calculator</title>\n    <style>\n        * {\n            margin: 0;\n            padding: 0;\n            box-sizing: border-box;\n        }\n\n        body {\n            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);\n            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;\n            display: flex;\n            justify-content: center;\n            align-items: center;\n    …",
+  "domains": [
+    "frontend"
+  ],
+  "supersedes": [
+    "3af6465e-7a42-4c77-b4cf-fceb2834cd89"
+  ],
+  "related_to": [],
+  "refs": [
+    "calc.html"
+  ],
+  "timestamp": 1774747016340,
+  "source": "session:252bc7f6-a587-428c-b48d-536b8383065c"
+}

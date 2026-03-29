@@ -1,0 +1,13 @@
+{
+  "id": "agent-1268b20f-9c91-4d99-b5be-11b48b35a32e",
+  "type": "agent",
+  "content": "calc.html: <!DOCTYPE html>",
+  "domains": [
+    "assistant_info"
+  ],
+  "supersedes": [],
+  "related_to": [],
+  "refs": [],
+  "timestamp": 1774747302991,
+  "source": "powgraph-stop"
+}

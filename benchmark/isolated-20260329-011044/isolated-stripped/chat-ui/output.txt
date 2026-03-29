@@ -1,0 +1,17 @@
+Warning: no stdin data received in 3s, proceeding without it. If piping from a slow command, redirect stdin explicitly: < /dev/null to skip, or wait longer.
+Created `chat.html` with a fully functional iMessage-style chat UI:
+
+**Features:**
+- **Dark theme** with proper color scheme (#1a1a1a background)
+- **Message bubbles**: blue right-aligned for sent, gray left-aligned for received
+- **Timestamps** on each message
+- **Typing indicator** with animated bouncing dots
+- **Auto-growing textarea** input that expands up to 100px
+- **Send button** that's disabled when input is empty
+- **Keyboard shortcuts**: Enter to send, Shift+Enter for newlines
+- **Auto-scroll** to latest message
+- **Simulated responses** with random replies and typing delay
+- **Animations**: fade-in for messages, bounce for typing dots
+- **No external dependencies** — pure HTML/CSS/JavaScript
+
+Open it in a browser and type a message to see it work. Messages trigger a typing indicator and a simulated response after 2 seconds.

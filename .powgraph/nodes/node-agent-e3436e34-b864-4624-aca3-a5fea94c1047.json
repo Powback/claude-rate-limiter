@@ -1,0 +1,13 @@
+{
+  "id": "agent-e3436e34-b864-4624-aca3-a5fea94c1047",
+  "type": "agent",
+  "content": "snake.html: <!DOCTYPE html>",
+  "domains": [
+    "assistant_info"
+  ],
+  "supersedes": [],
+  "related_to": [],
+  "refs": [],
+  "timestamp": 1774746937238,
+  "source": "powgraph-stop"
+}

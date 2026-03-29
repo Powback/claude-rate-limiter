@@ -1,0 +1,28 @@
+Done! Created `/workspace/todo-api.mjs` with a complete REST API that:
+
+- **GET /todos** — returns all todos
+- **GET /todos/:id** — returns a single todo
+- **POST /todos** — creates a new todo (requires `title`, optional `completed`)
+- **PUT /todos/:id** — updates a todo (can update `title` and/or `completed`)
+- **DELETE /todos/:id** — deletes a todo
+
+**Features:**
+- Uses only Node.js built-in `http` and `url` modules
+- In-memory storage with auto-incrementing IDs
+- JSON request/response bodies
+- Proper HTTP status codes (201 for creation, 404 for not found, 400 for bad requests)
+- CORS headers included
+- Starts with 2 sample todos
+
+**Run it:**
+```bash
+node todo-api.mjs
+```
+
+Server runs on port 3000 (or `$PORT` env var). Test with curl:
+```bash
+curl http://localhost:3000/todos
+curl -X POST http://localhost:3000/todos -H "Content-Type: application/json" -d '{"title":"Buy milk"}'
+curl -X PUT http://localhost:3000/todos/1 -H "Content-Type: application/json" -d '{"completed":true}'
+curl -X DELETE http://localhost:3000/todos/1
+```

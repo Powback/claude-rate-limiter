@@ -1,0 +1,15 @@
+{
+  "id": "a980e734-effd-4c3f-85eb-ed5ccfb8bf06",
+  "type": "reference",
+  "content": "Read todo.js",
+  "domains": [
+    "general"
+  ],
+  "supersedes": [],
+  "related_to": [],
+  "refs": [
+    "todo.js"
+  ],
+  "timestamp": 1774747407852,
+  "source": "session:1e35774c-c4d3-4da6-b57c-3bed36c86ebd"
+}

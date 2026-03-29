@@ -1,0 +1,10 @@
+{
+  "id": "4bc5c57b-9072-426e-87b9-6bad72b091ae",
+  "from": "skill-javascript",
+  "to": "todo.js",
+  "type": "skill_for",
+  "metadata": {
+    "skill": "JavaScript"
+  },
+  "timestamp": 1774747401666
+}

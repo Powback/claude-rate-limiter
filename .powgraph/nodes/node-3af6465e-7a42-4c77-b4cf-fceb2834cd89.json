@@ -1,0 +1,19 @@
+{
+  "id": "3af6465e-7a42-4c77-b4cf-fceb2834cd89",
+  "type": "knowledge",
+  "content": "chat.html: <!DOCTYPE html>",
+  "snippet": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Chat</title>\n    <style>\n        * {\n            margin: 0;\n            padding: 0;\n            box-sizing: border-box;\n        }\n\n        body {\n            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;\n            background: #0a0a0a;\n            color: #fff;\n            height: 100vh;\n            display: flex;\n            flex-direction: column;\n        }\n\n        .chat-container {\n            di…",
+  "domains": [
+    "assistant_info",
+    "frontend"
+  ],
+  "supersedes": [
+    "7d8481c5-9e3b-4fa1-94d4-649cb597720f"
+  ],
+  "related_to": [],
+  "refs": [
+    "chat.html"
+  ],
+  "timestamp": 1774746978873,
+  "source": "session:db8e5d93-c8aa-429a-8218-c6c39b928ba4"
+}

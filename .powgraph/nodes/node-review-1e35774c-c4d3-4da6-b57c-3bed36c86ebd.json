@@ -1,0 +1,27 @@
+{
+  "id": "review-1e35774c-c4d3-4da6-b57c-3bed36c86ebd",
+  "type": "review",
+  "content": "todo.js: toJSON() {",
+  "domains": [
+    "assistant_info"
+  ],
+  "supersedes": [],
+  "related_to": [
+    "agent-1e35774c-c4d3-4da6-b57c-3bed36c86ebd"
+  ],
+  "refs": [
+    "todo.js",
+    "todo.js"
+  ],
+  "metadata": {
+    "files_edited": 1,
+    "files_read": 1,
+    "commits": 0,
+    "skills": [
+      "JavaScript"
+    ],
+    "commit_messages": []
+  },
+  "timestamp": 1774747413191,
+  "source": "powgraph-stop"
+}

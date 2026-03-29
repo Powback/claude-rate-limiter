@@ -1,0 +1,24 @@
+{
+  "id": "review-9f2e9504-bc1f-46ef-9cb9-b60291665aa2",
+  "type": "review",
+  "content": "space-invaders.html: <!DOCTYPE html>",
+  "domains": [
+    "assistant_info"
+  ],
+  "supersedes": [],
+  "related_to": [
+    "agent-9f2e9504-bc1f-46ef-9cb9-b60291665aa2"
+  ],
+  "refs": [
+    "space-invaders.html"
+  ],
+  "metadata": {
+    "files_edited": 1,
+    "files_read": 0,
+    "commits": 0,
+    "skills": [],
+    "commit_messages": []
+  },
+  "timestamp": 1774746913250,
+  "source": "powgraph-stop"
+}

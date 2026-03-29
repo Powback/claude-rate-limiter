@@ -1,0 +1,13 @@
+{
+  "id": "agent-e956ffcf-2817-4afb-9bc8-46798f613f06",
+  "type": "agent",
+  "content": "todo-api.mjs: import http from 'http';",
+  "domains": [
+    "assistant_info"
+  ],
+  "supersedes": [],
+  "related_to": [],
+  "refs": [],
+  "timestamp": 1774746956767,
+  "source": "powgraph-stop"
+}

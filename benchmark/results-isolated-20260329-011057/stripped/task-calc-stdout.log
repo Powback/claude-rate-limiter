@@ -1,0 +1,20 @@
+Done! I've created a comprehensive scientific calculator and saved it as **calc.html** in `/workspace`.
+
+**Features included:**
+- **Basic operations**: +, −, ×, ÷
+- **Parentheses**: Full support for nested expressions
+- **Trig functions**: sin, cos, tan with DEG/RAD toggle
+- **Math functions**: √, log (base 10), ln (natural log), x²
+- **Constants**: π and e
+- **Dark theme**: Deep blue with teal accents and green text display
+- **Keyboard support**: 
+  - Numbers and operators via keyboard
+  - Enter to calculate, Backspace to delete, C to clear
+  - Full key mapping for all functions
+- **Calculation history**: 
+  - Last result shown above main display
+  - Expandable history panel with clickable items
+  - Up to 50 recent calculations stored
+- **Extra polish**: Smooth animations, error handling, responsive design
+
+Just open the file in any modern browser. All features work standalone with no external dependencies.

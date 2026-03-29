@@ -1,0 +1,18 @@
+{
+  "id": "d43867a0-fe5c-433b-bcfc-12d88d68f6fb",
+  "type": "knowledge",
+  "content": "todo.js: filter(priority) {",
+  "snippet": "  filter(priority) {\n    return this.todos.filter(todo => todo.priority === priority);\n  }\n\n  overdue() {\n    const today = new Date();\n    today.setHours(0, 0, 0, 0);\n    return this.todos.filter(todo =>\n      todo.dueDate && new Date(todo.dueDate) < today && !todo.done\n    );\n  }\n\n  stats() {",
+  "domains": [
+    "temporal_data"
+  ],
+  "supersedes": [
+    "ff360807-532f-4744-b3d1-5265d30366e0"
+  ],
+  "related_to": [],
+  "refs": [
+    "todo.js"
+  ],
+  "timestamp": 1774747443665,
+  "source": "session:d2487c74-7583-41a6-a419-2033d0baa70f"
+}

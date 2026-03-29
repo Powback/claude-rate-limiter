@@ -1,0 +1,24 @@
+{
+  "id": "review-e3436e34-b864-4624-aca3-a5fea94c1047",
+  "type": "review",
+  "content": "snake.html: <!DOCTYPE html>",
+  "domains": [
+    "assistant_info"
+  ],
+  "supersedes": [],
+  "related_to": [
+    "agent-e3436e34-b864-4624-aca3-a5fea94c1047"
+  ],
+  "refs": [
+    "snake.html"
+  ],
+  "metadata": {
+    "files_edited": 1,
+    "files_read": 0,
+    "commits": 0,
+    "skills": [],
+    "commit_messages": []
+  },
+  "timestamp": 1774746937238,
+  "source": "powgraph-stop"
+}

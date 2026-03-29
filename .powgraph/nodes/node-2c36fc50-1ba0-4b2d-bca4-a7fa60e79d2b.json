@@ -1,0 +1,16 @@
+{
+  "id": "2c36fc50-1ba0-4b2d-bca4-a7fa60e79d2b",
+  "type": "knowledge",
+  "content": "space-invaders.html: <!DOCTYPE html>",
+  "snippet": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Space Invaders</title>\n    <style>\n        body {\n            margin: 0;\n            padding: 20px;\n            display: flex;\n            flex-direction: column;\n            align-items: center;\n            justify-content: center;\n            min-height: 100vh;\n            background-color: #000;\n            font-family: Arial, sans-serif;\n        }\n\n        canvas {\n            border: 3px solid #00ff00;\n            background-color: #000;\n…",
+  "domains": [
+    "general"
+  ],
+  "supersedes": [],
+  "related_to": [],
+  "refs": [
+    "space-invaders.html"
+  ],
+  "timestamp": 1774746907686,
+  "source": "session:9f2e9504-bc1f-46ef-9cb9-b60291665aa2"
+}

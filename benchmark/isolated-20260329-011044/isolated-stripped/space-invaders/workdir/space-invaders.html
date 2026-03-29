@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Invaders</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #000;
+            font-family: Arial, sans-serif;
+        }
+
+        canvas {
+            border: 3px solid #00ff00;
+            background-color: #000;
+            display: block;
+            margin: 20px 0;
+        }
+
+        #hud {
+            color: #00ff00;
+            font-size: 18px;
+            display: flex;
+            gap: 40px;
+            margin-bottom: 10px;
+        }
+
+        #gameOver {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.9);
+            color: #00ff00;
+            padding: 40px;
+            border: 3px solid #00ff00;
+            text-align: center;
+            display: none;
+            z-index: 1000;
+            min-width: 300px;
+        }
+
+        #gameOver h1 {
+            margin: 0 0 20px 0;
+            font-size: 36px;
+        }
+
+        #gameOver p {
+            font-size: 20px;
+            margin: 10px 0;
+        }
+
+        #gameOver button {
+            margin-top: 20px;
+            padding: 10px 30px;
+            background-color: #00ff00;
+            color: #000;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        #gameOver button:hover {
+            background-color: #00cc00;
+        }
+
+        .instructions {
+            color: #00ff00;
+            text-align: center;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="color: #00ff00; margin: 0 0 10px 0;">SPACE INVADERS</h1>
+    <div id="hud">
+        <div>Score: <span id="score">0</span></div>
+        <div>Lives: <span id="lives">3</span></div>
+        <div>Wave: <span id="wave">1</span></div>
+    </div>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <div class="instructions">
+        ← → Move | SPACE Shoot | Press SPACE to Start
+    </div>
+
+    <div id="gameOver">
+        <h1 id="gameOverTitle">GAME OVER</h1>
+        <p>Final Score: <span id="finalScore">0</span></p>
+        <p>Wave Reached: <span id="finalWave">1</span></p>
+        <button onclick="location.reload()">Play Again</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Game states
+        const GAME_STATE = {
+            MENU: 'menu',
+            PLAYING: 'playing',
+            GAME_OVER: 'gameOver'
+        };
+
+        // Game variables
+        let gameState = GAME_STATE.MENU;
+        let score = 0;
+        let lives = 3;
+        let wave = 1;
+        let gameStarted = false;
+
+        // Player
+        const player = {
+            x: canvas.width / 2 - 15,
+            y: canvas.height - 40,
+            width: 30,
+            height: 30,
+            speed: 5,
+            dx: 0
+        };
+
+        // Bullets
+        let bullets = [];
+        const bulletSpeed = 7;
+
+        // Enemies
+        let enemies = [];
+        let enemyBullets = [];
+
+        // Input handling
+        const keys = {};
+        window.addEventListener('keydown', (e) => {
+            keys[e.key] = true;
+
+            if (e.key === ' ') {
+                e.preventDefault();
+                if (gameState === GAME_STATE.MENU) {
+                    startGame();
+                } else if (gameState === GAME_STATE.PLAYING) {
+                    shoot();
+                }
+            }
+        });
+
+        window.addEventListener('keyup', (e) => {
+            keys[e.key] = false;
+        });
+
+        function startGame() {
+            gameState = GAME_STATE.PLAYING;
+            gameStarted = true;
+            score = 0;
+            lives = 3;
+            wave = 1;
+            bullets = [];
+            enemies = [];
+            enemyBullets = [];
+            spawnWave();
+        }
+
+        function spawnWave() {
+            enemies = [];
+            const enemyCount = 3 + wave;
+            const spacing = canvas.width / (enemyCount + 1);
+
+            for (let i = 0; i < enemyCount; i++) {
+                enemies.push({
+                    x: spacing * (i + 1),
+                    y: 30 + (wave - 1) * 10,
+                    width: 20,
+                    height: 20,
+                    speed: 2 + wave * 0.5,
+                    shootChance: 0.002 + wave * 0.0005,
+                    direction: 1
+                });
+            }
+        }
+
+        function shoot() {
+            bullets.push({
+                x: player.x + player.width / 2 - 2,
+                y: player.y,
+                width: 4,
+                height: 10,
+                speed: bulletSpeed
+            });
+        }
+
+        function update() {
+            if (gameState !== GAME_STATE.PLAYING) return;
+
+            // Update player
+            if (keys['ArrowLeft'] || keys['a']) {
+                player.dx = -player.speed;
+            } else if (keys['ArrowRight'] || keys['d']) {
+                player.dx = player.speed;
+            } else {
+                player.dx = 0;
+            }
+
+            player.x += player.dx;
+
+            // Boundary checking
+            if (player.x < 0) player.x = 0;
+            if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
+
+            // Update bullets
+            for (let i = bullets.length - 1; i >= 0; i--) {
+                bullets[i].y -= bullets[i].speed;
+
+                if (bullets[i].y < 0) {
+                    bullets.splice(i, 1);
+                    continue;
+                }
+
+                // Check collision with enemies
+                for (let j = enemies.length - 1; j >= 0; j--) {
+                    if (checkCollision(bullets[i], enemies[j])) {
+                        score += 100;
+                        bullets.splice(i, 1);
+                        enemies.splice(j, 1);
+                        break;
+                    }
+                }
+            }
+
+            // Update enemies
+            let moveDown = false;
+
+            for (let i = 0; i < enemies.length; i++) {
+                enemies[i].x += enemies[i].speed * enemies[i].direction;
+
+                if (enemies[i].x <= 0 || enemies[i].x + enemies[i].width >= canvas.width) {
+                    moveDown = true;
+                }
+
+                // Random shooting
+                if (Math.random() < enemies[i].shootChance) {
+                    enemyBullets.push({
+                        x: enemies[i].x + enemies[i].width / 2 - 2,
+                        y: enemies[i].y + enemies[i].height,
+                        width: 4,
+                        height: 8,
+                        speed: 4
+                    });
+                }
+
+                // Check if enemy reached bottom
+                if (enemies[i].y > canvas.height) {
+                    lives--;
+                    if (lives <= 0) {
+                        endGame();
+                        return;
+                    }
+                    enemyBullets = [];
+                    spawnWave();
+                    return;
+                }
+            }
+
+            if (moveDown) {
+                for (let i = 0; i < enemies.length; i++) {
+                    enemies[i].direction *= -1;
+                    enemies[i].y += 20;
+                }
+            }
+
+            // Update enemy bullets
+            for (let i = enemyBullets.length - 1; i >= 0; i--) {
+                enemyBullets[i].y += enemyBullets[i].speed;
+
+                if (enemyBullets[i].y > canvas.height) {
+                    enemyBullets.splice(i, 1);
+                    continue;
+                }
+
+                // Check collision with player
+                if (checkCollision(enemyBullets[i], player)) {
+                    lives--;
+                    enemyBullets.splice(i, 1);
+
+                    if (lives <= 0) {
+                        endGame();
+                        return;
+                    }
+                }
+            }
+
+            // Check if wave cleared
+            if (enemies.length === 0) {
+                wave++;
+                spawnWave();
+            }
+
+            // Update HUD
+            document.getElementById('score').textContent = score;
+            document.getElementById('lives').textContent = lives;
+            document.getElementById('wave').textContent = wave;
+        }
+
+        function checkCollision(rect1, rect2) {
+            return rect1.x < rect2.x + rect2.width &&
+                   rect1.x + rect1.width > rect2.x &&
+                   rect1.y < rect2.y + rect2.height &&
+                   rect1.y + rect1.height > rect2.y;
+        }
+
+        function endGame() {
+            gameState = GAME_STATE.GAME_OVER;
+            document.getElementById('finalScore').textContent = score;
+            document.getElementById('finalWave').textContent = wave;
+            document.getElementById('gameOver').style.display = 'block';
+        }
+
+        function draw() {
+            // Clear canvas
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            if (gameState === GAME_STATE.MENU) {
+                drawMenu();
+            } else if (gameState === GAME_STATE.PLAYING) {
+                drawGame();
+            }
+        }
+
+        function drawMenu() {
+            ctx.fillStyle = '#00ff00';
+            ctx.font = 'bold 48px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('SPACE INVADERS', canvas.width / 2, 100);
+
+            ctx.font = '24px Arial';
+            ctx.fillText('Press SPACE to Start', canvas.width / 2, 200);
+
+            ctx.font = '18px Arial';
+            ctx.textAlign = 'left';
+            ctx.fillText('Controls:', 50, 300);
+            ctx.fillText('← → : Move', 50, 340);
+            ctx.fillText('SPACE : Shoot', 50, 380);
+
+            ctx.fillText('Destroy all enemies to advance to the next wave.', 50, 450);
+            ctx.fillText('Avoid enemy fire. You have 3 lives.', 50, 490);
+        }
+
+        function drawGame() {
+            // Draw player
+            drawPlayer();
+
+            // Draw bullets
+            ctx.fillStyle = '#00ff00';
+            for (let bullet of bullets) {
+                ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
+            }
+
+            // Draw enemies
+            ctx.fillStyle = '#ff0000';
+            for (let enemy of enemies) {
+                ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
+                ctx.fillStyle = '#ff6600';
+                ctx.fillRect(enemy.x + 5, enemy.y + 5, 5, 5);
+                ctx.fillRect(enemy.x + 10, enemy.y + 5, 5, 5);
+                ctx.fillStyle = '#ff0000';
+            }
+
+            // Draw enemy bullets
+            ctx.fillStyle = '#ff6600';
+            for (let bullet of enemyBullets) {
+                ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
+            }
+        }
+
+        function drawPlayer() {
+            ctx.fillStyle = '#00ff00';
+            // Body
+            ctx.fillRect(player.x + 10, player.y, 10, 20);
+            // Left wing
+            ctx.fillRect(player.x, player.y + 10, 10, 10);
+            // Right wing
+            ctx.fillRect(player.x + 20, player.y + 10, 10, 10);
+            // Cockpit
+            ctx.fillStyle = '#00cc00';
+            ctx.fillRect(player.x + 12, player.y + 5, 6, 6);
+        }
+
+        function gameLoop() {
+            update();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Start the game loop
+        gameLoop();
+    </script>
+</body>
+</html>

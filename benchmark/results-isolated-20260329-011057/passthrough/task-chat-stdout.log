@@ -1,0 +1,11 @@
+Done! I've created a standalone iMessage-style chat UI with:
+
+- **Dark theme** — black background (#0a0a0a) with dark gray elements
+- **Blue sent bubbles** — messages you send appear in blue (#007aff)
+- **Gray received bubbles** — incoming messages appear in gray (#454545)
+- **Send button** — blue up arrow that's disabled until you type
+- **Timestamps** — displayed below each message
+- **Typing indicator** — animated three dots that appear when "receiving" a message
+- **Interactive chat** — send messages with Enter or click the button; the app simulates responses
+
+The file is saved as `chat.html` and works entirely standalone. It includes sample messages to show it in action, smooth animations, and a responsive design. Just open it in a browser to chat!

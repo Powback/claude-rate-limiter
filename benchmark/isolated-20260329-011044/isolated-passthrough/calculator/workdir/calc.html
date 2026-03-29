@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scientific Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #e0e0e0;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 20px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .calculator {
+            background: #0f3460;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .display-area {
+            background: #1a1a2e;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .previous-operand {
+            font-size: 18px;
+            color: #888;
+            min-height: 24px;
+        }
+
+        .current-operand {
+            font-size: 32px;
+            font-weight: bold;
+            color: #00d4ff;
+            word-wrap: break-word;
+            word-break: break-all;
+        }
+
+        .buttons-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        button {
+            padding: 15px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: white;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .number, .decimal {
+            background: #16213e;
+            border: 1px solid #00d4ff;
+        }
+
+        .number:hover {
+            background: #1f2e45;
+        }
+
+        .operator {
+            background: #e94560;
+            font-size: 18px;
+        }
+
+        .operator:hover {
+            background: #ff5a7a;
+        }
+
+        .equals {
+            background: #00d4ff;
+            color: #0f3460;
+            grid-column: span 2;
+            font-size: 18px;
+        }
+
+        .equals:hover {
+            background: #00ffff;
+        }
+
+        .clear {
+            background: #ff6b6b;
+            grid-column: span 2;
+        }
+
+        .clear:hover {
+            background: #ff8787;
+        }
+
+        .delete {
+            background: #ff9100;
+        }
+
+        .delete:hover {
+            background: #ffb100;
+        }
+
+        .function {
+            background: #3d7a8a;
+            font-size: 14px;
+        }
+
+        .function:hover {
+            background: #4a9aaa;
+        }
+
+        .constant {
+            background: #5a3d6a;
+            font-size: 14px;
+        }
+
+        .constant:hover {
+            background: #7a5d8a;
+        }
+
+        .history-panel {
+            background: #0f3460;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-height: 600px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .history-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #00d4ff;
+        }
+
+        .history-list {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .history-item {
+            background: #1a1a2e;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-left: 3px solid #00d4ff;
+        }
+
+        .history-item:hover {
+            background: #252535;
+            transform: translateX(5px);
+        }
+
+        .history-item-expression {
+            color: #888;
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        .history-item-result {
+            color: #00d4ff;
+            font-weight: bold;
+        }
+
+        .clear-history {
+            background: #ff6b6b;
+            color: white;
+            padding: 8px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-top: 10px;
+            transition: all 0.2s;
+        }
+
+        .clear-history:hover {
+            background: #ff8787;
+        }
+
+        .empty-history {
+            color: #666;
+            text-align: center;
+            padding: 20px 10px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .history-panel {
+                max-height: 300px;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1a1a2e;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #00d4ff;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00ffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="calculator">
+            <div class="display-area">
+                <div class="previous-operand" id="previous"></div>
+                <div class="current-operand" id="current">0</div>
+            </div>
+
+            <div class="buttons-grid">
+                <!-- Row 1: Clear, Delete, Parentheses, Divide -->
+                <button class="clear" onclick="clearDisplay()">AC</button>
+                <button class="delete" onclick="deleteLast()">DEL</button>
+                <button class="operator" onclick="appendInput('(')">(</button>
+                <button class="operator" onclick="appendInput(')')">)</button>
+
+                <!-- Row 2: Trig -->
+                <button class="function" onclick="appendInput('sin(')">sin</button>
+                <button class="function" onclick="appendInput('cos(')">cos</button>
+                <button class="function" onclick="appendInput('tan(')">tan</button>
+                <button class="operator" onclick="appendInput('/')">÷</button>
+
+                <!-- Row 3: Log functions -->
+                <button class="function" onclick="appendInput('log(')">log</button>
+                <button class="function" onclick="appendInput('ln(')">ln</button>
+                <button class="function" onclick="appendInput('sqrt(')">√</button>
+                <button class="operator" onclick="appendInput('*')">×</button>
+
+                <!-- Row 4: Constants -->
+                <button class="constant" onclick="appendInput('π')">π</button>
+                <button class="constant" onclick="appendInput('e')">e</button>
+                <button class="number" onclick="appendInput('7')">7</button>
+                <button class="number" onclick="appendInput('8')">8</button>
+
+                <!-- Row 5: Numbers -->
+                <button class="number" onclick="appendInput('9')">9</button>
+                <button class="operator" onclick="appendInput('-')">−</button>
+                <button class="number" onclick="appendInput('4')">4</button>
+                <button class="number" onclick="appendInput('5')">5</button>
+
+                <!-- Row 6: More numbers -->
+                <button class="number" onclick="appendInput('6')">6</button>
+                <button class="operator" onclick="appendInput('+')">+</button>
+                <button class="number" onclick="appendInput('1')">1</button>
+                <button class="number" onclick="appendInput('2')">2</button>
+
+                <!-- Row 7: Final numbers -->
+                <button class="number" onclick="appendInput('3')">3</button>
+                <button class="decimal" onclick="appendInput('.')">.</button>
+                <button class="number" onclick="appendInput('0')" style="grid-column: span 2;">0</button>
+
+                <!-- Row 8: Equals -->
+                <button class="equals" onclick="calculate()">=</button>
+            </div>
+        </div>
+
+        <div class="history-panel">
+            <div class="history-title">History</div>
+            <div class="history-list" id="historyList">
+                <div class="empty-history">No calculations yet</div>
+            </div>
+            <button class="clear-history" onclick="clearHistory()">Clear History</button>
+        </div>
+    </div>
+
+    <script>
+        let history = JSON.parse(localStorage.getItem('calcHistory')) || [];
+        let currentInput = '0';
+        let previousInput = '';
+        let operation = null;
+
+        const currentDisplay = document.getElementById('current');
+        const previousDisplay = document.getElementById('previous');
+        const historyList = document.getElementById('historyList');
+
+        function updateDisplay() {
+            currentDisplay.textContent = currentInput || '0';
+            previousDisplay.textContent = previousInput;
+        }
+
+        function appendInput(value) {
+            if (currentInput === '0' && value !== '.' && !isOperator(value)) {
+                currentInput = value;
+            } else if (value === '.' && currentInput.includes('.')) {
+                return;
+            } else {
+                currentInput += value;
+            }
+            updateDisplay();
+        }
+
+        function isOperator(char) {
+            return ['+', '-', '*', '/', '(', ')'].includes(char);
+        }
+
+        function deleteLast() {
+            if (currentInput.length > 0) {
+                currentInput = currentInput.slice(0, -1);
+                if (currentInput === '') currentInput = '0';
+            }
+            updateDisplay();
+        }
+
+        function clearDisplay() {
+            currentInput = '0';
+            previousInput = '';
+            operation = null;
+            updateDisplay();
+        }
+
+        function calculate() {
+            try {
+                let expression = currentInput;
+
+                // Replace constants
+                expression = expression.replace(/π/g, Math.PI);
+                expression = expression.replace(/e/g, Math.E);
+
+                // Replace trig functions
+                expression = expression.replace(/sin\(/g, 'Math.sin(');
+                expression = expression.replace(/cos\(/g, 'Math.cos(');
+                expression = expression.replace(/tan\(/g, 'Math.tan(');
+
+                // Replace log functions
+                expression = expression.replace(/log\(/g, 'Math.log10(');
+                expression = expression.replace(/ln\(/g, 'Math.log(');
+
+                // Replace sqrt
+                expression = expression.replace(/sqrt\(/g, 'Math.sqrt(');
+
+                // Evaluate
+                const result = eval(expression);
+                const roundedResult = Math.round(result * 1e10) / 1e10; // Avoid floating point errors
+
+                // Add to history
+                addToHistory(currentInput, roundedResult);
+
+                currentInput = String(roundedResult);
+                previousInput = '';
+                updateDisplay();
+            } catch (error) {
+                currentDisplay.textContent = 'Error';
+                currentInput = '0';
+                setTimeout(updateDisplay, 1500);
+            }
+        }
+
+        function addToHistory(expression, result) {
+            history.unshift({ expression, result, timestamp: new Date().toLocaleTimeString() });
+            if (history.length > 50) history.pop();
+            localStorage.setItem('calcHistory', JSON.stringify(history));
+            renderHistory();
+        }
+
+        function renderHistory() {
+            if (history.length === 0) {
+                historyList.innerHTML = '<div class="empty-history">No calculations yet</div>';
+                return;
+            }
+
+            historyList.innerHTML = history.map((item, idx) => `
+                <div class="history-item" onclick="loadFromHistory(${idx})">
+                    <div class="history-item-expression">${escapeHtml(item.expression)}</div>
+                    <div class="history-item-result">${item.result}</div>
+                </div>
+            `).join('');
+        }
+
+        function loadFromHistory(idx) {
+            const item = history[idx];
+            currentInput = String(item.result);
+            previousInput = '';
+            updateDisplay();
+        }
+
+        function clearHistory() {
+            if (confirm('Clear all history?')) {
+                history = [];
+                localStorage.removeItem('calcHistory');
+                renderHistory();
+            }
+        }
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        // Keyboard support
+        document.addEventListener('keydown', (e) => {
+            const key = e.key;
+
+            if (key >= '0' && key <= '9') {
+                appendInput(key);
+            } else if (key === '.') {
+                appendInput('.');
+            } else if (key === '+' || key === '-' || key === '*' || key === '/') {
+                appendInput(key);
+            } else if (key === '(' || key === ')') {
+                appendInput(key);
+            } else if (key === 'Enter' || key === '=') {
+                e.preventDefault();
+                calculate();
+            } else if (key === 'Backspace') {
+                e.preventDefault();
+                deleteLast();
+            } else if (key === 'Escape') {
+                clearDisplay();
+            }
+        });
+
+        // Initialize
+        renderHistory();
+        updateDisplay();
+    </script>
+</body>
+</html>

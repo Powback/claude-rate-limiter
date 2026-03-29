@@ -1,0 +1,24 @@
+{
+  "id": "review-1268b20f-9c91-4d99-b5be-11b48b35a32e",
+  "type": "review",
+  "content": "calc.html: <!DOCTYPE html>",
+  "domains": [
+    "assistant_info"
+  ],
+  "supersedes": [],
+  "related_to": [
+    "agent-1268b20f-9c91-4d99-b5be-11b48b35a32e"
+  ],
+  "refs": [
+    "/Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/isolated-passthrough/calculator/workdir/calc.html"
+  ],
+  "metadata": {
+    "files_edited": 1,
+    "files_read": 0,
+    "commits": 0,
+    "skills": [],
+    "commit_messages": []
+  },
+  "timestamp": 1774747302991,
+  "source": "powgraph-stop"
+}

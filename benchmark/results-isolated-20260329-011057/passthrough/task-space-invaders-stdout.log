@@ -1,0 +1,16 @@
+Done! I've created a complete Space Invaders game in a single HTML file: **space-invaders.html**
+
+**Features:**
+- **Canvas-based graphics** (800×600) with retro green-on-black aesthetic
+- **Keyboard controls**: Arrow keys to move, spacebar to shoot
+- **Scoring system**: Earn 10 × wave level points per enemy destroyed
+- **Lives system**: Start with 3 lives, lose one when hit
+- **Wave progression**: Automatically advances when all enemies cleared, increases difficulty
+- **Gameplay**:
+  - 20 enemies per wave that move side-to-side and descend
+  - Enemies shoot randomly at the player
+  - Collision detection for bullets and impacts
+  - Game over when lives reach 0 or enemies reach the bottom
+  - Restart button to play again
+
+Just open the file in a web browser and start playing! The game gets progressively harder with each wave as enemy speed increases.

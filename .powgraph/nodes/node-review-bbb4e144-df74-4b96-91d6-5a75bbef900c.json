@@ -1,0 +1,26 @@
+{
+  "id": "review-bbb4e144-df74-4b96-91d6-5a75bbef900c",
+  "type": "review",
+  "content": "todo.js: class TodoList {",
+  "domains": [
+    "assistant_info"
+  ],
+  "supersedes": [],
+  "related_to": [
+    "agent-bbb4e144-df74-4b96-91d6-5a75bbef900c"
+  ],
+  "refs": [
+    "todo.js"
+  ],
+  "metadata": {
+    "files_edited": 1,
+    "files_read": 0,
+    "commits": 0,
+    "skills": [
+      "JavaScript"
+    ],
+    "commit_messages": []
+  },
+  "timestamp": 1774747365676,
+  "source": "powgraph-stop"
+}

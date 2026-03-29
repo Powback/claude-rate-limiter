@@ -1,0 +1,8 @@
+{
+  "id": "741db0c1-12f9-4f31-a86b-fafc8d2abcc8",
+  "from": "agent-1268b20f-9c91-4d99-b5be-11b48b35a32e",
+  "to": "review-1268b20f-9c91-4d99-b5be-11b48b35a32e",
+  "type": "reviewed_as",
+  "metadata": {},
+  "timestamp": 1774747302991
+}

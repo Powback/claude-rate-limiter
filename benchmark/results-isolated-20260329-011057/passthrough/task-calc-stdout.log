@@ -1,0 +1,15 @@
+Done! I've created `calc.html` with all the features you requested:
+
+**Features included:**
+- **Basic operations**: +, −, ×, ÷, %
+- **Parentheses**: Full support with ( ) buttons
+- **Trig functions**: sin, cos, tan (angle input in degrees)
+- **Logarithms**: log (base 10), ln (natural log)
+- **Advanced**: √ (square root), x^y (exponent), n! (factorial), +/− (sign toggle)
+- **Constants**: π and e
+- **Dark theme**: Clean, dark interface with color-coded buttons
+- **Keyboard support**: Number keys, operators, Enter for equals, Escape to clear, Backspace for delete
+- **Persistent history**: Calculation history saved in localStorage, click any entry to load it
+- **Responsive**: Works on mobile and desktop
+
+The calculator handles complex expressions with proper operator precedence and supports nested parentheses. All computations are safe and the history panel allows you to track and reuse previous calculations.

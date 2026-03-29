@@ -1,0 +1,38 @@
+Warning: no stdin data received in 3s, proceeding without it. If piping from a slow command, redirect stdin explicitly: < /dev/null to skip, or wait longer.
+Done! Created `todo-api.mjs` with:
+
+**Features:**
+- GET `/todos` — list all todos
+- POST `/todos` — create todo (requires `title` field)
+- PUT `/todos/:id` — update todo (patch `title` and/or `completed`)
+- DELETE `/todos/:id` — delete todo
+- In-memory Map storage with auto-incrementing IDs
+- JSON request/response handling
+- Basic error handling (400, 404, 500)
+- CORS headers included
+
+**Run it:**
+```bash
+node todo-api.mjs
+```
+
+Server starts on `http://localhost:3000` (or use `PORT=8000 node todo-api.mjs` to override).
+
+**Example usage:**
+```bash
+# Create
+curl -X POST http://localhost:3000/todos \
+  -H "Content-Type: application/json" \
+  -d '{"title":"Buy milk"}'
+
+# List
+curl http://localhost:3000/todos
+
+# Update
+curl -X PUT http://localhost:3000/todos/1 \
+  -H "Content-Type: application/json" \
+  -d '{"completed":true}'
+
+# Delete
+curl -X DELETE http://localhost:3000/todos/1
+```

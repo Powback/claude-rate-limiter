@@ -1,0 +1,39 @@
+[01:18:30] 🚀 claude-rate-limiter listening on :3130
+[01:18:30]    Upstream: https://api.anthropic.com
+[01:18:30]    Queue threshold: 85% utilization
+[01:18:30]    Max queue: 100
+[01:18:30] 
+[01:18:30]    Usage: ANTHROPIC_BASE_URL=http://localhost:3130 claude ...
+[01:18:32] 📡 / ? 167ms 
+[01:18:34] 🟢 Utilization: 5h=21% 7d=9% [five_hour] status=allowed
+[01:18:56] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 23294ms in=10 out=4318 cache_read=20654 cache_create=5660
+[01:18:57] 🟢 Utilization: 5h=21% 7d=9% [five_hour] status=allowed
+[01:19:02] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 5924ms in=8 out=515 cache_read=26314 cache_create=4371
+[01:19:02] 📡 / ? 111ms 
+[01:19:03] 🟢 Utilization: 5h=21% 7d=9% [five_hour] status=allowed
+[01:19:18] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 15095ms in=10 out=2958 cache_read=20654 cache_create=5658
+[01:19:18] 🟢 Utilization: 5h=21% 7d=9% [five_hour] status=allowed
+[01:19:24] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 6288ms in=8 out=468 cache_read=26312 cache_create=3003
+[01:19:24] 📡 / ? 104ms 
+[01:19:27] 🟢 Utilization: 5h=21% 7d=9% [five_hour] status=allowed
+[01:19:32] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 7247ms in=10 out=1140 cache_read=20654 cache_create=5672
+[01:19:34] 🟢 Utilization: 5h=21% 7d=9% [five_hour] status=allowed
+[01:19:36] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 3775ms in=8 out=229 cache_read=26326 cache_create=1193
+[01:19:37] 📡 / ? 106ms 
+[01:19:38] 🟢 Utilization: 5h=21% 7d=9% [five_hour] status=allowed
+[01:19:54] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 17012ms in=10 out=3112 cache_read=20654 cache_create=5664
+[01:19:55] 🟢 Utilization: 5h=21% 7d=9% [five_hour] status=allowed
+[01:19:59] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 4916ms in=8 out=411 cache_read=26318 cache_create=3159
+[01:19:59] 📡 / ? 103ms 
+[01:20:01] 🟢 Utilization: 5h=21% 7d=9% [five_hour] status=allowed
+[01:20:28] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 28286ms in=10 out=5384 cache_read=20654 cache_create=5665
+[01:20:29] 🟢 Utilization: 5h=21% 7d=9% [five_hour] status=allowed
+[01:20:33] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 4823ms in=8 out=506 cache_read=26319 cache_create=5423
+[01:20:34] 📡 / ? 105ms 
+[01:20:35] 🟢 Utilization: 5h=21% 7d=9% [five_hour] status=allowed
+[01:20:52] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 17741ms in=10 out=3503 cache_read=20654 cache_create=5704
+[01:20:53] 🟢 Utilization: 5h=22% 7d=9% [five_hour] status=allowed
+[01:20:56] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 4101ms in=8 out=340 cache_read=26358 cache_create=3546
+[01:20:56] 📡 /v1/messages/count_tokens?beta=true claude-haiku-4-5-20251001 188ms 
+[01:20:57] 🟢 Utilization: 5h=22% 7d=9% [five_hour] status=allowed
+[01:21:03] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 6659ms in=8 out=722 cache_read=29904 cache_create=3980

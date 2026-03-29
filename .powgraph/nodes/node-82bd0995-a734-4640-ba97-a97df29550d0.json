@@ -1,0 +1,18 @@
+{
+  "id": "82bd0995-a734-4640-ba97-a97df29550d0",
+  "type": "knowledge",
+  "content": "todo.js: class TodoList {",
+  "snippet": "class TodoList {\n  constructor() {\n    this.todos = [];\n    this.nextId = 1;\n  }\n\n  add(text) {\n    const id = this.nextId++;\n    this.todos.push({ id, text });\n    return id;\n  }\n\n  remove(id) {\n    const index = this.todos.findIndex(todo => todo.id === id);\n    if (index !== -1) {\n      this.todos.splice(index, 1);\n      return true;\n    }\n    return false;\n  }\n\n  list() {\n    return this.todos;\n  }\n}\n\nmodule.exports = TodoList;\n",
+  "domains": [
+    "frontend"
+  ],
+  "supersedes": [
+    "16dca1e1-2ac1-4706-ba4e-232a853b92e0"
+  ],
+  "related_to": [],
+  "refs": [
+    "todo.js"
+  ],
+  "timestamp": 1774747363467,
+  "source": "session:bbb4e144-df74-4b96-91d6-5a75bbef900c"
+}

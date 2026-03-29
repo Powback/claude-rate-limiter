@@ -1,0 +1,13 @@
+{
+  "id": "agent-fec07cda-bd27-4b23-b344-c9964bca587d",
+  "type": "agent",
+  "content": "chat.html: <!DOCTYPE html>",
+  "domains": [
+    "assistant_info"
+  ],
+  "supersedes": [],
+  "related_to": [],
+  "refs": [],
+  "timestamp": 1774747267371,
+  "source": "powgraph-stop"
+}

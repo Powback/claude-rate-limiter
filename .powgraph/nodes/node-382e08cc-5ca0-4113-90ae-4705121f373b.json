@@ -1,0 +1,18 @@
+{
+  "id": "382e08cc-5ca0-4113-90ae-4705121f373b",
+  "type": "knowledge",
+  "content": "todo.js: add(text, priority = 'medium') {",
+  "snippet": "  add(text, priority = 'medium') {\n    if (!['low', 'medium', 'high'].includes(priority)) {\n      priority = 'medium';\n    }\n    const id = this.nextId++;\n    this.todos.push({ id, text, priority });\n    return id;\n  }",
+  "domains": [
+    "frontend"
+  ],
+  "supersedes": [
+    "82bd0995-a734-4640-ba97-a97df29550d0"
+  ],
+  "related_to": [],
+  "refs": [
+    "todo.js"
+  ],
+  "timestamp": 1774747382797,
+  "source": "session:20d21e03-d47d-496d-a096-2e37ef0b1dcb"
+}

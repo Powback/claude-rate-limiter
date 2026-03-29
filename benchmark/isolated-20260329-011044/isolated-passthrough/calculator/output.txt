@@ -1,0 +1,28 @@
+Warning: no stdin data received in 3s, proceeding without it. If piping from a slow command, redirect stdin explicitly: < /dev/null to skip, or wait longer.
+Done! I've created **calc.html** with a fully-featured scientific calculator.
+
+**Features included:**
+
+✅ **Operations:** +, −, ×, ÷, parentheses  
+✅ **Trig functions:** sin, cos, tan  
+✅ **Logarithmic:** log (base 10), ln (natural log), √  
+✅ **Constants:** π, e  
+✅ **Dark theme:** Deep blue gradient with cyan accents  
+✅ **Keyboard support:** 
+  - Numbers & operators via keyboard
+  - Enter to calculate
+  - Backspace to delete
+  - Escape to clear
+
+✅ **Calculation history:** 
+  - Sidebar showing last 50 calculations
+  - Click any item to load result
+  - Persistent storage via localStorage
+  - Clear history button
+
+**Usage:**
+- Open the file in a browser
+- Use buttons or keyboard
+- History auto-saves and persists across sessions
+
+The calculator handles floating-point errors and invalid expressions gracefully. All code is self-contained in a single HTML file.

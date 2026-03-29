@@ -1,0 +1,13 @@
+{
+  "id": "agent-9f2e9504-bc1f-46ef-9cb9-b60291665aa2",
+  "type": "agent",
+  "content": "space-invaders.html: <!DOCTYPE html>",
+  "domains": [
+    "assistant_info"
+  ],
+  "supersedes": [],
+  "related_to": [],
+  "refs": [],
+  "timestamp": 1774746913250,
+  "source": "powgraph-stop"
+}

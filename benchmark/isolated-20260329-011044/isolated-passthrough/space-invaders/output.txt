@@ -1,0 +1,17 @@
+Warning: no stdin data received in 3s, proceeding without it. If piping from a slow command, redirect stdin explicitly: < /dev/null to skip, or wait longer.
+Done! I've created **space-invaders.html** with a fully functional Space Invaders game. Here's what's included:
+
+**Features:**
+- **Controls**: Arrow keys to move, Space to shoot
+- **Scoring**: 10 points per enemy destroyed
+- **Lives**: Start with 3 lives, lose one when hit by enemy fire
+- **Wave progression**: Each wave adds more enemies and increases their speed
+- **Collision detection**: Both player-vs-enemy bullets and enemy-vs-player
+- **Game mechanics**:
+  - Enemies move back and forth, diving down when hitting screen edges
+  - Enemies shoot randomly
+  - Waves complete automatically when all enemies are destroyed
+  - Game ends if you run out of lives or enemies reach the bottom
+- **Retro styling**: Green terminal aesthetic with glow effects and starfield background
+
+Just open the file in a browser and play. Press Space to shoot, use arrow keys to dodge enemy fire!

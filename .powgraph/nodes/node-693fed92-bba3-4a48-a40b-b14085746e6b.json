@@ -1,0 +1,18 @@
+{
+  "id": "693fed92-bba3-4a48-a40b-b14085746e6b",
+  "type": "knowledge",
+  "content": "todo.js: complete(id) {",
+  "snippet": "  complete(id) {\n    const todo = this.todos.find(t => t.id === id);\n    if (todo) {\n      todo.done = true;\n      return true;\n    }\n    return false;\n  }\n\n  list() {\n    return this.todos;\n  }\n}",
+  "domains": [
+    "general"
+  ],
+  "supersedes": [
+    "2c36fc50-1ba0-4b2d-bca4-a7fa60e79d2b"
+  ],
+  "related_to": [],
+  "refs": [
+    "todo.js"
+  ],
+  "timestamp": 1774747373206,
+  "source": "session:8a980b6f-f131-439e-b6ac-eb87abee19ea"
+}

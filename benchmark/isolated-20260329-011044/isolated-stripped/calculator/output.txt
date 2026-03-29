@@ -1,0 +1,21 @@
+Warning: no stdin data received in 3s, proceeding without it. If piping from a slow command, redirect stdin explicitly: < /dev/null to skip, or wait longer.
+Done! Created **calc.html** with a full-featured scientific calculator:
+
+**Features:**
+- **Basic ops**: +, −, ×, ÷
+- **Trig functions**: sin, cos, tan (converts degrees to radians automatically)
+- **Math functions**: log, √, x^y, |x|
+- **Constants**: π (pi), e
+- **Parentheses support**: Full expression parsing
+- **Dark theme**: Teal/green accents on deep blue background
+- **Keyboard support**: 
+  - Numbers & operators via keyboard
+  - `Enter` = calculate
+  - `Backspace` = delete
+  - `Escape` = clear
+  - `(` `)` = parentheses
+- **History panel**: Last 50 calculations (click to restore), persistent via localStorage
+- **Responsive**: Works on mobile and desktop
+- **Expression evaluation**: Proper operator precedence, error handling
+
+Open in any browser—no dependencies. Standalone file ready to use.

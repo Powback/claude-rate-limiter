@@ -1,0 +1,17 @@
+Done! Created a fully functional Snake game at `snake.html` with:
+
+✅ **Canvas-based rendering** — 400x400 pixel grid with 20x20 tiles  
+✅ **Arrow key controls** — Prevents reversing into itself  
+✅ **Food spawning** — Random positions, avoids snake body  
+✅ **Score tracking** — +10 points per food  
+✅ **Game over detection** — Wall and self-collision  
+✅ **Restart button** — Resets state and restarts game loop  
+
+Additional features:
+- 100ms game tick for smooth play
+- Visual grid and head/body distinction
+- Status display (Playing/Game Over)
+- Instructions on the page
+- Styled UI with gradient background
+
+Open `snake.html` in a browser and use arrow keys to move. The snake grows when it eats red food, and the game ends if you hit walls or yourself.

@@ -1,0 +1,14 @@
+{
+  "task_id": "snake-game",
+  "mode": "isolated-stripped",
+  "exit_code": 0,
+  "valid": true,
+  "duration_ms": 23953,
+  "api_calls": 3,
+  "input_tokens": 18,
+  "output_tokens": 3561,
+  "cache_read": 6026,
+  "cache_creation": 9176,
+  "output_file_bytes": 10246,
+  "cost_usd": 0.023916
+}

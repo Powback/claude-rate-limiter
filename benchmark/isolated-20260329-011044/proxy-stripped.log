@@ -1,0 +1,411 @@
+[01:14:21] 🚀 claude-rate-limiter listening on :13129
+[01:14:21]    Upstream: https://api.anthropic.com
+[01:14:21]    Queue threshold: 85% utilization
+[01:14:21]    Max queue: 100
+[01:14:21] 
+[01:14:21]    Usage: ANTHROPIC_BASE_URL=http://localhost:13129 claude ...
+[01:14:45] 📡 / ? 152ms 
+[90m[01:14:48] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-stripped-logs/system-prompt-2026-03-29T01-14-48-603Z.txt (27995 chars)[0m
+[90m[01:14:48] ✂️ Replaced default system block: 12951 → 1036 chars[0m
+[90m[01:14:48] ✂️ Dropped system block: 14459 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[01:14:48] ✂️ Stripped 81.8KB (~20936 tokens): 102417 → 18675 chars [total saved: ~20936 tokens across 1 requests]
+[01:14:49] 🟢 Utilization: 5h=20% 7d=9% [five_hour] status=allowed
+[90m[01:15:07] 📊 SSE message_start: in=10 cache_read=0 cache_create=5965[0m
+[90m[01:15:07] 📊 SSE message_delta: out=3746[0m
+[01:15:07] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 19051ms in=10 out=3746 cache_create=5965
+[90m[01:15:07] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-stripped-logs/system-prompt-2026-03-29T01-15-07-694Z.txt (27995 chars)[0m
+[90m[01:15:07] ✂️ Replaced default system block: 12951 → 1036 chars[0m
+[90m[01:15:07] ✂️ Dropped system block: 14459 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[01:15:07] ✂️ Stripped 81.8KB (~20936 tokens): 116829 → 33087 chars [total saved: ~41872 tokens across 2 requests]
+[01:15:08] 🟢 Utilization: 5h=20% 7d=9% [five_hour] status=allowed
+[90m[01:15:13] 📊 SSE message_start: in=8 cache_read=5965 cache_create=3667[0m
+[90m[01:15:13] 📊 SSE message_delta: out=537[0m
+[01:15:13] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 5535ms in=8 out=537 cache_read=5965 cache_create=3667
+[01:15:13] 📡 / ? 104ms 
+[90m[01:15:16] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-stripped-logs/system-prompt-2026-03-29T01-15-16-990Z.txt (28021 chars)[0m
+[90m[01:15:16] ✂️ Replaced default system block: 12951 → 1036 chars[0m
+[90m[01:15:16] ✂️ Dropped system block: 14484 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[01:15:16] ✂️ Stripped 81.8KB (~20942 tokens): 102673 → 18905 chars [total saved: ~62814 tokens across 3 requests]
+[01:15:17] 🟢 Utilization: 5h=20% 7d=9% [five_hour] status=allowed
+[90m[01:15:32] 📊 SSE message_start: in=10 cache_read=0 cache_create=6026[0m
+[90m[01:15:32] 📊 SSE message_delta: out=3139[0m
+[01:15:32] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 15988ms in=10 out=3139 cache_create=6026
+[90m[01:15:32] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-stripped-logs/system-prompt-2026-03-29T01-15-32-986Z.txt (28021 chars)[0m
+[90m[01:15:32] ✂️ Replaced default system block: 12951 → 1036 chars[0m
+[90m[01:15:32] ✂️ Dropped system block: 14484 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[01:15:32] ✂️ Stripped 81.8KB (~20942 tokens): 115485 → 31717 chars [total saved: ~83756 tokens across 4 requests]
+[01:15:33] 🟢 Utilization: 5h=20% 7d=9% [five_hour] status=allowed
+[90m[01:15:37] 📊 SSE message_start: in=8 cache_read=6026 cache_create=3150[0m
+[90m[01:15:37] 📊 SSE message_delta: out=422[0m
+[01:15:37] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 4226ms in=8 out=422 cache_read=6026 cache_create=3150
+[01:15:37] 📡 / ? 102ms 
+[90m[01:15:40] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-stripped-logs/system-prompt-2026-03-29T01-15-40-947Z.txt (28019 chars)[0m
+[90m[01:15:40] ✂️ Replaced default system block: 12951 → 1036 chars[0m
+[90m[01:15:40] ✂️ Dropped system block: 14482 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[01:15:40] ✂️ Stripped 81.8KB (~20942 tokens): 102752 → 18986 chars [total saved: ~104698 tokens across 5 requests]
+[01:15:41] 🟢 Utilization: 5h=20% 7d=9% [five_hour] status=allowed
+[90m[01:15:54] 📊 SSE message_start: in=10 cache_read=0 cache_create=6063[0m
+[90m[01:15:54] 📊 SSE message_delta: out=3081[0m
+[01:15:54] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 13053ms in=10 out=3081 cache_create=6063
+[90m[01:15:54] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-stripped-logs/system-prompt-2026-03-29T01-15-54-044Z.txt (28019 chars)[0m
+[90m[01:15:54] ✂️ Replaced default system block: 12951 → 1036 chars[0m
+[90m[01:15:54] ✂️ Dropped system block: 14482 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[01:15:54] ✂️ Stripped 81.8KB (~20942 tokens): 121207 → 37441 chars [total saved: ~125640 tokens across 6 requests]
+[01:15:54] 🟢 Utilization: 5h=20% 7d=9% [five_hour] status=allowed
+[90m[01:15:56] 📊 SSE message_start: in=8 cache_read=6063 cache_create=3107[0m
+[90m[01:15:56] 📊 SSE message_delta: out=306[0m
+[01:15:56] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 2693ms in=8 out=306 cache_read=6063 cache_create=3107
+[01:15:57] 📡 / ? 103ms 
+[90m[01:16:00] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-stripped-logs/system-prompt-2026-03-29T01-16-00-531Z.txt (28018 chars)[0m
+[90m[01:16:00] ✂️ Replaced default system block: 12951 → 1036 chars[0m
+[90m[01:16:00] ✂️ Dropped system block: 14481 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[01:16:00] ✂️ Stripped 81.8KB (~20941 tokens): 102817 → 19052 chars [total saved: ~146581 tokens across 7 requests]
+[01:16:01] 🟢 Utilization: 5h=20% 7d=9% [five_hour] status=allowed
+[90m[01:16:18] 📊 SSE message_start: in=10 cache_read=0 cache_create=6072[0m
+[90m[01:16:18] 📊 SSE message_delta: out=3589[0m
+[01:16:18] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 18313ms in=10 out=3589 cache_create=6072
+[90m[01:16:18] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-stripped-logs/system-prompt-2026-03-29T01-16-18-883Z.txt (28018 chars)[0m
+[90m[01:16:18] ✂️ Replaced default system block: 12951 → 1036 chars[0m
+[90m[01:16:18] ✂️ Dropped system block: 14481 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[01:16:18] ✂️ Stripped 81.8KB (~20941 tokens): 118132 → 34367 chars [total saved: ~167522 tokens across 8 requests]
+[01:16:19] 🟢 Utilization: 5h=20% 7d=9% [five_hour] status=allowed
+[90m[01:16:24] 📊 SSE message_start: in=8 cache_read=6072 cache_create=3604[0m
+[90m[01:16:24] 📊 SSE message_delta: out=478[0m
+[01:16:24] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 5135ms in=8 out=478 cache_read=6072 cache_create=3604
+[01:16:24] 📡 / ? 102ms 
+[90m[01:16:27] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-stripped-logs/system-prompt-2026-03-29T01-16-27-798Z.txt (28021 chars)[0m
+[90m[01:16:27] ✂️ Replaced default system block: 12951 → 1036 chars[0m
+[90m[01:16:27] ✂️ Dropped system block: 14484 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[01:16:27] ✂️ Stripped 81.8KB (~20942 tokens): 102763 → 18995 chars [total saved: ~188464 tokens across 9 requests]
+[01:16:28] 🟢 Utilization: 5h=20% 7d=9% [five_hour] status=allowed
+[90m[01:16:56] 📊 SSE message_start: in=10 cache_read=0 cache_create=6057[0m
+[90m[01:16:56] 📊 SSE message_delta: out=5719[0m
+[01:16:56] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 28501ms in=10 out=5719 cache_create=6057
+[90m[01:16:56] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-stripped-logs/system-prompt-2026-03-29T01-16-56-350Z.txt (28021 chars)[0m
+[90m[01:16:56] ✂️ Replaced default system block: 12951 → 1036 chars[0m
+[90m[01:16:56] ✂️ Dropped system block: 14484 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[01:16:56] ✂️ Stripped 81.8KB (~20942 tokens): 126155 → 42387 chars [total saved: ~209406 tokens across 10 requests]
+[01:16:57] 🟢 Utilization: 5h=21% 7d=9% [five_hour] status=allowed
+[90m[01:17:01] 📊 SSE message_start: in=8 cache_read=6057 cache_create=5741[0m
+[90m[01:17:01] 📊 SSE message_delta: out=507[0m
+[01:17:01] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 5309ms in=8 out=507 cache_read=6057 cache_create=5741
+[01:22:37] 📡 / ? 137ms 
+[90m[01:22:40] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-stripped-logs/system-prompt-2026-03-29T01-22-40-439Z.txt (27994 chars)[0m
+[90m[01:22:40] ✂️ Replaced default system block: 12951 → 1036 chars[0m
+[90m[01:22:40] ✂️ Dropped system block: 14457 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[01:22:40] ✂️ Stripped 81.8KB (~20935 tokens): 102658 → 18917 chars [total saved: ~230341 tokens across 11 requests]
+[01:22:41] 🟢 Utilization: 5h=23% 7d=9% [five_hour] status=allowed
+[90m[01:22:43] 📊 SSE message_start: in=10 cache_read=0 cache_create=6043[0m
+[90m[01:22:43] 📊 SSE message_delta: out=350[0m
+[01:22:43] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 2980ms in=10 out=350 cache_create=6043
+[90m[01:22:43] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-stripped-logs/system-prompt-2026-03-29T01-22-43-473Z.txt (27994 chars)[0m
+[90m[01:22:43] ✂️ Replaced default system block: 12951 → 1036 chars[0m
+[90m[01:22:43] ✂️ Dropped system block: 14457 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[01:22:43] ✂️ Stripped 81.8KB (~20935 tokens): 104806 → 21065 chars [total saved: ~251276 tokens across 12 requests]
+[01:22:44] 🟢 Utilization: 5h=23% 7d=9% [five_hour] status=allowed
+[90m[01:22:45] 📊 SSE message_start: in=8 cache_read=6043 cache_create=378[0m
+[90m[01:22:45] 📊 SSE message_delta: out=189[0m
+[01:22:45] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 2186ms in=8 out=189 cache_read=6043 cache_create=378
+[01:22:46] 📡 / ? 104ms 
+[90m[01:22:49] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-stripped-logs/system-prompt-2026-03-29T01-22-49-653Z.txt (27994 chars)[0m
+[90m[01:22:49] ✂️ Replaced default system block: 12951 → 1036 chars[0m
+[90m[01:22:49] ✂️ Dropped system block: 14457 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[01:22:49] ✂️ Stripped 81.8KB (~20935 tokens): 102766 → 19025 chars [total saved: ~272211 tokens across 13 requests]
+[01:22:50] 🟢 Utilization: 5h=23% 7d=9% [five_hour] status=allowed
+[90m[01:22:50] 📊 SSE message_start: in=10 cache_read=0 cache_create=6068[0m
+[90m[01:22:50] 📊 SSE message_delta: out=98[0m
+[01:22:50] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 1110ms in=10 out=98 cache_create=6068
+[90m[01:22:50] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-stripped-logs/system-prompt-2026-03-29T01-22-50-781Z.txt (27994 chars)[0m
+[90m[01:22:50] ✂️ Replaced default system block: 12951 → 1036 chars[0m
+[90m[01:22:50] ✂️ Dropped system block: 14457 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[01:22:50] ✂️ Stripped 81.8KB (~20935 tokens): 104601 → 20860 chars [total saved: ~293146 tokens across 14 requests]
+[01:22:51] 🟢 Utilization: 5h=23% 7d=9% [five_hour] status=allowed
+[90m[01:22:53] 📊 SSE message_start: in=8 cache_read=0 cache_create=6485[0m
+[90m[01:22:53] 📊 SSE message_delta: out=292[0m
+[01:22:53] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 2396ms in=8 out=292 cache_create=6485
+[90m[01:22:53] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-stripped-logs/system-prompt-2026-03-29T01-22-53-217Z.txt (27994 chars)[0m
+[90m[01:22:53] ✂️ Replaced default system block: 12951 → 1036 chars[0m
+[90m[01:22:53] ✂️ Dropped system block: 14457 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[01:22:53] ✂️ Stripped 81.8KB (~20935 tokens): 106457 → 22716 chars [total saved: ~314081 tokens across 15 requests]
+[01:22:53] 🟢 Utilization: 5h=23% 7d=9% [five_hour] status=allowed
+[90m[01:22:54] 📊 SSE message_start: in=8 cache_read=6485 cache_create=339[0m
+[90m[01:22:54] 📊 SSE message_delta: out=84[0m
+[01:22:54] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 1660ms in=8 out=84 cache_read=6485 cache_create=339
+[01:22:55] 📡 / ? 108ms 
+[90m[01:22:58] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-stripped-logs/system-prompt-2026-03-29T01-22-58-712Z.txt (27994 chars)[0m
+[90m[01:22:58] ✂️ Replaced default system block: 12951 → 1036 chars[0m
+[90m[01:22:58] ✂️ Dropped system block: 14457 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[01:22:58] ✂️ Stripped 81.8KB (~20935 tokens): 102795 → 19054 chars [total saved: ~335016 tokens across 16 requests]
+[01:22:59] 🟢 Utilization: 5h=23% 7d=9% [five_hour] status=allowed
+[90m[01:23:00] 📊 SSE message_start: in=10 cache_read=0 cache_create=6076[0m
+[90m[01:23:00] 📊 SSE message_delta: out=133[0m
+[01:23:00] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 1612ms in=10 out=133 cache_create=6076
+[90m[01:23:00] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-stripped-logs/system-prompt-2026-03-29T01-23-00-341Z.txt (27994 chars)[0m
+[90m[01:23:00] ✂️ Replaced default system block: 12951 → 1036 chars[0m
+[90m[01:23:00] ✂️ Dropped system block: 14457 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[01:23:00] ✂️ Stripped 81.8KB (~20935 tokens): 105158 → 21417 chars [total saved: ~355951 tokens across 17 requests]
+[01:23:00] 🟢 Utilization: 5h=23% 7d=9% [five_hour] status=allowed
+[90m[01:23:02] 📊 SSE message_start: in=8 cache_read=6076 cache_create=528[0m
+[90m[01:23:02] 📊 SSE message_delta: out=364[0m
+[01:23:02] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 2404ms in=8 out=364 cache_read=6076 cache_create=528
+[90m[01:23:02] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-stripped-logs/system-prompt-2026-03-29T01-23-02-805Z.txt (27994 chars)[0m
+[90m[01:23:02] ✂️ Replaced default system block: 12951 → 1036 chars[0m
+[90m[01:23:02] ✂️ Dropped system block: 14457 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[01:23:02] ✂️ Stripped 81.8KB (~20935 tokens): 107400 → 23659 chars [total saved: ~376886 tokens across 18 requests]
+[01:23:03] 🟢 Utilization: 5h=23% 7d=9% [five_hour] status=allowed
+[90m[01:23:04] 📊 SSE message_start: in=8 cache_read=6604 cache_create=410[0m
+[90m[01:23:04] 📊 SSE message_delta: out=169[0m
+[01:23:04] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 1907ms in=8 out=169 cache_read=6604 cache_create=410
+[01:23:05] 📡 / ? 109ms 
+[90m[01:23:08] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-stripped-logs/system-prompt-2026-03-29T01-23-08-526Z.txt (27994 chars)[0m
+[90m[01:23:08] ✂️ Replaced default system block: 12951 → 1036 chars[0m
+[90m[01:23:08] ✂️ Dropped system block: 14457 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[01:23:08] ✂️ Stripped 81.8KB (~20935 tokens): 102800 → 19059 chars [total saved: ~397821 tokens across 19 requests]
+[01:23:09] 🟢 Utilization: 5h=23% 7d=9% [five_hour] status=allowed
+[90m[01:23:09] 📊 SSE message_start: in=10 cache_read=0 cache_create=6080[0m
+[90m[01:23:09] 📊 SSE message_delta: out=102[0m
+[01:23:09] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 1212ms in=10 out=102 cache_create=6080
+[90m[01:23:09] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-stripped-logs/system-prompt-2026-03-29T01-23-09-750Z.txt (27994 chars)[0m
+[90m[01:23:09] ✂️ Replaced default system block: 12951 → 1036 chars[0m
+[90m[01:23:09] ✂️ Dropped system block: 14457 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[01:23:09] ✂️ Stripped 81.8KB (~20935 tokens): 105003 → 21262 chars [total saved: ~418756 tokens across 20 requests]
+[01:23:10] 🟢 Utilization: 5h=23% 7d=9% [five_hour] status=allowed
+[90m[01:23:11] 📊 SSE message_start: in=8 cache_read=6080 cache_create=542[0m
+[90m[01:23:11] 📊 SSE message_delta: out=268[0m
+[01:23:11] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 2116ms in=8 out=268 cache_read=6080 cache_create=542
+[90m[01:23:11] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-stripped-logs/system-prompt-2026-03-29T01-23-11-909Z.txt (27994 chars)[0m
+[90m[01:23:11] ✂️ Replaced default system block: 12951 → 1036 chars[0m
+[90m[01:23:11] ✂️ Dropped system block: 14457 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[01:23:11] ✂️ Stripped 81.8KB (~20935 tokens): 106937 → 23196 chars [total saved: ~439691 tokens across 21 requests]
+[01:23:12] 🟢 Utilization: 5h=23% 7d=9% [five_hour] status=allowed
+[90m[01:23:13] 📊 SSE message_start: in=8 cache_read=6622 cache_create=315[0m
+[90m[01:23:13] 📊 SSE message_delta: out=91[0m
+[01:23:13] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 1147ms in=8 out=91 cache_read=6622 cache_create=315
+[01:23:13] 📡 / ? 106ms 
+[90m[01:23:16] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-stripped-logs/system-prompt-2026-03-29T01-23-16-887Z.txt (27994 chars)[0m
+[90m[01:23:16] ✂️ Replaced default system block: 12951 → 1036 chars[0m
+[90m[01:23:16] ✂️ Dropped system block: 14457 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[01:23:16] ✂️ Stripped 81.8KB (~20935 tokens): 102779 → 19038 chars [total saved: ~460626 tokens across 22 requests]
+[01:23:17] 🟢 Utilization: 5h=23% 7d=9% [five_hour] status=allowed
+[90m[01:23:18] 📊 SSE message_start: in=10 cache_read=0 cache_create=6075[0m
+[90m[01:23:18] 📊 SSE message_delta: out=115[0m
+[01:23:18] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 1339ms in=10 out=115 cache_create=6075
+[90m[01:23:18] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-stripped-logs/system-prompt-2026-03-29T01-23-18-255Z.txt (27994 chars)[0m
+[90m[01:23:18] ✂️ Replaced default system block: 12951 → 1036 chars[0m
+[90m[01:23:18] ✂️ Dropped system block: 14457 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[01:23:18] ✂️ Stripped 81.8KB (~20935 tokens): 105246 → 21505 chars [total saved: ~481561 tokens across 23 requests]
+[01:23:18] 🟢 Utilization: 5h=23% 7d=9% [five_hour] status=allowed
+[90m[01:23:20] 📊 SSE message_start: in=8 cache_read=6075 cache_create=591[0m
+[90m[01:23:20] 📊 SSE message_delta: out=308[0m
+[01:23:20] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 2095ms in=8 out=308 cache_read=6075 cache_create=591
+[90m[01:23:20] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-stripped-logs/system-prompt-2026-03-29T01-23-20-409Z.txt (27994 chars)[0m
+[90m[01:23:20] ✂️ Replaced default system block: 12951 → 1036 chars[0m
+[90m[01:23:20] ✂️ Dropped system block: 14457 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[01:23:20] ✂️ Stripped 81.8KB (~20935 tokens): 107296 → 23555 chars [total saved: ~502496 tokens across 24 requests]
+[01:23:20] 🟢 Utilization: 5h=23% 7d=9% [five_hour] status=allowed
+[90m[01:23:21] 📊 SSE message_start: in=8 cache_read=6666 cache_create=355[0m
+[90m[01:23:21] 📊 SSE message_delta: out=99[0m
+[01:23:21] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 1238ms in=8 out=99 cache_read=6666 cache_create=355
+[01:23:22] 📡 / ? 103ms 
+[90m[01:23:25] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-stripped-logs/system-prompt-2026-03-29T01-23-25-454Z.txt (27994 chars)[0m
+[90m[01:23:25] ✂️ Replaced default system block: 12951 → 1036 chars[0m
+[90m[01:23:25] ✂️ Dropped system block: 14457 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[01:23:25] ✂️ Stripped 81.8KB (~20935 tokens): 102788 → 19047 chars [total saved: ~523431 tokens across 25 requests]
+[01:23:26] 🟢 Utilization: 5h=23% 7d=9% [five_hour] status=allowed
+[90m[01:23:27] 📊 SSE message_start: in=10 cache_read=0 cache_create=6078[0m
+[90m[01:23:27] 📊 SSE message_delta: out=228[0m
+[01:23:27] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 2397ms in=10 out=228 cache_create=6078
+[90m[01:23:27] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-stripped-logs/system-prompt-2026-03-29T01-23-27-859Z.txt (27994 chars)[0m
+[90m[01:23:27] ✂️ Replaced default system block: 12951 → 1036 chars[0m
+[90m[01:23:27] ✂️ Dropped system block: 14457 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[01:23:27] ✂️ Stripped 81.8KB (~20935 tokens): 106314 → 22573 chars [total saved: ~544366 tokens across 26 requests]
+[01:23:29] 🟢 Utilization: 5h=23% 7d=9% [five_hour] status=allowed
+[90m[01:23:31] 📊 SSE message_start: in=8 cache_read=6078 cache_create=755[0m
+[90m[01:23:31] 📊 SSE message_delta: out=326[0m
+[01:23:31] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 3151ms in=8 out=326 cache_read=6078 cache_create=755
+[90m[01:23:31] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-stripped-logs/system-prompt-2026-03-29T01-23-31-058Z.txt (27994 chars)[0m
+[90m[01:23:31] ✂️ Replaced default system block: 12951 → 1036 chars[0m
+[90m[01:23:31] ✂️ Dropped system block: 14457 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[01:23:31] ✂️ Stripped 81.8KB (~20935 tokens): 108277 → 24536 chars [total saved: ~565301 tokens across 27 requests]
+[01:23:31] 🟢 Utilization: 5h=23% 7d=9% [five_hour] status=allowed
+[90m[01:23:33] 📊 SSE message_start: in=8 cache_read=6833 cache_create=373[0m
+[90m[01:23:33] 📊 SSE message_delta: out=258[0m
+[01:23:33] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 2103ms in=8 out=258 cache_read=6833 cache_create=373
+[01:23:33] 📡 / ? 108ms 
+[90m[01:23:37] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-stripped-logs/system-prompt-2026-03-29T01-23-37-081Z.txt (27994 chars)[0m
+[90m[01:23:37] ✂️ Replaced default system block: 12951 → 1036 chars[0m
+[90m[01:23:37] ✂️ Dropped system block: 14457 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[01:23:37] ✂️ Stripped 81.8KB (~20935 tokens): 102793 → 19052 chars [total saved: ~586236 tokens across 28 requests]
+[01:23:37] 🟢 Utilization: 5h=23% 7d=9% [five_hour] status=allowed
+[90m[01:23:39] 📊 SSE message_start: in=10 cache_read=0 cache_create=6081[0m
+[90m[01:23:39] 📊 SSE message_delta: out=195[0m
+[01:23:39] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 2398ms in=10 out=195 cache_create=6081
+[90m[01:23:39] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-stripped-logs/system-prompt-2026-03-29T01-23-39-506Z.txt (27994 chars)[0m
+[90m[01:23:39] ✂️ Replaced default system block: 12951 → 1036 chars[0m
+[90m[01:23:39] ✂️ Dropped system block: 14457 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[01:23:39] ✂️ Stripped 81.8KB (~20935 tokens): 106352 → 22611 chars [total saved: ~607171 tokens across 29 requests]
+[01:23:40] 🟢 Utilization: 5h=23% 7d=9% [five_hour] status=allowed
+[90m[01:23:42] 📊 SSE message_start: in=8 cache_read=6081 cache_create=798[0m
+[90m[01:23:42] 📊 SSE message_delta: out=379[0m
+[01:23:42] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 2608ms in=8 out=379 cache_read=6081 cache_create=798
+[90m[01:23:42] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-stripped-logs/system-prompt-2026-03-29T01-23-42-158Z.txt (27994 chars)[0m
+[90m[01:23:42] ✂️ Replaced default system block: 12951 → 1036 chars[0m
+[90m[01:23:42] ✂️ Dropped system block: 14457 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[01:23:42] ✂️ Stripped 81.8KB (~20935 tokens): 108468 → 24727 chars [total saved: ~628106 tokens across 30 requests]
+[01:23:43] 🟢 Utilization: 5h=23% 7d=9% [five_hour] status=allowed
+[90m[01:23:43] 📊 SSE message_start: in=8 cache_read=6879 cache_create=422[0m
+[90m[01:23:43] 📊 SSE message_delta: out=88[0m
+[01:23:43] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 1448ms in=8 out=88 cache_read=6879 cache_create=422
+[01:23:44] 📡 / ? 111ms 
+[90m[01:23:47] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-stripped-logs/system-prompt-2026-03-29T01-23-47-617Z.txt (27994 chars)[0m
+[90m[01:23:47] ✂️ Replaced default system block: 12951 → 1036 chars[0m
+[90m[01:23:47] ✂️ Dropped system block: 14457 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[01:23:47] ✂️ Stripped 81.8KB (~20935 tokens): 102794 → 19053 chars [total saved: ~649041 tokens across 31 requests]
+[01:23:48] 🟢 Utilization: 5h=23% 7d=9% [five_hour] status=allowed
+[90m[01:23:49] 📊 SSE message_start: in=10 cache_read=0 cache_create=6080[0m
+[90m[01:23:49] 📊 SSE message_delta: out=168[0m
+[01:23:49] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 2013ms in=10 out=168 cache_create=6080
+[90m[01:23:49] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-stripped-logs/system-prompt-2026-03-29T01-23-49-646Z.txt (27994 chars)[0m
+[90m[01:23:49] ✂️ Replaced default system block: 12951 → 1036 chars[0m
+[90m[01:23:49] ✂️ Dropped system block: 14457 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[01:23:49] ✂️ Stripped 81.8KB (~20935 tokens): 106485 → 22744 chars [total saved: ~669976 tokens across 32 requests]
+[01:23:50] 🟢 Utilization: 5h=23% 7d=9% [five_hour] status=allowed
+[90m[01:23:51] 📊 SSE message_start: in=8 cache_read=0 cache_create=7004[0m
+[90m[01:23:51] 📊 SSE message_delta: out=341[0m
+[01:23:51] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 2262ms in=8 out=341 cache_create=7004
+[90m[01:23:51] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-stripped-logs/system-prompt-2026-03-29T01-23-51-955Z.txt (27994 chars)[0m
+[90m[01:23:51] ✂️ Replaced default system block: 12951 → 1036 chars[0m
+[90m[01:23:51] ✂️ Dropped system block: 14457 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[01:23:51] ✂️ Stripped 81.8KB (~20935 tokens): 108370 → 24629 chars [total saved: ~690911 tokens across 33 requests]
+[01:23:52] 🟢 Utilization: 5h=23% 7d=9% [five_hour] status=allowed
+[90m[01:23:53] 📊 SSE message_start: in=8 cache_read=7004 cache_create=388[0m
+[90m[01:23:53] 📊 SSE message_delta: out=125[0m
+[01:23:53] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 1820ms in=8 out=125 cache_read=7004 cache_create=388
+[01:23:54] 📡 / ? 103ms 
+[90m[01:23:57] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-stripped-logs/system-prompt-2026-03-29T01-23-57-621Z.txt (27994 chars)[0m
+[90m[01:23:57] ✂️ Replaced default system block: 12951 → 1036 chars[0m
+[90m[01:23:57] ✂️ Dropped system block: 14457 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[01:23:57] ✂️ Stripped 81.8KB (~20935 tokens): 102810 → 19069 chars [total saved: ~711846 tokens across 34 requests]
+[01:23:58] 🟢 Utilization: 5h=23% 7d=9% [five_hour] status=allowed
+[90m[01:23:59] 📊 SSE message_start: in=10 cache_read=0 cache_create=6085[0m
+[90m[01:23:59] 📊 SSE message_delta: out=130[0m
+[01:23:59] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 1492ms in=10 out=130 cache_create=6085
+[90m[01:23:59] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-stripped-logs/system-prompt-2026-03-29T01-23-59-129Z.txt (27994 chars)[0m
+[90m[01:23:59] ✂️ Replaced default system block: 12951 → 1036 chars[0m
+[90m[01:23:59] ✂️ Dropped system block: 14457 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[01:23:59] ✂️ Stripped 81.8KB (~20935 tokens): 106132 → 22391 chars [total saved: ~732781 tokens across 35 requests]
+[01:24:01] 🟢 Utilization: 5h=23% 7d=9% [five_hour] status=allowed
+[90m[01:24:03] 📊 SSE message_start: in=8 cache_read=6085 cache_create=895[0m
+[90m[01:24:03] 📊 SSE message_delta: out=398[0m
+[01:24:03] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 4500ms in=8 out=398 cache_read=6085 cache_create=895
+[90m[01:24:03] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-stripped-logs/system-prompt-2026-03-29T01-24-03-674Z.txt (27994 chars)[0m
+[90m[01:24:03] ✂️ Replaced default system block: 12951 → 1036 chars[0m
+[90m[01:24:03] ✂️ Dropped system block: 14457 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[01:24:03] ✂️ Stripped 81.8KB (~20935 tokens): 108622 → 24881 chars [total saved: ~753716 tokens across 36 requests]
+[01:24:04] 🟢 Utilization: 5h=23% 7d=9% [five_hour] status=allowed
+[90m[01:24:05] 📊 SSE message_start: in=8 cache_read=6980 cache_create=442[0m
+[90m[01:24:05] 📊 SSE message_delta: out=155[0m
+[01:24:05] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 1799ms in=8 out=155 cache_read=6980 cache_create=442
+[01:24:06] 📡 / ? 106ms 
+[90m[01:24:09] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-stripped-logs/system-prompt-2026-03-29T01-24-09-304Z.txt (27994 chars)[0m
+[90m[01:24:09] ✂️ Replaced default system block: 12951 → 1036 chars[0m
+[90m[01:24:09] ✂️ Dropped system block: 14457 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[01:24:09] ✂️ Stripped 81.8KB (~20935 tokens): 102821 → 19080 chars [total saved: ~774651 tokens across 37 requests]
+[01:24:09] 🟢 Utilization: 5h=23% 7d=9% [five_hour] status=allowed
+[90m[01:24:10] 📊 SSE message_start: in=10 cache_read=0 cache_create=6089[0m
+[90m[01:24:10] 📊 SSE message_delta: out=117[0m
+[01:24:10] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 1328ms in=10 out=117 cache_create=6089
+[90m[01:24:10] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-stripped-logs/system-prompt-2026-03-29T01-24-10-640Z.txt (27994 chars)[0m
+[90m[01:24:10] ✂️ Replaced default system block: 12951 → 1036 chars[0m
+[90m[01:24:10] ✂️ Dropped system block: 14457 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[01:24:10] ✂️ Stripped 81.8KB (~20935 tokens): 106323 → 22582 chars [total saved: ~795586 tokens across 38 requests]
+[01:24:11] 🟢 Utilization: 5h=23% 7d=9% [five_hour] status=allowed
+[90m[01:24:37] 📊 SSE message_start: in=8 cache_read=6089 cache_create=974[0m
+[90m[01:24:37] 📊 SSE message_delta: out=5648[0m
+[01:24:37] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 26372ms in=8 out=5648 cache_read=6089 cache_create=974
+[90m[01:24:37] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-stripped-logs/system-prompt-2026-03-29T01-24-37-055Z.txt (27994 chars)[0m
+[90m[01:24:37] ✂️ Replaced default system block: 12951 → 1036 chars[0m
+[90m[01:24:37] ✂️ Dropped system block: 14457 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[01:24:37] ✂️ Stripped 81.8KB (~20935 tokens): 126459 → 42718 chars [total saved: ~816521 tokens across 39 requests]
+[01:24:37] 🟢 Utilization: 5h=23% 7d=9% [five_hour] status=allowed
+[90m[01:24:38] 📊 SSE message_start: in=8 cache_read=7063 cache_create=5677[0m
+[90m[01:24:38] 📊 SSE message_delta: out=138[0m
+[01:24:38] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 1566ms in=8 out=138 cache_read=7063 cache_create=5677

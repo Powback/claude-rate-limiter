@@ -1,0 +1,18 @@
+{
+  "id": "d1fac597-6c4e-4de7-b8ae-fc30097c34f3",
+  "type": "knowledge",
+  "content": "todo.js: filter(priority) {",
+  "snippet": "  filter(priority) {\n    return this.todos.filter(todo => todo.priority === priority);\n  }\n\n  toJSON() {\n    return JSON.stringify({\n      todos: this.todos,\n      nextId: this.nextId\n    });\n  }\n}\n\nmodule.exports = TodoList;",
+  "domains": [
+    "frontend"
+  ],
+  "supersedes": [
+    "382e08cc-5ca0-4113-90ae-4705121f373b"
+  ],
+  "related_to": [],
+  "refs": [
+    "todo.js"
+  ],
+  "timestamp": 1774747400402,
+  "source": "session:f1bb80f2-6a96-4cb5-8b8b-c4b5c8c9f19c"
+}
