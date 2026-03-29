@@ -19,6 +19,8 @@
 
 import { createServer, IncomingMessage, ServerResponse } from 'node:http';
 import { request as httpsRequest } from 'node:https';
+import { createGunzip, createBrotliDecompress, createInflate } from 'node:zlib';
+import { Transform } from 'node:stream';
 import { DASHBOARD_HTML } from './dashboard.js';
 
 // ── Config ──────────────────────────────────────────────────────────────────
@@ -552,8 +554,7 @@ function forwardRequest(req: IncomingMessage, res: ServerResponse, body: Buffer)
 
   for (const [key, value] of Object.entries(req.headers)) {
     if (key === 'host' || key === 'connection') continue;
-    // Strip accept-encoding so we get uncompressed responses we can parse
-    if (key === 'accept-encoding') continue;
+    // Forward accept-encoding as-is — we decompress server-side for token parsing
     if (value) headers[key] = Array.isArray(value) ? value.join(', ') : value;
   }
   headers['host'] = upstream.host;
@@ -597,36 +598,62 @@ function forwardRequest(req: IncomingMessage, res: ServerResponse, body: Buffer)
       state.totalForwarded++;
       entry.statusCode = proxyRes.statusCode;
 
-      // Forward status + headers to client
+      // Forward status + headers to client (original encoding preserved)
       res.writeHead(proxyRes.statusCode || 502, proxyRes.headers);
 
-      // Capture response body for analysis while streaming to client.
-      // SSE chunks can arrive fragmented — buffer the full text to parse events.
+      // Decompress for token parsing while forwarding original stream to client.
+      // Client gets the compressed stream (fast), proxy reads decompressed for analysis.
       let responseText = '';
-      proxyRes.on('data', (chunk: Buffer) => {
-        responseText += chunk.toString();
-        res.write(chunk);
-      });
+      const encoding = proxyRes.headers['content-encoding'];
+      let decompressor: Transform | null = null;
+      if (encoding === 'gzip') decompressor = createGunzip();
+      else if (encoding === 'br') decompressor = createBrotliDecompress();
+      else if (encoding === 'deflate') decompressor = createInflate();
+
+      if (decompressor) {
+        // Pipe to client AND decompress in parallel
+        proxyRes.on('data', (chunk: Buffer) => {
+          res.write(chunk); // forward compressed to client
+          decompressor!.write(chunk); // decompress for parsing
+        });
+        decompressor.on('data', (chunk: Buffer) => {
+          responseText += chunk.toString();
+        });
+      } else {
+        // No compression — read directly
+        proxyRes.on('data', (chunk: Buffer) => {
+          responseText += chunk.toString();
+          res.write(chunk);
+        });
+      }
 
       proxyRes.on('end', () => {
+        if (decompressor) decompressor.end();
         res.end();
         entry.latencyMs = Date.now() - startTime;
 
-        // Extract usage from the complete response text
-        const resInfo = analyzeResponseText(responseText);
-        Object.assign(entry, resInfo);
+        // Wait for decompressor to flush, then parse
+        const finalize = () => {
+          const resInfo = analyzeResponseText(responseText);
+          Object.assign(entry, resInfo);
 
-        // Log the request
-        recentRequests.push(entry);
-        if (recentRequests.length > MAX_REQUEST_LOG) recentRequests.shift();
+          recentRequests.push(entry);
+          if (recentRequests.length > MAX_REQUEST_LOG) recentRequests.shift();
 
-        const model = entry.model || '?';
-        const tokens = entry.inputTokens || entry.outputTokens
-          ? `in=${entry.inputTokens || '?'} out=${entry.outputTokens || '?'}${entry.cacheRead ? ` cache_read=${entry.cacheRead}` : ''}${entry.cacheCreation ? ` cache_create=${entry.cacheCreation}` : ''}`
-          : '';
-        log('info', `📡 ${path} ${model} ${entry.latencyMs}ms ${tokens}`);
+          const model = entry.model || '?';
+          const tokens = entry.inputTokens || entry.outputTokens
+            ? `in=${entry.inputTokens || '?'} out=${entry.outputTokens || '?'}${entry.cacheRead ? ` cache_read=${entry.cacheRead}` : ''}${entry.cacheCreation ? ` cache_create=${entry.cacheCreation}` : ''}`
+            : '';
+          log('info', `📡 ${path} ${model} ${entry.latencyMs}ms ${tokens}`);
 
-        if (queue.length > 0) drainQueue();
+          if (queue.length > 0) drainQueue();
+        };
+
+        if (decompressor) {
+          decompressor.on('end', finalize);
+        } else {
+          finalize();
+        }
       });
     },
   );
