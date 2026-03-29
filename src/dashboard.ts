@@ -559,17 +559,21 @@ function renderSessionList() {
 async function pollSessions() {
   if (activeTab !== 'sessions') return;
   try {
-    const resp = await fetch('/sessions');
-    if (!resp.ok) {
-      if (resp.status === 404) {
-        $('sessions-body').innerHTML = '<tr><td colspan="7"><div class="sessions-empty"><div class="empty-icon">🔌</div>Session API not yet available<br><span style="font-size:11px;color:#444">Waiting for /sessions endpoint…</span></div></td></tr>';
-        return;
-      }
-      throw new Error('HTTP ' + resp.status);
+    // Fetch both cch-keyed sessions (reliable billing-header IDs) and time-based sessions in parallel
+    const [cchResp, sessResp] = await Promise.all([
+      fetch('/cch-sessions').then(r => r.ok ? r.json() : null).catch(() => null),
+      fetch('/sessions').then(r => r.ok ? r.json() : null).catch(() => null),
+    ]);
+    const cchList = Array.isArray(cchResp) ? cchResp : [];
+    const sessData = sessResp ? (Array.isArray(sessResp) ? sessResp : (sessResp.sessions || [])) : [];
+    // Merge: cch sessions take priority; add any non-duplicate time-based sessions
+    const seen = new Set(cchList.map(s => s.id));
+    allSessions = [...cchList, ...sessData.filter(s => !seen.has(s.id))];
+    if (allSessions.length === 0 && !cchResp && !sessResp) {
+      $('sessions-body').innerHTML = '<tr><td colspan="7"><div class="sessions-empty"><div class="empty-icon">🔌</div>Session API not yet available<br><span style="font-size:11px;color:#444">Waiting for /sessions endpoint…</span></div></td></tr>';
+      sessionPollTimer = setTimeout(pollSessions, 3000);
+      return;
     }
-    const data = await resp.json();
-    // API returns { sessions: [...], total, offset, limit } or plain array
-    allSessions = Array.isArray(data) ? data : (data.sessions || []);
     filterSessions();
     // Refresh open panel
     if (selectedSessionId) refreshPanel(selectedSessionId);
@@ -598,7 +602,9 @@ async function openSession(id) {
 async function refreshPanel(id) {
   if (selectedSessionId !== id) return;
   try {
-    const resp = await fetch('/sessions/' + encodeURIComponent(id));
+    // Try cch-keyed session first (set by billing-header extraction), fall back to time-based session
+    let resp = await fetch('/cch-sessions/' + encodeURIComponent(id));
+    if (!resp.ok) resp = await fetch('/sessions/' + encodeURIComponent(id));
     if (!resp.ok) throw new Error('HTTP ' + resp.status);
     const session = await resp.json();
     renderPanel(session);

@@ -1133,8 +1133,52 @@ const server = createServer((req, res) => {
     return;
   }
 
-  // ── Session API (/sessions, /sessions/:id, /sessions/:id/conversations, /conversations/:id)
+  // ── CCH Sessions API — cch-keyed sessions from billing headers ──────────────
   const pathname = path.split('?')[0];
+  if (pathname === '/cch-sessions' && req.method === 'GET') {
+    const sessionList = Array.from(cchSessions.values())
+      .sort((a, b) => b.lastSeen - a.lastSeen)
+      .map(s => ({
+        id: s.id,
+        firstSeen: new Date(s.firstSeen).toISOString(),
+        lastSeen: new Date(s.lastSeen).toISOString(),
+        model: s.model,
+        requestCount: s.requestCount,
+        totalInputTokens: s.totalInputTokens,
+        totalOutputTokens: s.totalOutputTokens,
+        totalCacheRead: s.totalCacheRead,
+        totalCacheCreation: s.totalCacheCreation,
+        avgLatencyMs: s.requestCount > 0 ? Math.round(s.totalLatencyMs / s.requestCount) : 0,
+        taskDescription: s.taskDescription,
+        durationMs: s.lastSeen - s.firstSeen,
+      }));
+    res.writeHead(200, { 'content-type': 'application/json' });
+    res.end(JSON.stringify(sessionList));
+    return;
+  }
+
+  if (path.startsWith('/cch-sessions/') && req.method === 'GET') {
+    const sid = decodeURIComponent(path.slice('/cch-sessions/'.length));
+    const session = cchSessions.get(sid);
+    if (!session) {
+      res.writeHead(404, { 'content-type': 'application/json' });
+      res.end(JSON.stringify({ error: 'session not found' }));
+      return;
+    }
+    res.writeHead(200, { 'content-type': 'application/json' });
+    res.end(JSON.stringify({
+      id: session.id,
+      firstSeen: new Date(session.firstSeen).toISOString(),
+      lastSeen: new Date(session.lastSeen).toISOString(),
+      model: session.model,
+      requestCount: session.requestCount,
+      taskDescription: session.taskDescription,
+      requests: session.requests.map(r => ({ ...r, timestamp: new Date(r.timestamp).toISOString() })),
+    }));
+    return;
+  }
+
+  // ── Session API (/sessions, /sessions/:id, /sessions/:id/conversations, /conversations/:id)
 
   // GET /sessions[?offset=N&limit=N&model=X&since=<epochMs>&active=true]
   if (pathname === '/sessions' && req.method === 'GET') {
