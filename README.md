@@ -1,108 +1,105 @@
 # claude-rate-limiter
 
-Rate-limit-aware reverse proxy for the Anthropic API. Strips bloat from Claude Code's default system prompt, queues requests when approaching limits, and provides a live dashboard.
-
-**Saves 21-33K tokens per request and prevents 429 errors in multi-agent setups.**
+Rate-limit-aware reverse proxy for the Anthropic API. Prevents 429 errors in multi-agent setups by reading Anthropic's utilization headers and queuing requests before they get rejected.
 
 ## The Problem
 
-Claude Code sends ~31K tokens of overhead with every API request:
-- 51K char system prompt (auto memory instructions, git commit rules, tool docs nobody reads)
-- 23 tool definitions when agents only need ~10
-- Each tool has 1-10K chars of description
-
-With 6 concurrent agents making ~1 turn/min, that's **1.8M wasted tokens/hour** (~$27/hr for Opus).
-
-Anthropic's unified rate limiter uses a 5-hour utilization window. Once you hit ~85%, all requests get rejected until the window resets.
+When running multiple Claude agents concurrently, they hit Anthropic's rate limits and enter a death spiral: agent hits 429 → disconnects → reconnects → immediately hits 429 again. With 6+ agents this cascade makes the entire system unusable.
 
 ## The Solution
 
-A transparent reverse proxy that sits between Claude CLI and `api.anthropic.com`:
+A transparent reverse proxy between Claude CLI and `api.anthropic.com`. Reads the actual rate limit headers from every response and queues requests when utilization is high.
 
 ```
 Claude CLI --HTTP--> rate-limiter:3128 --HTTPS--> api.anthropic.com
                          |
-                    ✂️ Strips 83% of request bloat
-                    📊 Reads rate limit headers
-                    ⏳ Queues when near limit
-                    📈 Live dashboard
+                    📊 Reads utilization headers
+                    ⏳ Queues when > 85% utilized
+                    📈 Live dashboard + metrics
 ```
 
 ## Quick Start
 
 ```bash
-# Standalone
+# Install and run
+cd claude-rate-limiter
+npm install
 npx tsx src/index.ts
-# Then run Claude through it:
-ANTHROPIC_BASE_URL=http://localhost:3128 claude ...
 
-# Docker
-docker compose up -d
+# Route Claude through it
 ANTHROPIC_BASE_URL=http://localhost:3128 claude ...
 ```
 
 Dashboard at `http://localhost:3128/`
 
-## What It Does
+## What It Tracks
 
-### 1. Request Stripping (83% reduction)
-
-| Component | Before | After | Saved |
-|-----------|--------|-------|-------|
-| System prompt | 51K chars | 933 chars | 98% |
-| Tool definitions | 70K chars (23 tools) | 12K chars (10 tools) | 83% |
-| Tool descriptions | 45K chars | 2K chars | 96% |
-| **Total per request** | **~123K chars (~31K tokens)** | **~18K chars (~4.5K tokens)** | **83%** |
-
-**Detection is size-based, not content-based** — any system prompt block over 3K chars gets replaced with a minimal version. Works regardless of Anthropic changing their default prompt.
-
-What gets stripped:
-- Auto memory instructions (38K chars) — agents don't persist memories
-- Git commit formatting rules (10K chars in Bash tool) — agents rarely commit
-- TodoWrite (9K chars), EnterPlanMode (4K), CronCreate/Delete/List, NotebookEdit, etc.
-- Verbose tool descriptions replaced with 1-3 line versions
-
-What's preserved:
-- Billing headers (required by Anthropic)
-- User/app system prompts (< 3K chars)
-- Persona prompts
-- Essential tools: Bash, Read, Edit, Write, Glob, Grep, Agent, Skill, WebSearch, WebFetch
-
-### 2. Rate Limit Tracking
-
-Reads Anthropic's actual response headers:
+Anthropic uses a **unified utilization-based** rate limit system (not the `x-ratelimit-*` headers from their docs). The proxy reads the actual headers:
 
 ```
 anthropic-ratelimit-unified-status: allowed | rejected
-anthropic-ratelimit-unified-5h-utilization: 0.0–1.0
-anthropic-ratelimit-unified-5h-reset: <epoch seconds>
-anthropic-ratelimit-unified-7d-utilization: 0.0–1.0
-anthropic-ratelimit-unified-7d-reset: <epoch seconds>
+anthropic-ratelimit-unified-5h-utilization: 0.44    (44% of 5-hour window used)
+anthropic-ratelimit-unified-7d-utilization: 0.06    (6% of 7-day window used)
+anthropic-ratelimit-unified-5h-reset: 1774735200    (epoch seconds)
+anthropic-ratelimit-unified-representative-claim: five_hour
 ```
 
-Also tracks per-minute RPM/TPM headers when present.
+Per request, it also tracks:
+- Model, streaming mode, system prompt size, message count
+- Input/output tokens and prompt cache usage (parsed from SSE stream)
+- Latency, status code
+- Rate limit events (429s, queuing, threshold crossings) with trigger reasons
 
-### 3. Request Queuing
+## Benchmarks
 
-When utilization exceeds threshold (default 85%), requests are held in a FIFO queue and released one at a time after the reset window. Prevents the cascade where agents hit 429 → disconnect → reconnect → immediately hit 429 again.
+Tested with 10 real coding tasks (Space Invaders, Snake, TODO API, markdown editor, CSV analyzer, chat UI, regex tester, sorting visualizer, calculator, weather dashboard) on Claude Haiku:
 
-### 4. Live Dashboard
+### Passthrough mode (no stripping, just monitoring + queuing)
 
-`http://localhost:3128/` shows:
-- Rate limit status with color-coded utilization bars (5h + 7d)
-- Tokens saved counter (cumulative)
-- Request log with model, status, latency, tokens, savings per request
+| Metric | Per task (avg) | Total (10 tasks) |
+|--------|---------------|-------------------|
+| API calls | 3 | 30 |
+| Input tokens | 18 | 180 |
+| Output tokens | 4,695 | 46,949 |
+| Cache creation | 10,236 | 102,362 |
+| Cache read | 47,871 | 478,705 |
+| Time | 27.9s | 279s |
+| Cost | $0.033 | $0.329 |
+| **Task success** | **10/10** | |
+
+### Key finding: prompt caching makes stripping unnecessary
+
+We tested an aggressive stripping mode that replaced Anthropic's 51K system prompt with a 933-char slim version and removed unused tools. Results:
+
+| Metric | Stripped | Passthrough | Winner |
+|--------|---------|-------------|--------|
+| Cost | $0.306 | $0.329 | Stripped (-6.8%) |
+| Speed | 283s | 279s | Passthrough (-1.7%) |
+| **Success rate** | **0/10** | **10/10** | **Passthrough** |
+
+Stripping broke CWD awareness — agents wrote files to wrong paths. The 6.8% cost savings came from smaller cache entries, but Anthropic's prompt caching already prices cached tokens at $0.08/M (vs $0.80/M input). The bloated default prompt only costs ~$0.004 per turn after the first request.
+
+**Stripping is disabled by default.** The proxy's value is in queuing and observability, not prompt surgery.
+
+## Rate Limit Queuing
+
+When 5-hour utilization exceeds the threshold (default 85%), incoming requests are held in a FIFO queue and released one at a time. This prevents the reconnect-429 death spiral that crashes multi-agent systems.
+
+Rate limit events are logged with:
+- Type (429, queued, rejected, threshold_crossed)
+- Model that triggered it
+- Utilization at time of event
+- Queue depth
+- Human-readable trigger reason
+
+## Live Dashboard
+
+`http://localhost:3128/` — auto-refreshes every 2 seconds:
+
+- Rate limit status with color-coded utilization bars (5h + 7d windows)
+- Request log with model, status, latency, input/output tokens per request
 - By-model breakdown with cost estimation
-- Rate limit events (429s, queued, threshold crossings) with trigger reasons
-
-### 5. Token & Cost Tracking
-
-Per-request tracking:
-- Model used, streaming mode
-- Input/output/cache tokens (parsed from SSE stream)
-- System prompt size, message count
-- Before/after request size, tokens saved
-- Latency
+- Rate limit event history with trigger reasons
 
 ## API Endpoints
 
@@ -113,33 +110,26 @@ Per-request tracking:
 | `GET /metrics` | Prometheus-format metrics |
 | `GET /requests` | Recent request log (last 200) |
 | `GET /stats` | Aggregate stats by model with cost estimation |
-| `GET /events` | Rate limit event history (429s, queues, threshold crossings) |
+| `GET /events` | Rate limit event history |
 
 ## Configuration
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `PORT` | `3128` | Proxy listen port |
-| `ANTHROPIC_API_URL` | `https://api.anthropic.com` | Upstream API URL |
-| `QUEUE_THRESHOLD` | `0.85` | Queue when utilization exceeds this (0.0–1.0) |
-| `MAX_QUEUE_SIZE` | `100` | Max queued requests before rejecting |
+| `PORT` | `3128` | Listen port |
+| `ANTHROPIC_API_URL` | `https://api.anthropic.com` | Upstream |
+| `QUEUE_THRESHOLD` | `0.85` | Queue when utilization exceeds this |
+| `MAX_QUEUE_SIZE` | `100` | Max queued requests |
 | `LOG_LEVEL` | `info` | `debug` \| `info` \| `warn` \| `error` |
-| `STRIP_BLOAT` | `true` | Enable request stripping (`false` to disable) |
-| `KEEP_TOOLS` | `Bash,Read,Edit,Write,Glob,Grep,Agent,Skill,WebSearch,WebFetch` | Tools to keep |
-| `BLOAT_THRESHOLD` | `3000` | System prompt blocks larger than this get replaced |
+| `STRIP_BLOAT` | `false` | Enable prompt stripping (not recommended) |
 
 ## Docker Compose Integration
-
-Add to your existing docker-compose.yml:
 
 ```yaml
 services:
   rate-limiter:
-    build: ../claude-rate-limiter  # or image: ghcr.io/powback/claude-rate-limiter
+    build: ../claude-rate-limiter
     restart: unless-stopped
-    environment:
-      - PORT=3128
-      - QUEUE_THRESHOLD=0.85
 
   agents:
     environment:
@@ -148,42 +138,19 @@ services:
       - rate-limiter
 ```
 
-That's it. All Claude CLI processes spawned in the agents container will route through the proxy.
-
-## Benchmarks (real production data)
-
-| Agent Type | Original | After Stripping | Reduction | Tokens Saved |
-|------------|----------|-----------------|-----------|--------------|
-| Fresh Sonnet task agent | 123K chars | 18K chars | **84%** | ~26K tokens |
-| Fresh Opus 1M agent | 229K chars | 95K chars | **58%** | ~33K tokens |
-| Resumed agent with history | Larger | Larger | 40-58% | ~33K tokens |
-
-The fixed overhead (system prompt + tools) is always stripped by ~98%. For fresh agents this dominates. For agents with long conversation histories, the history is the bulk of the request and can't be stripped — but you still save ~33K tokens of bloat per turn.
-
-## Cost Impact
-
-For 6 concurrent Opus agents (~1 turn/min each):
-
-| Scenario | Saved/turn | Saved/hr | Saved/month |
-|----------|-----------|---------|------------|
-| Opus (33K saved/turn) | ~33K tokens | ~2M tokens | ~$43K input cost saved |
-| Sonnet (26K saved/turn) | ~26K tokens | ~1.6M tokens | ~$7K input cost saved |
-
 ## How It Works
 
 1. Claude CLI sends request to proxy (via `ANTHROPIC_BASE_URL`)
-2. Proxy parses request JSON, replaces bloated system prompt with 933-char slim version
-3. Removes unused tool definitions, trims kept tool descriptions
-4. Strips system-reminder nag messages from user content
-5. Forwards stripped request to `api.anthropic.com` (uncompressed for token parsing)
-6. Reads rate limit headers from response
-7. Parses SSE stream for token usage (input/output/cache)
-8. Streams response back to client
-9. If utilization > threshold, queues subsequent requests until reset
+2. Proxy strips `accept-encoding` so responses are uncompressed (needed to parse SSE)
+3. Forwards request to `api.anthropic.com`
+4. Reads `anthropic-ratelimit-unified-*` headers from response
+5. Parses SSE stream for `message_start` (input tokens, cache) and `message_delta` (output tokens)
+6. Streams response back to client
+7. If utilization > threshold, queues subsequent requests until reset window
 
 ## Zero Dependencies
 
-Built with Node.js built-in `http` and `https` modules only. TypeScript for development, compiles to plain JS.
+Node.js built-in `http` and `https` only. ~800 lines TypeScript.
 
 ## License
 
