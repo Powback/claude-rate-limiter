@@ -298,15 +298,26 @@ function timeAgo(iso) {
   const s = Math.ceil(ms/1000);
   return s > 3600 ? Math.floor(s/3600)+'h '+Math.floor((s%3600)/60)+'m' : s > 60 ? Math.floor(s/60)+'m '+s%60+'s' : s+'s';
 }
-function relTime(iso) {
-  if (!iso) return '—';
-  const ms = Date.now() - new Date(iso).getTime();
+function relTime(v) {
+  if (!v) return '—';
+  // accept epoch ms (number), ISO string, or Date
+  const ts = typeof v === 'number' ? v : new Date(v).getTime();
+  const ms = Date.now() - ts;
   if (ms < 0) return 'just now';
   const s = Math.floor(ms/1000);
+  if (s < 5) return 'just now';
   if (s < 60) return s+'s ago';
   if (s < 3600) return Math.floor(s/60)+'m ago';
   if (s < 86400) return Math.floor(s/3600)+'h ago';
   return Math.floor(s/86400)+'d ago';
+}
+
+// Derive session status from lastActivity timestamp (epoch ms)
+function deriveStatus(s) {
+  const idle = Date.now() - (s.lastActivity || 0);
+  if (idle < 60_000) return 'active';
+  if (idle < 30 * 60_000) return 'idle';
+  return 'completed';
 }
 function esc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -464,16 +475,23 @@ function renderSessionRow(s) {
   tr.dataset.id = s.id;
   if (s.id === selectedSessionId) tr.classList.add('selected');
   const shortId = s.id ? s.id.slice(0, 12) + '…' : '—';
-  const task = esc(s.task || s.title || s.description || '(untitled)');
-  const tokenHtml = '<span class="in">'+fmt(s.inputTokens)+'</span><span style="color:#333"> / </span><span class="out">'+fmt(s.outputTokens)+'</span>'+(s.cacheRead?'<br><span class="cache">⚡'+fmt(s.cacheRead)+'</span>':'');
+  // Sessions don't have a task name — show model + start time as identifier
+  const startLabel = s.startTime ? new Date(s.startTime).toLocaleString([], {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) : '';
+  const task = esc(s.task || s.title || s.description || (startLabel ? 'Session ' + startLabel : '(session)'));
+  const inTok = s.totalInputTokens ?? s.inputTokens ?? 0;
+  const outTok = s.totalOutputTokens ?? s.outputTokens ?? 0;
+  const cacheR = s.totalCacheRead ?? s.cacheRead ?? 0;
+  const tokenHtml = '<span class="in">'+fmt(inTok)+'</span><span style="color:#333"> / </span><span class="out">'+fmt(outTok)+'</span>'+(cacheR?'<br><span class="cache">⚡'+fmt(cacheR)+'</span>':'');
+  const status = s.status || deriveStatus(s);
+  const msgCount = s.requestCount ?? s.conversationCount ?? s.messageCount ?? 0;
   tr.innerHTML =
     '<td><span class="session-id" title="'+esc(s.id || '')+'">'+shortId+'</span></td>'+
     '<td><div class="session-task" title="'+task+'">'+task+'</div></td>'+
-    '<td>'+statusBadge(s.status)+'</td>'+
+    '<td>'+statusBadge(status)+'</td>'+
     '<td style="color:#888;font-size:11px">'+esc(shortModel(s.model))+'</td>'+
-    '<td style="text-align:right;color:#888;font-size:12px">'+(s.messageCount || 0)+'</td>'+
+    '<td style="text-align:right;color:#888;font-size:12px">'+msgCount+'</td>'+
     '<td class="token-cell">'+tokenHtml+'</td>'+
-    '<td class="time-cell">'+relTime(s.lastActivity || s.updatedAt || s.startedAt)+'</td>';
+    '<td class="time-cell">'+relTime(s.lastActivity ?? s.updatedAt ?? s.startedAt)+'</td>';
   tr.onclick = () => openSession(s.id);
   return tr;
 }
@@ -506,7 +524,8 @@ function setFilter(f) {
 function filterSessions() {
   const q = ($('session-search').value || '').toLowerCase();
   filteredSessions = allSessions.filter(s => {
-    const matchStatus = sessionFilter === 'all' || (s.status || '').toLowerCase().startsWith(sessionFilter);
+    const status = (s.status || deriveStatus(s)).toLowerCase();
+    const matchStatus = sessionFilter === 'all' || status.startsWith(sessionFilter);
     const matchSearch = !q ||
       (s.id || '').toLowerCase().includes(q) ||
       (s.task || s.title || s.description || '').toLowerCase().includes(q) ||
@@ -529,7 +548,7 @@ function renderSessionList() {
   }
   $('session-count').textContent = sorted.length + ' of ' + allSessions.length + ' sessions';
   // Update badge
-  const activeCnt = allSessions.filter(s => ['active','working'].includes((s.status||'').toLowerCase())).length;
+  const activeCnt = allSessions.filter(s => ['active','working'].includes((s.status||deriveStatus(s)).toLowerCase())).length;
   const badge = $('sessions-badge');
   if (activeCnt > 0) { badge.textContent = activeCnt; badge.style.display = ''; }
   else badge.style.display = 'none';
@@ -547,6 +566,7 @@ async function pollSessions() {
       throw new Error('HTTP ' + resp.status);
     }
     const data = await resp.json();
+    // API returns { sessions: [...], total, offset, limit } or plain array
     allSessions = Array.isArray(data) ? data : (data.sessions || []);
     filterSessions();
     // Refresh open panel
@@ -588,27 +608,52 @@ async function refreshPanel(id) {
 function renderPanel(session) {
   // Header
   $('panel-sid').textContent = session.id || '';
-  $('panel-task').textContent = session.task || session.title || session.description || '(untitled)';
+  const startLabel = session.startTime ? new Date(session.startTime).toLocaleString([], {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) : '';
+  $('panel-task').textContent = session.task || session.title || session.description || (startLabel ? 'Session ' + startLabel : '(session)');
+  const status = session.status || deriveStatus(session);
   const metaParts = [];
   if (session.model) metaParts.push('<span style="color:#8b5cf6">'+esc(shortModel(session.model))+'</span>');
-  if (session.startedAt) metaParts.push('Started '+relTime(session.startedAt));
-  if (session.status) metaParts.push(statusBadge(session.status));
-  $('panel-meta').innerHTML = metaParts.join('<span style="color:#333">·</span>');
+  if (session.startTime) metaParts.push('Started '+relTime(session.startTime));
+  metaParts.push(statusBadge(status));
+  $('panel-meta').innerHTML = metaParts.join('<span style="color:#333"> · </span>');
 
-  // Stats bar
-  const msgs = session.messages || [];
-  const userMsgs = msgs.filter(m => m.role === 'user').length;
-  const asstMsgs = msgs.filter(m => m.role === 'assistant').length;
-  const totalIn = session.inputTokens || msgs.reduce((s,m) => s+(m.inputTokens||m.tokens||0),0);
-  const totalOut = session.outputTokens || msgs.reduce((s,m) => s+(m.outputTokens||0),0);
+  // Stats bar — use totalInputTokens / totalOutputTokens from session
+  const convs = session.conversations || session.messages || [];
+  const totalIn  = session.totalInputTokens  ?? session.inputTokens  ?? convs.reduce((a,c) => a+(c.inputTokens||0), 0);
+  const totalOut = session.totalOutputTokens ?? session.outputTokens ?? convs.reduce((a,c) => a+(c.outputTokens||0), 0);
+  const reqCount = session.requestCount ?? session.conversationCount ?? convs.length;
+  const avgLat   = session.avgLatencyMs ? session.avgLatencyMs+'ms' : '—';
   $('panel-stats').innerHTML =
-    '<div class="panel-stat"><div class="ps-label">Messages</div><div class="ps-value" style="color:#e0e0e0">'+msgs.length+'</div></div>'+
+    '<div class="panel-stat"><div class="ps-label">Requests</div><div class="ps-value" style="color:#e0e0e0">'+reqCount+'</div></div>'+
     '<div class="panel-stat"><div class="ps-label">Input tok</div><div class="ps-value blue">'+fmt(totalIn)+'</div></div>'+
-    '<div class="panel-stat"><div class="ps-label">Output tok</div><div class="ps-value purple">'+fmt(totalOut)+'</div></div>';
+    '<div class="panel-stat"><div class="ps-label">Avg latency</div><div class="ps-value purple">'+avgLat+'</div></div>';
 
-  // Messages
-  sessionMessages = msgs;
+  // Convert conversations → synthetic message pairs for the thread view
+  sessionMessages = conversationsToMessages(convs);
   renderMessages();
+}
+
+// Each ConversationEntry becomes two synthetic messages (user turn + assistant turn)
+function conversationsToMessages(convs) {
+  const msgs = [];
+  for (const c of convs) {
+    if (c.lastUserMessage) {
+      msgs.push({
+        role: 'user', content: c.lastUserMessage,
+        timestamp: c.timestamp, inputTokens: c.inputTokens,
+        _preview: true, _convId: c.id,
+      });
+    }
+    if (c.lastAssistantResponse) {
+      msgs.push({
+        role: 'assistant', content: c.lastAssistantResponse,
+        timestamp: c.timestamp, outputTokens: c.outputTokens,
+        latencyMs: c.latencyMs, _preview: true, _convId: c.id,
+        _msgCount: c.messageCount,
+      });
+    }
+  }
+  return msgs;
 }
 
 function renderMessages() {
