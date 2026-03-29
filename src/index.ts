@@ -459,6 +459,154 @@ function recordRateLimitEvent(type: RateLimitEvent['type'], reason: string, mode
 const recentRequests: RequestLog[] = [];
 const MAX_REQUEST_LOG = 200;
 
+// ── Session & Conversation tracking ────────────────────────────────────────
+
+interface ConversationEntry {
+  id: string;
+  sessionId: string;
+  timestamp: number;
+  model: string;
+  inputTokens: number;
+  outputTokens: number;
+  cacheRead: number;
+  cacheCreation: number;
+  latencyMs: number;
+  statusCode: number;
+  streaming: boolean;
+  messageCount: number;
+  systemPromptLength: number;
+  lastUserMessage: string;       // preview of most recent user turn (≤300 chars)
+  lastAssistantResponse: string; // preview of most recent assistant turn (≤300 chars)
+  path: string;
+}
+
+interface SessionEntry {
+  id: string;
+  startTime: number;
+  lastActivity: number;
+  model: string;
+  conversationIds: string[];
+  totalInputTokens: number;
+  totalOutputTokens: number;
+  totalCacheRead: number;
+  totalCacheCreation: number;
+  totalLatencyMs: number;
+  requestCount: number;
+}
+
+const sessions = new Map<string, SessionEntry>();
+const conversations = new Map<string, ConversationEntry>();
+const MAX_SESSIONS = 100;
+const MAX_CONVERSATIONS = 500;
+const SESSION_IDLE_MS = 30 * 60 * 1000; // 30 minutes — new session after this idle
+
+let currentSessionId: string | null = null;
+
+// SSE clients listening for real-time session/conversation updates
+const sseClients = new Set<ServerResponse>();
+
+function generateId(): string {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+}
+
+function getOrCreateSession(): string {
+  const now = Date.now();
+  if (currentSessionId) {
+    const session = sessions.get(currentSessionId);
+    if (session && now - session.lastActivity < SESSION_IDLE_MS) {
+      return currentSessionId;
+    }
+  }
+  const id = generateId();
+  sessions.set(id, {
+    id, startTime: now, lastActivity: now, model: 'unknown',
+    conversationIds: [], totalInputTokens: 0, totalOutputTokens: 0,
+    totalCacheRead: 0, totalCacheCreation: 0, totalLatencyMs: 0, requestCount: 0,
+  });
+  currentSessionId = id;
+  // Evict oldest session when over limit
+  if (sessions.size > MAX_SESSIONS) {
+    const oldest = [...sessions.entries()].sort((a, b) => a[1].lastActivity - b[1].lastActivity)[0];
+    if (oldest) sessions.delete(oldest[0]);
+  }
+  log('info', `🗂 New session: ${id}`);
+  return id;
+}
+
+function extractMessagePreview(body: Buffer): { lastUserMessage: string; lastAssistantResponse: string } {
+  try {
+    const json = JSON.parse(body.toString());
+    if (!Array.isArray(json.messages) || json.messages.length === 0) {
+      return { lastUserMessage: '', lastAssistantResponse: '' };
+    }
+    const textOf = (content: any): string => {
+      if (typeof content === 'string') return content;
+      if (Array.isArray(content)) return content.filter((b: any) => b.type === 'text').map((b: any) => b.text || '').join(' ');
+      return '';
+    };
+    let lastUserMessage = '';
+    let lastAssistantResponse = '';
+    for (let i = json.messages.length - 1; i >= 0; i--) {
+      const msg = json.messages[i];
+      if (!lastUserMessage && msg.role === 'user') lastUserMessage = textOf(msg.content).slice(0, 300);
+      if (!lastAssistantResponse && msg.role === 'assistant') lastAssistantResponse = textOf(msg.content).slice(0, 300);
+      if (lastUserMessage && lastAssistantResponse) break;
+    }
+    return { lastUserMessage, lastAssistantResponse };
+  } catch { return { lastUserMessage: '', lastAssistantResponse: '' }; }
+}
+
+function serializeSession(s: SessionEntry) {
+  return {
+    id: s.id, startTime: s.startTime, lastActivity: s.lastActivity, model: s.model,
+    requestCount: s.requestCount, conversationCount: s.conversationIds.length,
+    totalInputTokens: s.totalInputTokens, totalOutputTokens: s.totalOutputTokens,
+    totalCacheRead: s.totalCacheRead, totalCacheCreation: s.totalCacheCreation,
+    avgLatencyMs: s.requestCount > 0 ? Math.round(s.totalLatencyMs / s.requestCount) : 0,
+  };
+}
+
+function recordConversation(entry: RequestLog, msgPreview: { lastUserMessage: string; lastAssistantResponse: string }) {
+  if (!entry.path.includes('/messages')) return; // only track messages API calls
+  const sessionId = getOrCreateSession();
+  const session = sessions.get(sessionId)!;
+  const id = generateId();
+  const conv: ConversationEntry = {
+    id, sessionId, timestamp: entry.timestamp,
+    model: entry.model || 'unknown',
+    inputTokens: entry.inputTokens || 0, outputTokens: entry.outputTokens || 0,
+    cacheRead: entry.cacheRead || 0, cacheCreation: entry.cacheCreation || 0,
+    latencyMs: entry.latencyMs || 0, statusCode: entry.statusCode || 0,
+    streaming: entry.streaming || false, messageCount: entry.messageCount || 0,
+    systemPromptLength: entry.systemPromptLength || 0,
+    lastUserMessage: msgPreview.lastUserMessage,
+    lastAssistantResponse: msgPreview.lastAssistantResponse,
+    path: entry.path,
+  };
+  conversations.set(id, conv);
+  if (conversations.size > MAX_CONVERSATIONS) {
+    const oldest = conversations.keys().next().value;
+    if (oldest) conversations.delete(oldest);
+  }
+  // Update session aggregates
+  session.conversationIds.push(id);
+  session.lastActivity = entry.timestamp;
+  session.model = entry.model || session.model;
+  session.totalInputTokens += conv.inputTokens;
+  session.totalOutputTokens += conv.outputTokens;
+  session.totalCacheRead += conv.cacheRead;
+  session.totalCacheCreation += conv.cacheCreation;
+  session.totalLatencyMs += conv.latencyMs;
+  session.requestCount++;
+  // Push to SSE clients
+  if (sseClients.size > 0) {
+    const payload = JSON.stringify({ type: 'conversation', conversation: conv, session: serializeSession(session) });
+    for (const client of sseClients) {
+      try { client.write(`data: ${payload}\n\n`); } catch { sseClients.delete(client); }
+    }
+  }
+}
+
 import { writeFileSync, mkdirSync, existsSync } from 'node:fs';
 
 const LOG_DIR = process.env.LOG_DIR || './logs';
@@ -564,6 +712,9 @@ function forwardRequest(req: IncomingMessage, res: ServerResponse, body: Buffer)
   const reqInfo = analyzeRequestBody(body, path);
   const entry: RequestLog = { timestamp: startTime, method: req.method || 'POST', path, ...reqInfo, originalSize };
 
+  // Capture message previews before rewriting (rewrite may strip content)
+  const msgPreview = extractMessagePreview(body);
+
   // Rewrite request — strip system prompt bloat + useless tools
   body = rewriteRequest(body);
   headers['content-length'] = String(body.length);
@@ -639,6 +790,8 @@ function forwardRequest(req: IncomingMessage, res: ServerResponse, body: Buffer)
 
           recentRequests.push(entry);
           if (recentRequests.length > MAX_REQUEST_LOG) recentRequests.shift();
+
+          recordConversation(entry, msgPreview);
 
           const model = entry.model || '?';
           const tokens = entry.inputTokens || entry.outputTokens
@@ -822,6 +975,81 @@ const server = createServer((req, res) => {
   if (path === '/events' && req.method === 'GET') {
     res.writeHead(200, { 'content-type': 'application/json' });
     res.end(JSON.stringify(rateLimitEvents.slice(-100).reverse()));
+    return;
+  }
+
+  // ── Session API ─────────────────────────────────────────────────────────────
+
+  // SSE stream — real-time session/conversation updates
+  if (path === '/sessions/stream' && req.method === 'GET') {
+    res.writeHead(200, {
+      'content-type': 'text/event-stream',
+      'cache-control': 'no-cache',
+      'connection': 'keep-alive',
+      'access-control-allow-origin': '*',
+    });
+    res.write('data: {"type":"connected"}\n\n');
+    sseClients.add(res);
+    req.on('close', () => sseClients.delete(res));
+    return;
+  }
+
+  // List all sessions  GET /sessions[?offset=N&limit=N&model=X&since=<epochMs>]
+  const pathname = path.split('?')[0];
+  if (pathname === '/sessions' && req.method === 'GET') {
+    const urlObj = new URL(path, `http://localhost`);
+    const offset = Math.max(0, parseInt(urlObj.searchParams.get('offset') || '0', 10));
+    const limit  = Math.min(100, Math.max(1, parseInt(urlObj.searchParams.get('limit') || '20', 10)));
+    const modelFilter = urlObj.searchParams.get('model');
+    const since = urlObj.searchParams.get('since') ? parseInt(urlObj.searchParams.get('since')!, 10) : 0;
+
+    let list = [...sessions.values()].sort((a, b) => b.lastActivity - a.lastActivity);
+    if (modelFilter) list = list.filter(s => s.model.includes(modelFilter));
+    if (since) list = list.filter(s => s.lastActivity >= since);
+
+    const total = list.length;
+    res.writeHead(200, { 'content-type': 'application/json' });
+    res.end(JSON.stringify({ total, offset, limit, sessions: list.slice(offset, offset + limit).map(serializeSession) }));
+    return;
+  }
+
+  // GET /sessions/:id  — session details with embedded conversations
+  // GET /sessions/:id/conversations  — paginated conversation list
+  const sessionRouteMatch = pathname.match(/^\/sessions\/([^/]+)(\/conversations)?$/);
+  if (sessionRouteMatch && req.method === 'GET') {
+    const sessionId = sessionRouteMatch[1];
+    const wantsConvList = !!sessionRouteMatch[2];
+    const session = sessions.get(sessionId);
+    if (!session) {
+      res.writeHead(404, { 'content-type': 'application/json' });
+      res.end(JSON.stringify({ error: 'session_not_found', id: sessionId }));
+      return;
+    }
+    const convList = session.conversationIds.map(id => conversations.get(id)).filter(Boolean) as ConversationEntry[];
+    if (wantsConvList) {
+      const urlObj = new URL(path, `http://localhost`);
+      const offset = Math.max(0, parseInt(urlObj.searchParams.get('offset') || '0', 10));
+      const limit  = Math.min(100, Math.max(1, parseInt(urlObj.searchParams.get('limit') || '20', 10)));
+      res.writeHead(200, { 'content-type': 'application/json' });
+      res.end(JSON.stringify({ sessionId, total: convList.length, offset, limit, conversations: convList.slice(offset, offset + limit) }));
+    } else {
+      res.writeHead(200, { 'content-type': 'application/json' });
+      res.end(JSON.stringify({ ...serializeSession(session), conversations: convList }));
+    }
+    return;
+  }
+
+  // GET /conversations/:id  — single conversation
+  const convRouteMatch = pathname.match(/^\/conversations\/([^/]+)$/);
+  if (convRouteMatch && req.method === 'GET') {
+    const conv = conversations.get(convRouteMatch[1]);
+    if (!conv) {
+      res.writeHead(404, { 'content-type': 'application/json' });
+      res.end(JSON.stringify({ error: 'conversation_not_found', id: convRouteMatch[1] }));
+      return;
+    }
+    res.writeHead(200, { 'content-type': 'application/json' });
+    res.end(JSON.stringify(conv));
     return;
   }
 
