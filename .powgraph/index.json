@@ -17,7 +17,12 @@
       "agent-f1bb80f2-6a96-4cb5-8b8b-c4b5c8c9f19c",
       "agent-1e35774c-c4d3-4da6-b57c-3bed36c86ebd",
       "agent-b25bd4ba-14d8-477a-ae2b-d33aa9707d8e",
-      "agent-d2487c74-7583-41a6-a419-2033d0baa70f"
+      "agent-d2487c74-7583-41a6-a419-2033d0baa70f",
+      "agent-2bd3d70f-8a48-4285-9d83-0ade068ba50f",
+      "agent-610762ab-d665-489f-b802-c090ed88e8a9",
+      "agent-d6f33dbb-09d6-4803-92fa-2ba0355055fe",
+      "agent-ff731e03-5f09-46d0-a0a8-132bde91006a",
+      "agent-b9ba6f32-8619-4707-9736-aa6e7d585645"
     ],
     "knowledge": [
       "2c36fc50-1ba0-4b2d-bca4-a7fa60e79d2b",
@@ -36,7 +41,12 @@
       "d1fac597-6c4e-4de7-b8ae-fc30097c34f3",
       "55b3a3bb-ec81-4183-b05f-a28c07f7591f",
       "ff360807-532f-4744-b3d1-5265d30366e0",
-      "d43867a0-fe5c-433b-bcfc-12d88d68f6fb"
+      "d43867a0-fe5c-433b-bcfc-12d88d68f6fb",
+      "4cc83572-a604-4902-8137-59d161000f9f",
+      "34121c5f-2ffc-497f-b990-9b9c89c32e6d",
+      "2e11c872-b290-4ede-b924-a9c1d267b179",
+      "f154b5a1-1eed-4b28-9119-391df41933cd",
+      "7b5290ff-29cb-4acd-91cf-db6b90e09232"
     ],
     "review": [
       "review-9f2e9504-bc1f-46ef-9cb9-b60291665aa2",
@@ -55,7 +65,12 @@
       "review-f1bb80f2-6a96-4cb5-8b8b-c4b5c8c9f19c",
       "review-1e35774c-c4d3-4da6-b57c-3bed36c86ebd",
       "review-b25bd4ba-14d8-477a-ae2b-d33aa9707d8e",
-      "review-d2487c74-7583-41a6-a419-2033d0baa70f"
+      "review-d2487c74-7583-41a6-a419-2033d0baa70f",
+      "review-2bd3d70f-8a48-4285-9d83-0ade068ba50f",
+      "review-610762ab-d665-489f-b802-c090ed88e8a9",
+      "review-d6f33dbb-09d6-4803-92fa-2ba0355055fe",
+      "review-ff731e03-5f09-46d0-a0a8-132bde91006a",
+      "review-b9ba6f32-8619-4707-9736-aa6e7d585645"
     ],
     "skill": [
       "skill-javascript"
@@ -66,7 +81,11 @@
       "053faa57-d96c-48d6-8b94-ec1c4bbb8402",
       "a980e734-effd-4c3f-85eb-ed5ccfb8bf06",
       "a6c02304-52e3-45f5-bb55-05361fbb404f",
-      "a5378c98-9925-4599-821a-77336c0bfcac"
+      "a5378c98-9925-4599-821a-77336c0bfcac",
+      "f5f6749b-b0ca-4a63-b29a-63eaac54db4b",
+      "e377dc0d-a414-4744-a1af-d3fbd71bc6c4",
+      "eaec1093-aebd-4221-93b8-3cfa4215589b",
+      "9c84bdd3-b4cf-4e17-894e-c72bd59d790e"
     ]
   },
   "byDomain": {
@@ -111,7 +130,26 @@
       "agent-b25bd4ba-14d8-477a-ae2b-d33aa9707d8e",
       "review-b25bd4ba-14d8-477a-ae2b-d33aa9707d8e",
       "agent-d2487c74-7583-41a6-a419-2033d0baa70f",
-      "review-d2487c74-7583-41a6-a419-2033d0baa70f"
+      "review-d2487c74-7583-41a6-a419-2033d0baa70f",
+      "agent-2bd3d70f-8a48-4285-9d83-0ade068ba50f",
+      "4cc83572-a604-4902-8137-59d161000f9f",
+      "review-2bd3d70f-8a48-4285-9d83-0ade068ba50f",
+      "agent-610762ab-d665-489f-b802-c090ed88e8a9",
+      "34121c5f-2ffc-497f-b990-9b9c89c32e6d",
+      "f5f6749b-b0ca-4a63-b29a-63eaac54db4b",
+      "review-610762ab-d665-489f-b802-c090ed88e8a9",
+      "agent-d6f33dbb-09d6-4803-92fa-2ba0355055fe",
+      "2e11c872-b290-4ede-b924-a9c1d267b179",
+      "e377dc0d-a414-4744-a1af-d3fbd71bc6c4",
+      "review-d6f33dbb-09d6-4803-92fa-2ba0355055fe",
+      "agent-ff731e03-5f09-46d0-a0a8-132bde91006a",
+      "f154b5a1-1eed-4b28-9119-391df41933cd",
+      "eaec1093-aebd-4221-93b8-3cfa4215589b",
+      "review-ff731e03-5f09-46d0-a0a8-132bde91006a",
+      "agent-b9ba6f32-8619-4707-9736-aa6e7d585645",
+      "7b5290ff-29cb-4acd-91cf-db6b90e09232",
+      "9c84bdd3-b4cf-4e17-894e-c72bd59d790e",
+      "review-b9ba6f32-8619-4707-9736-aa6e7d585645"
     ],
     "general": [
       "2c36fc50-1ba0-4b2d-bca4-a7fa60e79d2b",
@@ -135,7 +173,9 @@
       "382e08cc-5ca0-4113-90ae-4705121f373b",
       "d1fac597-6c4e-4de7-b8ae-fc30097c34f3",
       "55b3a3bb-ec81-4183-b05f-a28c07f7591f",
-      "ff360807-532f-4744-b3d1-5265d30366e0"
+      "ff360807-532f-4744-b3d1-5265d30366e0",
+      "4cc83572-a604-4902-8137-59d161000f9f",
+      "7b5290ff-29cb-4acd-91cf-db6b90e09232"
     ],
     "preferences": [
       "7d8481c5-9e3b-4fa1-94d4-649cb597720f",
@@ -150,11 +190,46 @@
       "e9012ecb-5606-40c5-9816-9b949b073490",
       "5a78918f-f96e-41c2-a8e7-0ac8355900ae",
       "c72a4959-a450-400f-9771-ba6ec7cb6f47",
-      "16dca1e1-2ac1-4706-ba4e-232a853b92e0"
+      "16dca1e1-2ac1-4706-ba4e-232a853b92e0",
+      "4cc83572-a604-4902-8137-59d161000f9f",
+      "34121c5f-2ffc-497f-b990-9b9c89c32e6d",
+      "f5f6749b-b0ca-4a63-b29a-63eaac54db4b",
+      "2e11c872-b290-4ede-b924-a9c1d267b179",
+      "e377dc0d-a414-4744-a1af-d3fbd71bc6c4",
+      "f154b5a1-1eed-4b28-9119-391df41933cd",
+      "eaec1093-aebd-4221-93b8-3cfa4215589b",
+      "7b5290ff-29cb-4acd-91cf-db6b90e09232",
+      "9c84bdd3-b4cf-4e17-894e-c72bd59d790e"
     ],
     "temporal_data": [
       "ff360807-532f-4744-b3d1-5265d30366e0",
-      "d43867a0-fe5c-433b-bcfc-12d88d68f6fb"
+      "d43867a0-fe5c-433b-bcfc-12d88d68f6fb",
+      "f154b5a1-1eed-4b28-9119-391df41933cd"
+    ],
+    "auth": [
+      "4cc83572-a604-4902-8137-59d161000f9f",
+      "34121c5f-2ffc-497f-b990-9b9c89c32e6d",
+      "f5f6749b-b0ca-4a63-b29a-63eaac54db4b",
+      "2e11c872-b290-4ede-b924-a9c1d267b179",
+      "e377dc0d-a414-4744-a1af-d3fbd71bc6c4",
+      "f154b5a1-1eed-4b28-9119-391df41933cd",
+      "eaec1093-aebd-4221-93b8-3cfa4215589b",
+      "7b5290ff-29cb-4acd-91cf-db6b90e09232",
+      "9c84bdd3-b4cf-4e17-894e-c72bd59d790e"
+    ],
+    "security": [
+      "4cc83572-a604-4902-8137-59d161000f9f",
+      "34121c5f-2ffc-497f-b990-9b9c89c32e6d",
+      "f5f6749b-b0ca-4a63-b29a-63eaac54db4b",
+      "2e11c872-b290-4ede-b924-a9c1d267b179",
+      "e377dc0d-a414-4744-a1af-d3fbd71bc6c4",
+      "f154b5a1-1eed-4b28-9119-391df41933cd",
+      "eaec1093-aebd-4221-93b8-3cfa4215589b",
+      "7b5290ff-29cb-4acd-91cf-db6b90e09232",
+      "9c84bdd3-b4cf-4e17-894e-c72bd59d790e"
+    ],
+    "testing": [
+      "7b5290ff-29cb-4acd-91cf-db6b90e09232"
     ]
   },
   "byNodeId": {
@@ -577,6 +652,170 @@
       "domains": [
         "assistant_info"
       ]
+    },
+    "agent-2bd3d70f-8a48-4285-9d83-0ade068ba50f": {
+      "file": "nodes/node-agent-2bd3d70f-8a48-4285-9d83-0ade068ba50f.json",
+      "type": "agent",
+      "domains": [
+        "assistant_info"
+      ]
+    },
+    "4cc83572-a604-4902-8137-59d161000f9f": {
+      "file": "nodes/node-4cc83572-a604-4902-8137-59d161000f9f.json",
+      "type": "knowledge",
+      "domains": [
+        "auth",
+        "security",
+        "personal_info",
+        "assistant_info",
+        "frontend"
+      ]
+    },
+    "review-2bd3d70f-8a48-4285-9d83-0ade068ba50f": {
+      "file": "nodes/node-review-2bd3d70f-8a48-4285-9d83-0ade068ba50f.json",
+      "type": "review",
+      "domains": [
+        "assistant_info"
+      ]
+    },
+    "agent-610762ab-d665-489f-b802-c090ed88e8a9": {
+      "file": "nodes/node-agent-610762ab-d665-489f-b802-c090ed88e8a9.json",
+      "type": "agent",
+      "domains": [
+        "assistant_info"
+      ]
+    },
+    "34121c5f-2ffc-497f-b990-9b9c89c32e6d": {
+      "file": "nodes/node-34121c5f-2ffc-497f-b990-9b9c89c32e6d.json",
+      "type": "knowledge",
+      "domains": [
+        "auth",
+        "security",
+        "personal_info",
+        "assistant_info"
+      ]
+    },
+    "f5f6749b-b0ca-4a63-b29a-63eaac54db4b": {
+      "file": "nodes/node-f5f6749b-b0ca-4a63-b29a-63eaac54db4b.json",
+      "type": "reference",
+      "domains": [
+        "auth",
+        "security",
+        "personal_info",
+        "assistant_info"
+      ]
+    },
+    "review-610762ab-d665-489f-b802-c090ed88e8a9": {
+      "file": "nodes/node-review-610762ab-d665-489f-b802-c090ed88e8a9.json",
+      "type": "review",
+      "domains": [
+        "assistant_info"
+      ]
+    },
+    "agent-d6f33dbb-09d6-4803-92fa-2ba0355055fe": {
+      "file": "nodes/node-agent-d6f33dbb-09d6-4803-92fa-2ba0355055fe.json",
+      "type": "agent",
+      "domains": [
+        "assistant_info"
+      ]
+    },
+    "2e11c872-b290-4ede-b924-a9c1d267b179": {
+      "file": "nodes/node-2e11c872-b290-4ede-b924-a9c1d267b179.json",
+      "type": "knowledge",
+      "domains": [
+        "auth",
+        "security",
+        "personal_info",
+        "assistant_info"
+      ]
+    },
+    "e377dc0d-a414-4744-a1af-d3fbd71bc6c4": {
+      "file": "nodes/node-e377dc0d-a414-4744-a1af-d3fbd71bc6c4.json",
+      "type": "reference",
+      "domains": [
+        "auth",
+        "security",
+        "personal_info",
+        "assistant_info"
+      ]
+    },
+    "review-d6f33dbb-09d6-4803-92fa-2ba0355055fe": {
+      "file": "nodes/node-review-d6f33dbb-09d6-4803-92fa-2ba0355055fe.json",
+      "type": "review",
+      "domains": [
+        "assistant_info"
+      ]
+    },
+    "agent-ff731e03-5f09-46d0-a0a8-132bde91006a": {
+      "file": "nodes/node-agent-ff731e03-5f09-46d0-a0a8-132bde91006a.json",
+      "type": "agent",
+      "domains": [
+        "assistant_info"
+      ]
+    },
+    "f154b5a1-1eed-4b28-9119-391df41933cd": {
+      "file": "nodes/node-f154b5a1-1eed-4b28-9119-391df41933cd.json",
+      "type": "knowledge",
+      "domains": [
+        "auth",
+        "security",
+        "personal_info",
+        "temporal_data",
+        "assistant_info"
+      ]
+    },
+    "eaec1093-aebd-4221-93b8-3cfa4215589b": {
+      "file": "nodes/node-eaec1093-aebd-4221-93b8-3cfa4215589b.json",
+      "type": "reference",
+      "domains": [
+        "auth",
+        "security",
+        "personal_info",
+        "assistant_info"
+      ]
+    },
+    "review-ff731e03-5f09-46d0-a0a8-132bde91006a": {
+      "file": "nodes/node-review-ff731e03-5f09-46d0-a0a8-132bde91006a.json",
+      "type": "review",
+      "domains": [
+        "assistant_info"
+      ]
+    },
+    "agent-b9ba6f32-8619-4707-9736-aa6e7d585645": {
+      "file": "nodes/node-agent-b9ba6f32-8619-4707-9736-aa6e7d585645.json",
+      "type": "agent",
+      "domains": [
+        "assistant_info"
+      ]
+    },
+    "7b5290ff-29cb-4acd-91cf-db6b90e09232": {
+      "file": "nodes/node-7b5290ff-29cb-4acd-91cf-db6b90e09232.json",
+      "type": "knowledge",
+      "domains": [
+        "auth",
+        "security",
+        "personal_info",
+        "assistant_info",
+        "testing",
+        "frontend"
+      ]
+    },
+    "9c84bdd3-b4cf-4e17-894e-c72bd59d790e": {
+      "file": "nodes/node-9c84bdd3-b4cf-4e17-894e-c72bd59d790e.json",
+      "type": "reference",
+      "domains": [
+        "auth",
+        "security",
+        "personal_info",
+        "assistant_info"
+      ]
+    },
+    "review-b9ba6f32-8619-4707-9736-aa6e7d585645": {
+      "file": "nodes/node-review-b9ba6f32-8619-4707-9736-aa6e7d585645.json",
+      "type": "review",
+      "domains": [
+        "assistant_info"
+      ]
     }
   },
   "supersededBy": {
@@ -594,6 +833,14 @@
     "382e08cc-5ca0-4113-90ae-4705121f373b": "d1fac597-6c4e-4de7-b8ae-fc30097c34f3",
     "d1fac597-6c4e-4de7-b8ae-fc30097c34f3": "55b3a3bb-ec81-4183-b05f-a28c07f7591f",
     "55b3a3bb-ec81-4183-b05f-a28c07f7591f": "ff360807-532f-4744-b3d1-5265d30366e0",
-    "ff360807-532f-4744-b3d1-5265d30366e0": "d43867a0-fe5c-433b-bcfc-12d88d68f6fb"
+    "ff360807-532f-4744-b3d1-5265d30366e0": "d43867a0-fe5c-433b-bcfc-12d88d68f6fb",
+    "4cc83572-a604-4902-8137-59d161000f9f": "34121c5f-2ffc-497f-b990-9b9c89c32e6d",
+    "34121c5f-2ffc-497f-b990-9b9c89c32e6d": "2e11c872-b290-4ede-b924-a9c1d267b179",
+    "f5f6749b-b0ca-4a63-b29a-63eaac54db4b": "2e11c872-b290-4ede-b924-a9c1d267b179",
+    "2e11c872-b290-4ede-b924-a9c1d267b179": "f154b5a1-1eed-4b28-9119-391df41933cd",
+    "e377dc0d-a414-4744-a1af-d3fbd71bc6c4": "f154b5a1-1eed-4b28-9119-391df41933cd",
+    "d43867a0-fe5c-433b-bcfc-12d88d68f6fb": "f154b5a1-1eed-4b28-9119-391df41933cd",
+    "f154b5a1-1eed-4b28-9119-391df41933cd": "7b5290ff-29cb-4acd-91cf-db6b90e09232",
+    "eaec1093-aebd-4221-93b8-3cfa4215589b": "7b5290ff-29cb-4acd-91cf-db6b90e09232"
   }
 }

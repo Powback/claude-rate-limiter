@@ -1,0 +1,27 @@
+{
+  "id": "review-b9ba6f32-8619-4707-9736-aa6e7d585645",
+  "type": "review",
+  "content": "test-todo.js: const TodoList = require('./todo');",
+  "domains": [
+    "assistant_info"
+  ],
+  "supersedes": [],
+  "related_to": [
+    "agent-b9ba6f32-8619-4707-9736-aa6e7d585645"
+  ],
+  "refs": [
+    "/Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/session-passthrough/workdir/test-todo.js",
+    "/Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/session-passthrough/workdir/todo.js"
+  ],
+  "metadata": {
+    "files_edited": 1,
+    "files_read": 1,
+    "commits": 0,
+    "skills": [
+      "JavaScript"
+    ],
+    "commit_messages": []
+  },
+  "timestamp": 1774747638609,
+  "source": "powgraph-stop"
+}

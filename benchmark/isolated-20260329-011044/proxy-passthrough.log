@@ -60,3 +60,157 @@
 [90m[01:21:42] 📊 SSE message_delta: out=557[0m
 [01:21:42] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 5697ms in=8 out=557 cache_read=26849 cache_create=4249
 [01:24:56] 📡 / ? 138ms 
+[90m[01:24:59] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-passthrough-logs/system-prompt-2026-03-29T01-24-59-269Z.txt (61325 chars)[0m
+[01:24:59] 🟢 Utilization: 5h=23% 7d=9% [five_hour] status=allowed
+[90m[01:25:02] 📊 SSE message_start: in=10 cache_read=20654 cache_create=19926[0m
+[90m[01:25:02] 📊 SSE message_delta: out=395[0m
+[01:25:02] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 3039ms in=10 out=395 cache_read=20654 cache_create=19926
+[90m[01:25:02] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-passthrough-logs/system-prompt-2026-03-29T01-25-02-361Z.txt (61325 chars)[0m
+[01:25:03] 🟢 Utilization: 5h=23% 7d=9% [five_hour] status=allowed
+[90m[01:25:05] 📊 SSE message_start: in=8 cache_read=40580 cache_create=458[0m
+[90m[01:25:05] 📊 SSE message_delta: out=259[0m
+[01:25:05] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 3398ms in=8 out=259 cache_read=40580 cache_create=458
+[01:25:06] 📡 / ? 119ms 
+[90m[01:25:09] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-passthrough-logs/system-prompt-2026-03-29T01-25-09-554Z.txt (29052 chars)[0m
+[01:25:10] 🟢 Utilization: 5h=23% 7d=9% [five_hour] status=allowed
+[90m[01:25:11] 📊 SSE message_start: in=10 cache_read=20654 cache_create=6707[0m
+[90m[01:25:11] 📊 SSE message_delta: out=134[0m
+[01:25:11] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 2186ms in=10 out=134 cache_read=20654 cache_create=6707
+[90m[01:25:11] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-passthrough-logs/system-prompt-2026-03-29T01-25-11-770Z.txt (29052 chars)[0m
+[01:25:12] 🟢 Utilization: 5h=23% 7d=9% [five_hour] status=allowed
+[90m[01:25:14] 📊 SSE message_start: in=8 cache_read=27361 cache_create=457[0m
+[90m[01:25:14] 📊 SSE message_delta: out=458[0m
+[01:25:14] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 3015ms in=8 out=458 cache_read=27361 cache_create=457
+[90m[01:25:14] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-passthrough-logs/system-prompt-2026-03-29T01-25-14-823Z.txt (29052 chars)[0m
+[01:25:15] 🟢 Utilization: 5h=23% 7d=9% [five_hour] status=allowed
+[90m[01:25:16] 📊 SSE message_start: in=8 cache_read=27818 cache_create=539[0m
+[90m[01:25:16] 📊 SSE message_delta: out=115[0m
+[01:25:16] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 1885ms in=8 out=115 cache_read=27818 cache_create=539
+[01:25:17] 📡 / ? 102ms 
+[90m[01:25:20] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-passthrough-logs/system-prompt-2026-03-29T01-25-20-542Z.txt (30479 chars)[0m
+[01:25:21] 🟢 Utilization: 5h=23% 7d=9% [five_hour] status=allowed
+[90m[01:25:23] 📊 SSE message_start: in=10 cache_read=20654 cache_create=7394[0m
+[90m[01:25:23] 📊 SSE message_delta: out=131[0m
+[01:25:23] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 2472ms in=10 out=131 cache_read=20654 cache_create=7394
+[90m[01:25:23] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-passthrough-logs/system-prompt-2026-03-29T01-25-23-018Z.txt (30479 chars)[0m
+[01:25:23] 🟢 Utilization: 5h=23% 7d=9% [five_hour] status=allowed
+[90m[01:25:24] 📊 SSE message_start: in=8 cache_read=28048 cache_create=155[0m
+[90m[01:25:24] 📊 SSE message_delta: out=114[0m
+[01:25:24] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 1740ms in=8 out=114 cache_read=28048 cache_create=155
+[90m[01:25:24] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-passthrough-logs/system-prompt-2026-03-29T01-25-24-773Z.txt (30479 chars)[0m
+[01:25:25] 🟢 Utilization: 5h=23% 7d=9% [five_hour] status=allowed
+[90m[01:25:26] 📊 SSE message_start: in=8 cache_read=28203 cache_create=511[0m
+[90m[01:25:26] 📊 SSE message_delta: out=290[0m
+[01:25:26] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 2177ms in=8 out=290 cache_read=28203 cache_create=511
+[01:25:27] 📡 / ? 107ms 
+[90m[01:25:30] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-passthrough-logs/system-prompt-2026-03-29T01-25-30-774Z.txt (30945 chars)[0m
+[01:25:31] 🟢 Utilization: 5h=23% 7d=9% [five_hour] status=allowed
+[90m[01:25:33] 📊 SSE message_start: in=10 cache_read=20654 cache_create=7594[0m
+[90m[01:25:33] 📊 SSE message_delta: out=221[0m
+[01:25:33] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 2766ms in=10 out=221 cache_read=20654 cache_create=7594
+[90m[01:25:33] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-passthrough-logs/system-prompt-2026-03-29T01-25-33-560Z.txt (30945 chars)[0m
+[01:25:34] 🟢 Utilization: 5h=23% 7d=9% [five_hour] status=allowed
+[90m[01:25:37] 📊 SSE message_start: in=8 cache_read=28248 cache_create=628[0m
+[90m[01:25:37] 📊 SSE message_delta: out=468[0m
+[01:25:37] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 3851ms in=8 out=468 cache_read=28248 cache_create=628
+[90m[01:25:37] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-passthrough-logs/system-prompt-2026-03-29T01-25-37-468Z.txt (30945 chars)[0m
+[01:25:38] 🟢 Utilization: 5h=23% 7d=9% [five_hour] status=allowed
+[90m[01:25:38] 📊 SSE message_start: in=8 cache_read=28876 cache_create=549[0m
+[90m[01:25:38] 📊 SSE message_delta: out=96[0m
+[01:25:38] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 1208ms in=8 out=96 cache_read=28876 cache_create=549
+[01:25:39] 📡 / ? 103ms 
+[90m[01:25:42] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-passthrough-logs/system-prompt-2026-03-29T01-25-42-484Z.txt (32451 chars)[0m
+[01:25:44] 🟢 Utilization: 5h=23% 7d=9% [five_hour] status=allowed
+[90m[01:25:45] 📊 SSE message_start: in=10 cache_read=20654 cache_create=8317[0m
+[90m[01:25:45] 📊 SSE message_delta: out=162[0m
+[01:25:45] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 3145ms in=10 out=162 cache_read=20654 cache_create=8317
+[90m[01:25:45] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-passthrough-logs/system-prompt-2026-03-29T01-25-45-641Z.txt (32451 chars)[0m
+[01:25:47] 🟢 Utilization: 5h=23% 7d=9% [five_hour] status=allowed
+[90m[01:25:48] 📊 SSE message_start: in=8 cache_read=28971 cache_create=186[0m
+[90m[01:25:48] 📊 SSE message_delta: out=112[0m
+[01:25:48] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 2480ms in=8 out=112 cache_read=28971 cache_create=186
+[90m[01:25:48] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-passthrough-logs/system-prompt-2026-03-29T01-25-48-147Z.txt (32451 chars)[0m
+[01:25:49] 🟢 Utilization: 5h=23% 7d=9% [five_hour] status=allowed
+[90m[01:25:51] 📊 SSE message_start: in=8 cache_read=29157 cache_create=553[0m
+[90m[01:25:51] 📊 SSE message_delta: out=314[0m
+[01:25:51] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 2866ms in=8 out=314 cache_read=29157 cache_create=553
+[01:25:51] 📡 / ? 109ms 
+[90m[01:25:54] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-passthrough-logs/system-prompt-2026-03-29T01-25-54-986Z.txt (32917 chars)[0m
+[01:25:56] 🟢 Utilization: 5h=23% 7d=9% [five_hour] status=allowed
+[90m[01:25:57] 📊 SSE message_start: in=10 cache_read=20654 cache_create=8522[0m
+[90m[01:25:57] 📊 SSE message_delta: out=192[0m
+[01:25:57] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 2858ms in=10 out=192 cache_read=20654 cache_create=8522
+[90m[01:25:57] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-passthrough-logs/system-prompt-2026-03-29T01-25-57-850Z.txt (32917 chars)[0m
+[01:25:59] 🟢 Utilization: 5h=23% 7d=9% [five_hour] status=allowed
+[90m[01:26:00] 📊 SSE message_start: in=8 cache_read=29176 cache_create=215[0m
+[90m[01:26:00] 📊 SSE message_delta: out=115[0m
+[01:26:00] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 2759ms in=8 out=115 cache_read=29176 cache_create=215
+[90m[01:26:00] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-passthrough-logs/system-prompt-2026-03-29T01-26-00-615Z.txt (32917 chars)[0m
+[01:26:01] 🟢 Utilization: 5h=23% 7d=9% [five_hour] status=allowed
+[90m[01:26:03] 📊 SSE message_start: in=8 cache_read=29391 cache_create=607[0m
+[90m[01:26:03] 📊 SSE message_delta: out=370[0m
+[01:26:03] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 2976ms in=8 out=370 cache_read=29391 cache_create=607
+[01:26:04] 📡 / ? 102ms 
+[90m[01:26:07] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-passthrough-logs/system-prompt-2026-03-29T01-26-07-508Z.txt (33383 chars)[0m
+[01:26:08] 🟢 Utilization: 5h=23% 7d=9% [five_hour] status=allowed
+[90m[01:26:10] 📊 SSE message_start: in=10 cache_read=20654 cache_create=8729[0m
+[90m[01:26:10] 📊 SSE message_delta: out=193[0m
+[01:26:10] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 2535ms in=10 out=193 cache_read=20654 cache_create=8729
+[90m[01:26:10] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-passthrough-logs/system-prompt-2026-03-29T01-26-10-084Z.txt (33383 chars)[0m
+[01:26:10] 🟢 Utilization: 5h=24% 7d=9% [five_hour] status=allowed
+[90m[01:26:12] 📊 SSE message_start: in=8 cache_read=29383 cache_create=763[0m
+[90m[01:26:12] 📊 SSE message_delta: out=379[0m
+[01:26:12] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 2276ms in=8 out=379 cache_read=29383 cache_create=763
+[90m[01:26:12] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-passthrough-logs/system-prompt-2026-03-29T01-26-12-430Z.txt (33383 chars)[0m
+[01:26:13] 🟢 Utilization: 5h=24% 7d=9% [five_hour] status=allowed
+[90m[01:26:13] 📊 SSE message_start: in=8 cache_read=30146 cache_create=455[0m
+[90m[01:26:13] 📊 SSE message_delta: out=124[0m
+[01:26:13] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 1376ms in=8 out=124 cache_read=30146 cache_create=455
+[01:26:14] 📡 / ? 104ms 
+[90m[01:26:17] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-passthrough-logs/system-prompt-2026-03-29T01-26-17-721Z.txt (33849 chars)[0m
+[01:26:18] 🟢 Utilization: 5h=24% 7d=9% [five_hour] status=allowed
+[90m[01:26:19] 📊 SSE message_start: in=10 cache_read=20654 cache_create=8931[0m
+[90m[01:26:19] 📊 SSE message_delta: out=175[0m
+[01:26:19] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 2138ms in=10 out=175 cache_read=20654 cache_create=8931
+[90m[01:26:19] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-passthrough-logs/system-prompt-2026-03-29T01-26-19-867Z.txt (33849 chars)[0m
+[01:26:21] 🟢 Utilization: 5h=24% 7d=9% [five_hour] status=allowed
+[90m[01:26:22] 📊 SSE message_start: in=8 cache_read=29585 cache_create=199[0m
+[90m[01:26:22] 📊 SSE message_delta: out=113[0m
+[01:26:22] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 2755ms in=8 out=113 cache_read=29585 cache_create=199
+[90m[01:26:22] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-passthrough-logs/system-prompt-2026-03-29T01-26-22-651Z.txt (33849 chars)[0m
+[01:26:23] 🟢 Utilization: 5h=24% 7d=9% [five_hour] status=allowed
+[90m[01:26:25] 📊 SSE message_start: in=8 cache_read=29784 cache_create=849[0m
+[90m[01:26:25] 📊 SSE message_delta: out=328[0m
+[01:26:25] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 2369ms in=8 out=328 cache_read=29784 cache_create=849
+[01:26:25] 📡 / ? 104ms 
+[90m[01:26:28] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-passthrough-logs/system-prompt-2026-03-29T01-26-28-879Z.txt (34315 chars)[0m
+[01:26:30] 🟢 Utilization: 5h=24% 7d=9% [five_hour] status=allowed
+[90m[01:26:31] 📊 SSE message_start: in=10 cache_read=20654 cache_create=9133[0m
+[90m[01:26:31] 📊 SSE message_delta: out=150[0m
+[01:26:31] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 2331ms in=10 out=150 cache_read=20654 cache_create=9133
+[90m[01:26:31] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-passthrough-logs/system-prompt-2026-03-29T01-26-31-218Z.txt (34315 chars)[0m
+[01:26:31] 🟢 Utilization: 5h=24% 7d=9% [five_hour] status=allowed
+[90m[01:26:35] 📊 SSE message_start: in=8 cache_read=20654 cache_create=10031[0m
+[90m[01:26:35] 📊 SSE message_delta: out=656[0m
+[01:26:35] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 4412ms in=8 out=656 cache_read=20654 cache_create=10031
+[90m[01:26:35] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-passthrough-logs/system-prompt-2026-03-29T01-26-35-679Z.txt (34315 chars)[0m
+[01:26:36] 🟢 Utilization: 5h=24% 7d=9% [five_hour] status=allowed
+[90m[01:26:37] 📊 SSE message_start: in=8 cache_read=30685 cache_create=730[0m
+[90m[01:26:37] 📊 SSE message_delta: out=133[0m
+[01:26:37] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 1859ms in=8 out=133 cache_read=30685 cache_create=730
+[01:26:38] 📡 / ? 107ms 
+[90m[01:26:41] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-passthrough-logs/system-prompt-2026-03-29T01-26-41-514Z.txt (35900 chars)[0m
+[01:26:43] 🟢 Utilization: 5h=24% 7d=9% [five_hour] status=allowed
+[90m[01:26:44] 📊 SSE message_start: in=10 cache_read=20654 cache_create=9894[0m
+[90m[01:26:44] 📊 SSE message_delta: out=155[0m
+[01:26:44] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 2723ms in=10 out=155 cache_read=20654 cache_create=9894
+[90m[01:26:44] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-passthrough-logs/system-prompt-2026-03-29T01-26-44-261Z.txt (35900 chars)[0m
+[01:26:45] 🟢 Utilization: 5h=24% 7d=9% [five_hour] status=allowed
+[90m[01:27:13] 📊 SSE message_start: in=8 cache_read=30548 cache_create=1005[0m
+[90m[01:27:13] 📊 SSE message_delta: out=5817[0m
+[01:27:13] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 28813ms in=8 out=5817 cache_read=30548 cache_create=1005
+[90m[01:27:13] 📝 System prompt saved: /Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/proxy-passthrough-logs/system-prompt-2026-03-29T01-27-13-119Z.txt (35900 chars)[0m
+[01:27:14] 🟢 Utilization: 5h=24% 7d=9% [five_hour] status=allowed
+[90m[01:27:18] 📊 SSE message_start: in=8 cache_read=31553 cache_create=5856[0m
+[90m[01:27:18] 📊 SSE message_delta: out=472[0m
+[01:27:18] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 5473ms in=8 out=472 cache_read=31553 cache_create=5856

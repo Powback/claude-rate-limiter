@@ -1,0 +1,8 @@
+{
+  "id": "ad4b8ce9-c271-4cb4-93de-fb0bccf0eff1",
+  "from": "agent-610762ab-d665-489f-b802-c090ed88e8a9",
+  "to": "review-610762ab-d665-489f-b802-c090ed88e8a9",
+  "type": "reviewed_as",
+  "metadata": {},
+  "timestamp": 1774747516727
+}

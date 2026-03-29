@@ -1,0 +1,21 @@
+{
+  "id": "34121c5f-2ffc-497f-b990-9b9c89c32e6d",
+  "type": "knowledge",
+  "content": "todo.js: remove(id) {",
+  "snippet": "  remove(id) {\n    const index = this.todos.findIndex(todo => todo.id === id);\n    if (index !== -1) {\n      this.todos.splice(index, 1);\n      return true;\n    }\n    return false;\n  }\n\n  complete(id) {\n    const todo = this.todos.find(todo => todo.id === id);\n    if (todo) {\n      todo.completed = true;\n      return true;\n    }\n    return false;\n  }\n\n  list() {\n    return this.todos;\n  }",
+  "domains": [
+    "auth",
+    "security",
+    "personal_info",
+    "assistant_info"
+  ],
+  "supersedes": [
+    "4cc83572-a604-4902-8137-59d161000f9f"
+  ],
+  "related_to": [],
+  "refs": [
+    "/Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/session-passthrough/workdir/todo.js"
+  ],
+  "timestamp": 1774747514818,
+  "source": "session:610762ab-d665-489f-b802-c090ed88e8a9"
+}

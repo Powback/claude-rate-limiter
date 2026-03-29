@@ -1,0 +1,202 @@
+{
+  "run_id": "isolated-20260329-011044",
+  "method": "isolated_sequential_with_cwd_fix",
+  "note": "Separate proxy instances, 2-min gap, --permission-mode acceptEdits, CWD fix applied to slim prompt",
+  "tasks": {
+    "stripped": [
+      {
+        "task_id": "calculator",
+        "mode": "isolated-stripped",
+        "exit_code": 0,
+        "valid": true,
+        "duration_ms": 37651,
+        "api_calls": 3,
+        "input_tokens": 18,
+        "output_tokens": 6226,
+        "cache_read": 6057,
+        "cache_creation": 11798,
+        "output_file_bytes": 20147,
+        "cost_usd": 0.037201
+      },
+      {
+        "task_id": "chat-ui",
+        "mode": "isolated-stripped",
+        "exit_code": 0,
+        "valid": true,
+        "duration_ms": 27277,
+        "api_calls": 3,
+        "input_tokens": 18,
+        "output_tokens": 4067,
+        "cache_read": 6072,
+        "cache_creation": 9676,
+        "output_file_bytes": 12594,
+        "cost_usd": 0.026444
+      },
+      {
+        "task_id": "snake-game",
+        "mode": "isolated-stripped",
+        "exit_code": 0,
+        "valid": true,
+        "duration_ms": 23953,
+        "api_calls": 3,
+        "input_tokens": 18,
+        "output_tokens": 3561,
+        "cache_read": 6026,
+        "cache_creation": 9176,
+        "output_file_bytes": 10246,
+        "cost_usd": 0.023916
+      },
+      {
+        "task_id": "space-invaders",
+        "mode": "isolated-stripped",
+        "exit_code": 0,
+        "valid": true,
+        "duration_ms": 28290,
+        "api_calls": 3,
+        "input_tokens": 18,
+        "output_tokens": 4283,
+        "cache_read": 5965,
+        "cache_creation": 9632,
+        "output_file_bytes": 11983,
+        "cost_usd": 0.027256
+      },
+      {
+        "task_id": "todo-api",
+        "mode": "isolated-stripped",
+        "exit_code": 0,
+        "valid": true,
+        "duration_ms": 19444,
+        "api_calls": 3,
+        "input_tokens": 18,
+        "output_tokens": 3387,
+        "cache_read": 6063,
+        "cache_creation": 9170,
+        "output_file_bytes": 2697,
+        "cost_usd": 0.023217
+      }
+    ],
+    "passthrough": [
+      {
+        "task_id": "calculator",
+        "mode": "isolated-passthrough",
+        "exit_code": 0,
+        "valid": true,
+        "duration_ms": 35567,
+        "api_calls": 3,
+        "input_tokens": 18,
+        "output_tokens": 4741,
+        "cache_read": 47503,
+        "cache_creation": 10444,
+        "output_file_bytes": 14405,
+        "cost_usd": 0.033223
+      },
+      {
+        "task_id": "chat-ui",
+        "mode": "isolated-passthrough",
+        "exit_code": 0,
+        "valid": true,
+        "duration_ms": 30269,
+        "api_calls": 3,
+        "input_tokens": 18,
+        "output_tokens": 4077,
+        "cache_read": 47520,
+        "cache_creation": 9854,
+        "output_file_bytes": 12002,
+        "cost_usd": 0.029978
+      },
+      {
+        "task_id": "snake-game",
+        "mode": "isolated-passthrough",
+        "exit_code": 0,
+        "valid": true,
+        "duration_ms": 23963,
+        "api_calls": 3,
+        "input_tokens": 18,
+        "output_tokens": 3556,
+        "cache_read": 47494,
+        "cache_creation": 9338,
+        "output_file_bytes": 9732,
+        "cost_usd": 0.027376
+      },
+      {
+        "task_id": "space-invaders",
+        "mode": "isolated-passthrough",
+        "exit_code": 0,
+        "valid": true,
+        "duration_ms": 26664,
+        "api_calls": 3,
+        "input_tokens": 18,
+        "output_tokens": 4053,
+        "cache_read": 47498,
+        "cache_creation": 9791,
+        "output_file_bytes": 11671,
+        "cost_usd": 0.029817
+      },
+      {
+        "task_id": "todo-api",
+        "mode": "isolated-passthrough",
+        "exit_code": 0,
+        "valid": true,
+        "duration_ms": 15162,
+        "api_calls": 3,
+        "input_tokens": 18,
+        "output_tokens": 1726,
+        "cache_read": 47521,
+        "cache_creation": 7672,
+        "output_file_bytes": 3104,
+        "cost_usd": 0.018392
+      }
+    ],
+    "totals": {
+      "stripped": {
+        "api_calls": 15,
+        "input_tokens": 90,
+        "output_tokens": 21524,
+        "cache_read": 30183,
+        "cache_creation": 49452,
+        "duration_ms": 136615,
+        "cost_usd": 0.138034
+      },
+      "passthrough": {
+        "api_calls": 15,
+        "input_tokens": 90,
+        "output_tokens": 18153,
+        "cache_read": 237536,
+        "cache_creation": 47099,
+        "duration_ms": 131625,
+        "cost_usd": 0.138786
+      }
+    },
+    "savings": {
+      "cost_usd": -0.000752,
+      "cost_pct": -0.54,
+      "time_ms": 4990
+    },
+    "validity": {
+      "stripped": 5,
+      "passthrough": 5
+    }
+  },
+  "session": {
+    "stripped": {
+      "turns": 10,
+      "api_calls": 39,
+      "input_tokens": 252,
+      "output_tokens": 11356,
+      "cache_read": 109743,
+      "cache_creation": 88426,
+      "cost_usd": 0.14283
+    },
+    "passthrough": {
+      "turns": 10,
+      "api_calls": 39,
+      "input_tokens": 252,
+      "output_tokens": 12641,
+      "cache_read": 764707,
+      "cache_creation": 119893,
+      "cost_usd": 0.23184
+    },
+    "savings_usd": -0.08901,
+    "savings_pct": -38.4
+  }
+}

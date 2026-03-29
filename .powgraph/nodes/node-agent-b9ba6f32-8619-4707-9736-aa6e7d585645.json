@@ -1,0 +1,13 @@
+{
+  "id": "agent-b9ba6f32-8619-4707-9736-aa6e7d585645",
+  "type": "agent",
+  "content": "test-todo.js: const TodoList = require('./todo');",
+  "domains": [
+    "assistant_info"
+  ],
+  "supersedes": [],
+  "related_to": [],
+  "refs": [],
+  "timestamp": 1774747638609,
+  "source": "powgraph-stop"
+}

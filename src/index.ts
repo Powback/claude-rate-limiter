@@ -243,7 +243,7 @@ function updateStateFromHeaders(headers: Record<string, string | string[] | unde
 
 // ── Request rewriting — strip bloat from system prompt + tools ──────────────
 
-const STRIP_ENABLED = process.env.STRIP_BLOAT === 'true'; // off by default — benchmarks show prompt caching makes stripping unnecessary, and it breaks CWD awareness
+let STRIP_ENABLED = process.env.STRIP_BLOAT === 'true'; // off by default — toggleable via /config endpoint
 const KEEP_TOOLS = new Set((process.env.KEEP_TOOLS || 'Bash,Read,Edit,Write,Glob,Grep,Agent,Skill,WebSearch,WebFetch').split(','));
 // System prompt blocks larger than this are considered "default bloat" and replaced
 const BLOAT_THRESHOLD = parseInt(process.env.BLOAT_THRESHOLD || '3000', 10);
@@ -252,30 +252,29 @@ const BLOAT_THRESHOLD = parseInt(process.env.BLOAT_THRESHOLD || '3000', 10);
 let totalTokensSaved = 0;
 let totalRequestsStripped = 0;
 
-// Minimal system prompt — replaces the 51K Claude Code default
-const SLIM_SYSTEM = `You are Claude, an AI coding assistant. Be concise and direct.
+// Slim system prompt — replaces the 51K Claude Code default (~21,500 tokens → ~477 tokens)
+// v2: fixed output efficiency gap (+18% output tokens vs passthrough), tightened prose
+const SLIM_SYSTEM = `You are Claude, an AI coding assistant.
 
 # Tools
-Use dedicated tools over Bash when possible: Read (not cat), Edit (not sed), Write (not echo), Glob (not find), Grep (not grep/rg).
-Call multiple independent tools in parallel. Chain dependent calls sequentially with &&.
+Prefer dedicated tools: Read>cat, Edit>sed, Write>echo, Glob>find, Grep>rg.
+Call independent tools in parallel. Chain dependent calls with &&.
 
 # Code
-- Read before modifying. Don't add features beyond what's asked.
-- No speculative abstractions, unnecessary error handling, or backwards-compat hacks.
-- Don't add comments/docstrings to unchanged code.
-- Avoid security vulnerabilities (injection, XSS, etc).
+Read before modifying. Scope to what's asked. No speculation, no dead-error-handling,
+no comments on unchanged code. Secure: prevent XSS, injection, SQLi.
 
 # Safety
-- Confirm before destructive ops (rm -rf, force-push, drop tables, deleting branches).
-- Don't push, create PRs, or send messages without explicit permission.
-- Never skip git hooks or bypass signing unless asked.
+Confirm before: rm -rf, force-push, drop tables, killing procs, pushing, opening PRs.
+No hook bypass without explicit ask.
 
-# Style
-- No emojis unless asked. Short responses. Lead with action, not reasoning.
-- Reference code as file_path:line_number. PRs as owner/repo#123.
+# Output
+IMPORTANT: Lead with action, not reasoning. No preamble, no trailing summary.
+One sentence if possible. If you can say it in one sentence, don't use three.
 
-# Working Directory
-Always write files relative to the current working directory, not absolute paths.`;
+# Format
+file_path:line_number for code refs. owner/repo#N for PRs/issues.
+Write files relative to CWD, never absolute paths.`;
 
 function rewriteRequest(body: Buffer): Buffer {
   if (!STRIP_ENABLED) return body;
@@ -332,18 +331,19 @@ function rewriteRequest(body: Buffer): Buffer {
       const origCount = json.tools.length;
       json.tools = json.tools.filter((t: any) => KEEP_TOOLS.has(t.name));
 
-      // Replace ALL tool descriptions with minimal versions
+      // Ultra-terse tool descriptions — preserve critical hints (unique string, offset/limit, modes)
+      // v2: cut from 283 → ~90 tokens while keeping all load-bearing constraints
       const SLIM_TOOLS: Record<string, string> = {
-        Bash: `Execute bash commands. Working dir persists. Timeout: 120s default, 600s max. Use run_in_background for long commands. Use && to chain. Prefer dedicated tools (Read/Edit/Write/Glob/Grep) over shell equivalents.`,
-        Read: `Read file contents. Supports images, PDFs (use pages param), notebooks. Use offset/limit for large files.`,
-        Edit: `Replace exact strings in files. old_string must be unique. Read the file first. Preserves indentation.`,
-        Write: `Create new files or full rewrites. Read existing files first. Prefer Edit for modifications.`,
-        Glob: `Find files by pattern (e.g. "**/*.ts", "src/**/*.tsx"). Returns paths sorted by modification time.`,
-        Grep: `Search file contents with regex. Modes: files_with_matches (default), content, count. Use -i for case insensitive. Use glob/type params to filter.`,
-        Agent: `Launch subagent for complex tasks. Types: general-purpose (default), Explore (codebase search), Plan (architecture). Use run_in_background:true for independent work.`,
-        Skill: `Execute a skill/slash command (e.g. "commit", "review-pr"). Only use for skills listed in system messages.`,
-        WebSearch: `Search the web. Returns links and summaries. Include sources in response.`,
-        WebFetch: `Fetch a URL and return its content.`,
+        Bash: `Shell. Dir persists. 120s/600s timeout. run_in_background avail. Prefer Read/Edit/Write/Glob/Grep over shell equivalents.`,
+        Read: `Read file. offset/limit for large files. Supports images, PDFs (pages param), notebooks.`,
+        Edit: `Replace string in file. old_string must be unique. Read file first.`,
+        Write: `Create or rewrite file. Prefer Edit for modifications.`,
+        Glob: `Find files by glob pattern.`,
+        Grep: `Regex search. output_mode: files_with_matches|content|count. -i for case-insensitive.`,
+        Agent: `Subagent. types: general-purpose|Explore|Plan. run_in_background avail.`,
+        Skill: `Run slash command. Only use skills listed in system messages.`,
+        WebSearch: `Web search. Include sources in response.`,
+        WebFetch: `Fetch URL and return content.`,
       };
 
       for (const tool of json.tools) {
@@ -661,6 +661,7 @@ const server = createServer((req, res) => {
     res.writeHead(200, { 'content-type': 'application/json' });
     res.end(JSON.stringify({
       status: state.overall || 'unknown',
+      stripEnabled: STRIP_ENABLED,
       upstream: UPSTREAM,
       queue: queue.length,
       threshold: THRESHOLD,
@@ -794,6 +795,28 @@ const server = createServer((req, res) => {
   if (path === '/events' && req.method === 'GET') {
     res.writeHead(200, { 'content-type': 'application/json' });
     res.end(JSON.stringify(rateLimitEvents.slice(-100).reverse()));
+    return;
+  }
+
+  // Config toggle (runtime strip on/off)
+  if (path === '/config' && req.method === 'POST') {
+    const chunks: Buffer[] = [];
+    req.on('data', (c: Buffer) => chunks.push(c));
+    req.on('end', () => {
+      try {
+        const body = JSON.parse(Buffer.concat(chunks).toString());
+        if (body.strip === 'toggle') STRIP_ENABLED = !STRIP_ENABLED;
+        else if (body.strip === true || body.strip === 'on') STRIP_ENABLED = true;
+        else if (body.strip === false || body.strip === 'off') STRIP_ENABLED = false;
+        if (body.threshold !== undefined) (globalThis as any).__QUEUE_THRESHOLD = parseFloat(body.threshold);
+        log('info', `⚙️ Config updated: strip=${STRIP_ENABLED}`);
+        res.writeHead(200, { 'content-type': 'application/json' });
+        res.end(JSON.stringify({ stripEnabled: STRIP_ENABLED }));
+      } catch {
+        res.writeHead(400, { 'content-type': 'application/json' });
+        res.end(JSON.stringify({ error: 'invalid json' }));
+      }
+    });
     return;
   }
 

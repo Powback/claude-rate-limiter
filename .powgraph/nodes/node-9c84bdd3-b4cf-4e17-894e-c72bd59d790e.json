@@ -1,0 +1,18 @@
+{
+  "id": "9c84bdd3-b4cf-4e17-894e-c72bd59d790e",
+  "type": "reference",
+  "content": "Read todo.js",
+  "domains": [
+    "auth",
+    "security",
+    "personal_info",
+    "assistant_info"
+  ],
+  "supersedes": [],
+  "related_to": [],
+  "refs": [
+    "/Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/session-passthrough/workdir/todo.js"
+  ],
+  "timestamp": 1774747604252,
+  "source": "session:b9ba6f32-8619-4707-9736-aa6e7d585645"
+}

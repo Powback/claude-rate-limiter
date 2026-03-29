@@ -1,0 +1,27 @@
+{
+  "id": "review-ff731e03-5f09-46d0-a0a8-132bde91006a",
+  "type": "review",
+  "content": "todo.js: filter(priority) {",
+  "domains": [
+    "assistant_info"
+  ],
+  "supersedes": [],
+  "related_to": [
+    "agent-ff731e03-5f09-46d0-a0a8-132bde91006a"
+  ],
+  "refs": [
+    "/Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/session-passthrough/workdir/todo.js",
+    "/Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/session-passthrough/workdir/todo.js"
+  ],
+  "metadata": {
+    "files_edited": 1,
+    "files_read": 1,
+    "commits": 0,
+    "skills": [
+      "JavaScript"
+    ],
+    "commit_messages": []
+  },
+  "timestamp": 1774747597556,
+  "source": "powgraph-stop"
+}

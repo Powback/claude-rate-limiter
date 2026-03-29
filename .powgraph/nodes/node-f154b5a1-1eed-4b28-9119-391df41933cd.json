@@ -1,0 +1,24 @@
+{
+  "id": "f154b5a1-1eed-4b28-9119-391df41933cd",
+  "type": "knowledge",
+  "content": "todo.js: filter(priority) {",
+  "snippet": "  filter(priority) {\n    return this.todos.filter(todo => todo.priority === priority);\n  }\n\n  overdue() {\n    const today = new Date();\n    today.setHours(0, 0, 0, 0);\n\n    return this.todos.filter(todo =>\n      todo.dueDate &&\n      new Date(todo.dueDate) < today &&\n      !todo.completed\n    );\n  }\n\n  list() {\n    return this.todos;\n  }",
+  "domains": [
+    "auth",
+    "security",
+    "personal_info",
+    "temporal_data",
+    "assistant_info"
+  ],
+  "supersedes": [
+    "2e11c872-b290-4ede-b924-a9c1d267b179",
+    "e377dc0d-a414-4744-a1af-d3fbd71bc6c4",
+    "d43867a0-fe5c-433b-bcfc-12d88d68f6fb"
+  ],
+  "related_to": [],
+  "refs": [
+    "/Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/session-passthrough/workdir/todo.js"
+  ],
+  "timestamp": 1774747595671,
+  "source": "session:ff731e03-5f09-46d0-a0a8-132bde91006a"
+}

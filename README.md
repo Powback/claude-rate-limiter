@@ -59,36 +59,46 @@ Two isolated benchmark runs on 5 code generation tasks (Space Invaders, Snake, T
 | Metric | Per task (avg) | Total (5 tasks) |
 |--------|---------------|-----------------|
 | API calls | 3 | 15 |
-| Input tokens | 18 | 90 |
-| Output tokens | 3,808 | 19,041 |
-| Cache creation | 9,094 | 45,468 |
-| Cache read | 46,972 | 234,859 |
-| Time | 24.3s | 121.5s |
-| Cost | $0.028 | $0.1405 |
+| Output tokens | 3,631 | 18,153 |
+| Cache creation | 9,420 | 47,099 |
+| Cache read | 47,507 | 237,536 |
+| Time | 26.3s | 131.6s |
+| Cost | $0.028 | $0.13879 |
 | **Task success** | **5/5** | |
 
 ### Stripped mode (`STRIP_BLOAT=true`)
 
+> Slim prompt includes CWD instruction added 2026-03-29. Previous run (without CWD fix) showed 0/5 validity.
+
 | Metric | Per task (avg) | Total (5 tasks) |
 |--------|---------------|-----------------|
 | API calls | 3 | 15 |
-| Input tokens | 18 | 90 |
-| Output tokens | 3,878 | 19,389 |
-| Cache creation | 9,201 | 46,005 |
-| Cache read | 5,746 | 28,732 |
-| Time | 26.0s | 130.0s |
-| Cost | $0.025 | $0.1259 |
-| **Task success** | **0/5** | |
+| Output tokens | 4,305 | 21,524 |
+| Cache creation | 9,890 | 49,452 |
+| Cache read | 6,037 | 30,183 |
+| Time | 27.3s | 136.6s |
+| Cost | $0.028 | $0.13803 |
+| **Task success** | **5/5** | |
+
+### Session test: 10-turn conversation
+
+| Mode | API calls | Cache read | Cache create | Total cost |
+|------|----------:|-----------:|-------------:|-----------:|
+| Stripped | 39 | 109,743 | 88,426 | **$0.143** |
+| Passthrough | 39 | 764,707 | 119,893 | **$0.232** |
+| **Savings** | | | | **−$0.089 (−38%)** |
 
 ### Key findings
 
-**Stripping saves 11.6% cost but breaks correctness.** Stripped mode wrote files to absolute paths (`/workspace/`) instead of the task's working directory. The full Claude Code system prompt embeds actual CWD context that the slim prompt can't replicate — even with an explicit CWD instruction.
+**Single isolated tasks: essentially equal cost (−0.5%).** Anthropic permanently pre-caches the 51K default system prompt in a shared global cache. Passthrough mode gets those tokens at $0.08/MTok (cache_read rate), which nearly offsets the bandwidth savings from stripping. Neither mode has a meaningful cost advantage for one-off tasks.
 
-**`cache_read` does NOT count toward Anthropic utilization.** Both modes showed an identical +0.21 increase in 5-hour utilization despite an 8.2× difference in cache_read tokens (234,859 passthrough vs 28,732 stripped). Utilization is driven by `input + output + cache_creation` only. This means passthrough's heavy prompt caching does not accelerate rate limiting.
+**Multi-turn sessions: stripped saves 38%.** In sessions where the same workdir grows over turns, passthrough carries the 51K system prompt into every cache entry — compounding into both higher cache_creation (~$0.003/turn extra) and cache_read (~$0.005/turn extra). Over 10 turns this adds up to ~$0.089.
 
-**Cache reads are nearly free.** At $0.08/M vs $0.80/M for input, each cached system-prompt read costs ~$0.004 — less than the overhead of regenerating context from scratch.
+**`cache_read` does NOT count toward Anthropic utilization.** Both modes show the same utilization increase despite 8.2× difference in cache_read volume. Rate limits are driven by `input + output + cache_creation` only. Heavy prompt caching doesn't accelerate rate limiting.
 
-**Stripping is disabled by default.** See `benchmark/FINDINGS.md` for full analysis.
+**Stripped produces ~15% more output tokens.** The full 51K system prompt's detailed behavioral instructions produce more concise responses. For large code generation tasks, this can offset the cache savings.
+
+See `benchmark/FINDINGS.md` for full per-task and per-turn analysis.
 
 ## Rate Limit Queuing
 

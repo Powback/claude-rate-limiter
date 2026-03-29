@@ -1,0 +1,10 @@
+{
+  "id": "2df55ed3-84ba-436e-bd5a-c478da1050c8",
+  "from": "skill-javascript",
+  "to": "/Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/session-passthrough/workdir/test-todo.js",
+  "type": "skill_for",
+  "metadata": {
+    "skill": "JavaScript"
+  },
+  "timestamp": 1774747638609
+}

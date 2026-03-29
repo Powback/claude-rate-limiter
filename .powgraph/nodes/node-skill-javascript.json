@@ -8,7 +8,9 @@
   "supersedes": [],
   "related_to": [],
   "refs": [
-    "todo.js"
+    "todo.js",
+    "/Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/session-passthrough/workdir/todo.js",
+    "/Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/session-passthrough/workdir/test-todo.js"
   ],
   "timestamp": 1774747365676,
   "source": "powgraph-stop"

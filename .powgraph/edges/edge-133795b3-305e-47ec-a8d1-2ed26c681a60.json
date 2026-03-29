@@ -1,0 +1,11 @@
+{
+  "id": "133795b3-305e-47ec-a8d1-2ed26c681a60",
+  "from": "agent-b9ba6f32-8619-4707-9736-aa6e7d585645",
+  "to": "9c84bdd3-b4cf-4e17-894e-c72bd59d790e",
+  "type": "consulted",
+  "metadata": {
+    "file": "/Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/session-passthrough/workdir/todo.js",
+    "weight": 0.3
+  },
+  "timestamp": 1774747604252
+}

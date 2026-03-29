@@ -1,0 +1,24 @@
+{
+  "id": "7b5290ff-29cb-4acd-91cf-db6b90e09232",
+  "type": "knowledge",
+  "content": "test-todo.js: const TodoList = require('./todo');",
+  "snippet": "const TodoList = require('./todo');\n\ndescribe('TodoList', () => {\n  let todoList;\n\n  beforeEach(() => {\n    todoList = new TodoList();\n  });\n\n  describe('constructor', () => {\n    it('should initialize with empty todos array', () => {\n      expect(todoList.todos).toEqual([]);\n    });\n\n    it('should initialize nextId to 1', () => {\n      expect(todoList.nextId).toBe(1);\n    });\n  });\n\n  describe('add()', () => {\n    it('should add a todo with default priority', () => {\n      const id = todoList.add('Buy groceries');\n      expect(id).toBe(1);\n      expect(todoList.todos).toHaveLength(1);\n      …",
+  "domains": [
+    "auth",
+    "security",
+    "personal_info",
+    "assistant_info",
+    "testing",
+    "frontend"
+  ],
+  "supersedes": [
+    "f154b5a1-1eed-4b28-9119-391df41933cd",
+    "eaec1093-aebd-4221-93b8-3cfa4215589b"
+  ],
+  "related_to": [],
+  "refs": [
+    "/Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/session-passthrough/workdir/test-todo.js"
+  ],
+  "timestamp": 1774747633107,
+  "source": "session:b9ba6f32-8619-4707-9736-aa6e7d585645"
+}

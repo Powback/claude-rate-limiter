@@ -1,0 +1,26 @@
+{
+  "id": "review-2bd3d70f-8a48-4285-9d83-0ade068ba50f",
+  "type": "review",
+  "content": "todo.js: class TodoList {",
+  "domains": [
+    "assistant_info"
+  ],
+  "supersedes": [],
+  "related_to": [
+    "agent-2bd3d70f-8a48-4285-9d83-0ade068ba50f"
+  ],
+  "refs": [
+    "/Users/macback/Projects/claude-rate-limiter/benchmark/isolated-20260329-011044/session-passthrough/workdir/todo.js"
+  ],
+  "metadata": {
+    "files_edited": 1,
+    "files_read": 0,
+    "commits": 0,
+    "skills": [
+      "JavaScript"
+    ],
+    "commit_messages": []
+  },
+  "timestamp": 1774747505778,
+  "source": "powgraph-stop"
+}

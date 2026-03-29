@@ -1,0 +1,13 @@
+{
+  "id": "agent-ff731e03-5f09-46d0-a0a8-132bde91006a",
+  "type": "agent",
+  "content": "todo.js: filter(priority) {",
+  "domains": [
+    "assistant_info"
+  ],
+  "supersedes": [],
+  "related_to": [],
+  "refs": [],
+  "timestamp": 1774747597556,
+  "source": "powgraph-stop"
+}
