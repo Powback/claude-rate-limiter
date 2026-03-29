@@ -1,0 +1,32 @@
+Created `todo-api.mjs` with full REST API support. Start it with:
+
+```bash
+node todo-api.mjs
+```
+
+**Endpoints:**
+
+- `GET /todos` — list all todos
+- `POST /todos` — create new todo (body: `{"title": "...", "completed": false}`)
+- `PUT /todos/:id` — update todo (body: `{"title": "...", "completed": ...}`)
+- `DELETE /todos/:id` — delete todo
+
+**Example usage:**
+
+```bash
+# Create a todo
+curl -X POST http://localhost:3000/todos \
+  -H "Content-Type: application/json" \
+  -d '{"title":"Buy milk"}'
+
+# List todos
+curl http://localhost:3000/todos
+
+# Update todo 1
+curl -X PUT http://localhost:3000/todos/1 \
+  -H "Content-Type: application/json" \
+  -d '{"completed":true}'
+
+# Delete todo 1
+curl -X DELETE http://localhost:3000/todos/1
+```

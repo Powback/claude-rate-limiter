@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regex Tester</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            gap: 0;
+        }
+
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: white;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            padding: 20px;
+            border-bottom: 2px solid #e0e0e0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .inputs-section {
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+            background: #fafafa;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group:last-child {
+            margin-bottom: 0;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+            font-size: 13px;
+            resize: none;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .test-string-input {
+            height: 120px;
+        }
+
+        .flags-group {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            font-size: 13px;
+            font-weight: 500;
+            margin: 0;
+            cursor: pointer;
+            text-transform: none;
+            letter-spacing: normal;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 6px;
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
+        }
+
+        .content {
+            flex: 1;
+            display: flex;
+            gap: 20px;
+            overflow: hidden;
+            padding: 20px;
+        }
+
+        .results {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            min-width: 0;
+        }
+
+        .results-section {
+            background: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-height: 0;
+        }
+
+        .results-section-title {
+            padding: 12px 15px;
+            background: #f0f0f0;
+            border-bottom: 1px solid #e0e0e0;
+            font-weight: 600;
+            font-size: 13px;
+            color: #555;
+        }
+
+        .results-section-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            min-height: 0;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 4px;
+            border-radius: 2px;
+            font-weight: 600;
+            color: #856404;
+        }
+
+        .match-item {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 3px;
+            padding: 12px;
+            margin-bottom: 10px;
+            font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+            font-size: 12px;
+        }
+
+        .match-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .match-text {
+            color: #667eea;
+            font-weight: 600;
+            word-break: break-all;
+            margin-bottom: 8px;
+        }
+
+        .match-position {
+            color: #999;
+            font-size: 11px;
+            margin-bottom: 6px;
+        }
+
+        .match-groups {
+            background: #f5f5f5;
+            border-left: 3px solid #667eea;
+            padding: 8px;
+            margin-top: 8px;
+            font-size: 11px;
+        }
+
+        .group-item {
+            margin: 4px 0;
+            color: #666;
+        }
+
+        .group-index {
+            font-weight: 600;
+            color: #555;
+        }
+
+        .group-value {
+            color: #764ba2;
+            font-weight: 500;
+            word-break: break-all;
+        }
+
+        .empty-state {
+            padding: 30px;
+            text-align: center;
+            color: #999;
+            font-size: 13px;
+        }
+
+        .error-message {
+            background: #fee;
+            border: 1px solid #fcc;
+            border-radius: 4px;
+            padding: 12px;
+            color: #c33;
+            font-size: 13px;
+            font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+            word-break: break-all;
+        }
+
+        .success-message {
+            background: #efe;
+            border: 1px solid #cfc;
+            border-radius: 4px;
+            padding: 12px;
+            color: #3c3;
+            font-size: 13px;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: #f9f9f9;
+            border-left: 1px solid #e0e0e0;
+            overflow-y: auto;
+            flex-shrink: 0;
+        }
+
+        .sidebar-section {
+            padding: 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .sidebar-title {
+            padding: 12px 15px;
+            background: #f0f0f0;
+            font-weight: 600;
+            font-size: 12px;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            user-select: none;
+            border: none;
+            width: 100%;
+            text-align: left;
+        }
+
+        .sidebar-title:hover {
+            background: #e8e8e8;
+        }
+
+        .sidebar-content {
+            padding: 0;
+            max-height: 300px;
+            overflow: hidden;
+            transition: max-height 0.2s ease;
+        }
+
+        .sidebar-content.collapsed {
+            max-height: 0;
+            overflow: hidden;
+        }
+
+        .cheatsheet-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 12px;
+        }
+
+        .cheatsheet-item:hover {
+            background: #f0f0f0;
+            cursor: pointer;
+        }
+
+        .pattern {
+            font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+            background: #e8e8f0;
+            padding: 2px 4px;
+            border-radius: 2px;
+            color: #667eea;
+            font-weight: 600;
+            font-size: 11px;
+            display: inline-block;
+            margin-bottom: 6px;
+        }
+
+        .description {
+            color: #666;
+            font-size: 11px;
+            line-height: 1.4;
+        }
+
+        .copy-btn {
+            padding: 4px 8px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            font-size: 11px;
+            cursor: pointer;
+            margin-top: 6px;
+            display: block;
+        }
+
+        .copy-btn:hover {
+            background: #764ba2;
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                max-height: 200px;
+            }
+
+            .content {
+                flex-wrap: wrap;
+            }
+
+            .results {
+                min-width: 100%;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #aaa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main">
+            <div class="header">
+                <h1>🔍 Regex Tester</h1>
+                <p>Test and debug regular expressions with real-time matching</p>
+            </div>
+
+            <div class="inputs-section">
+                <div class="input-group">
+                    <label for="pattern">Regex Pattern</label>
+                    <input type="text" id="pattern" placeholder="e.g., \b[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}\b" value="">
+                </div>
+
+                <div class="input-group">
+                    <label for="testString">Test String</label>
+                    <textarea id="testString" class="test-string-input" placeholder="Enter text to test against the regex..."></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label>Flags</label>
+                    <div class="flags-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="flagGlobal" checked>
+                            Global (g)
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="flagIgnoreCase">
+                            Case-insensitive (i)
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="flagMultiline">
+                            Multiline (m)
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="flagDotAll">
+                            Dot-all (s)
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content">
+                <div class="results">
+                    <div class="results-section">
+                        <div class="results-section-title">Highlighted Test String</div>
+                        <div class="results-section-content" id="highlightedResult"></div>
+                    </div>
+
+                    <div class="results-section">
+                        <div class="results-section-title">Match Details</div>
+                        <div class="results-section-content" id="matchDetails"></div>
+                    </div>
+                </div>
+
+                <div class="sidebar">
+                    <div class="sidebar-section">
+                        <button class="sidebar-title">Character Classes</button>
+                        <div class="sidebar-content">
+                            <div class="cheatsheet-item">
+                                <div class="pattern">.</div>
+                                <div class="description">Any character (except newline)</div>
+                                <button class="copy-btn" data-pattern=".">Copy</button>
+                            </div>
+                            <div class="cheatsheet-item">
+                                <div class="pattern">\d</div>
+                                <div class="description">Any digit [0-9]</div>
+                                <button class="copy-btn" data-pattern="\d">Copy</button>
+                            </div>
+                            <div class="cheatsheet-item">
+                                <div class="pattern">\w</div>
+                                <div class="description">Word char [a-zA-Z0-9_]</div>
+                                <button class="copy-btn" data-pattern="\w">Copy</button>
+                            </div>
+                            <div class="cheatsheet-item">
+                                <div class="pattern">\s</div>
+                                <div class="description">Whitespace</div>
+                                <button class="copy-btn" data-pattern="\s">Copy</button>
+                            </div>
+                            <div class="cheatsheet-item">
+                                <div class="pattern">[abc]</div>
+                                <div class="description">a or b or c</div>
+                                <button class="copy-btn" data-pattern="[abc]">Copy</button>
+                            </div>
+                            <div class="cheatsheet-item">
+                                <div class="pattern">[^abc]</div>
+                                <div class="description">Not a, b, or c</div>
+                                <button class="copy-btn" data-pattern="[^abc]">Copy</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-section">
+                        <button class="sidebar-title">Quantifiers</button>
+                        <div class="sidebar-content">
+                            <div class="cheatsheet-item">
+                                <div class="pattern">*</div>
+                                <div class="description">0 or more</div>
+                                <button class="copy-btn" data-pattern="*">Copy</button>
+                            </div>
+                            <div class="cheatsheet-item">
+                                <div class="pattern">+</div>
+                                <div class="description">1 or more</div>
+                                <button class="copy-btn" data-pattern="+">Copy</button>
+                            </div>
+                            <div class="cheatsheet-item">
+                                <div class="pattern">?</div>
+                                <div class="description">0 or 1</div>
+                                <button class="copy-btn" data-pattern="?">Copy</button>
+                            </div>
+                            <div class="cheatsheet-item">
+                                <div class="pattern">{n}</div>
+                                <div class="description">Exactly n times</div>
+                                <button class="copy-btn" data-pattern="{3}">Copy</button>
+                            </div>
+                            <div class="cheatsheet-item">
+                                <div class="pattern">{n,m}</div>
+                                <div class="description">Between n and m times</div>
+                                <button class="copy-btn" data-pattern="{2,5}">Copy</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-section">
+                        <button class="sidebar-title">Anchors & Groups</button>
+                        <div class="sidebar-content">
+                            <div class="cheatsheet-item">
+                                <div class="pattern">^</div>
+                                <div class="description">Start of line</div>
+                                <button class="copy-btn" data-pattern="^">Copy</button>
+                            </div>
+                            <div class="cheatsheet-item">
+                                <div class="pattern">$</div>
+                                <div class="description">End of line</div>
+                                <button class="copy-btn" data-pattern="$">Copy</button>
+                            </div>
+                            <div class="cheatsheet-item">
+                                <div class="pattern">\b</div>
+                                <div class="description">Word boundary</div>
+                                <button class="copy-btn" data-pattern="\b">Copy</button>
+                            </div>
+                            <div class="cheatsheet-item">
+                                <div class="pattern">()</div>
+                                <div class="description">Capture group</div>
+                                <button class="copy-btn" data-pattern="()">Copy</button>
+                            </div>
+                            <div class="cheatsheet-item">
+                                <div class="pattern">|</div>
+                                <div class="description">Alternation (or)</div>
+                                <button class="copy-btn" data-pattern="|">Copy</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-section">
+                        <button class="sidebar-title">Common Patterns</button>
+                        <div class="sidebar-content">
+                            <div class="cheatsheet-item">
+                                <div class="pattern">Email</div>
+                                <div class="description">\b[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}\b</div>
+                                <button class="copy-btn" data-pattern="\b[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}\b">Copy</button>
+                            </div>
+                            <div class="cheatsheet-item">
+                                <div class="pattern">URL</div>
+                                <div class="description">https?://[^\s]+</div>
+                                <button class="copy-btn" data-pattern="https?://[^\s]+">Copy</button>
+                            </div>
+                            <div class="cheatsheet-item">
+                                <div class="pattern">Phone (US)</div>
+                                <div class="description">\b\d{3}[-.\s]?\d{3}[-.\s]?\d{4}\b</div>
+                                <button class="copy-btn" data-pattern="\b\d{3}[-.\s]?\d{3}[-.\s]?\d{4}\b">Copy</button>
+                            </div>
+                            <div class="cheatsheet-item">
+                                <div class="pattern">IP Address</div>
+                                <div class="description">\b(?:\d{1,3}\.){3}\d{1,3}\b</div>
+                                <button class="copy-btn" data-pattern="\b(?:\d{1,3}\.){3}\d{1,3}\b">Copy</button>
+                            </div>
+                            <div class="cheatsheet-item">
+                                <div class="pattern">Hex Color</div>
+                                <div class="description">#[0-9a-fA-F]{6}</div>
+                                <button class="copy-btn" data-pattern="#[0-9a-fA-F]{6}">Copy</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const patternInput = document.getElementById('pattern');
+        const testStringInput = document.getElementById('testString');
+        const flagGlobal = document.getElementById('flagGlobal');
+        const flagIgnoreCase = document.getElementById('flagIgnoreCase');
+        const flagMultiline = document.getElementById('flagMultiline');
+        const flagDotAll = document.getElementById('flagDotAll');
+        const highlightedResult = document.getElementById('highlightedResult');
+        const matchDetails = document.getElementById('matchDetails');
+
+        // Sidebar toggle
+        document.querySelectorAll('.sidebar-title').forEach(button => {
+            button.addEventListener('click', () => {
+                const content = button.nextElementSibling;
+                content.classList.toggle('collapsed');
+            });
+        });
+
+        // Copy to clipboard
+        document.querySelectorAll('.copy-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const pattern = btn.getAttribute('data-pattern');
+                patternInput.value = pattern;
+                patternInput.focus();
+                performTest();
+            });
+        });
+
+        function buildRegex() {
+            try {
+                let flags = '';
+                if (flagGlobal.checked) flags += 'g';
+                if (flagIgnoreCase.checked) flags += 'i';
+                if (flagMultiline.checked) flags += 'm';
+                if (flagDotAll.checked) flags += 's';
+
+                return new RegExp(patternInput.value, flags);
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function performTest() {
+            const testString = testStringInput.value;
+            const regex = buildRegex();
+
+            // Clear previous results
+            highlightedResult.innerHTML = '';
+            matchDetails.innerHTML = '';
+
+            if (!patternInput.value.trim()) {
+                highlightedResult.innerHTML = '<div class="empty-state">Enter a regex pattern to get started</div>';
+                return;
+            }
+
+            if (!regex) {
+                highlightedResult.innerHTML = `<div class="error-message">Invalid regex: ${escapeHtml(patternInput.value)}</div>`;
+                return;
+            }
+
+            if (!testString.trim()) {
+                highlightedResult.innerHTML = '<div class="empty-state">Enter a test string to see matches</div>';
+                return;
+            }
+
+            try {
+                // Highlight matches
+                let highlightedText = testString;
+                const matches = [];
+                let match;
+
+                // Create a fresh regex for iteration (global flag must be set)
+                const iterRegex = new RegExp(regex.source, 'g' + (flagIgnoreCase.checked ? 'i' : '') + (flagMultiline.checked ? 'm' : '') + (flagDotAll.checked ? 's' : ''));
+
+                while ((match = iterRegex.exec(testString)) !== null) {
+                    matches.push({
+                        text: match[0],
+                        index: match.index,
+                        endIndex: match.index + match[0].length,
+                        groups: match.slice(1)
+                    });
+                }
+
+                if (matches.length === 0) {
+                    highlightedResult.innerHTML = '<div class="empty-state">No matches found</div>';
+                    matchDetails.innerHTML = '<div class="empty-state">No matches to display</div>';
+                    return;
+                }
+
+                // Build highlighted string by going backwards to preserve indices
+                let lastIndex = testString.length;
+                let result = testString;
+
+                for (let i = matches.length - 1; i >= 0; i--) {
+                    const m = matches[i];
+                    result = result.slice(0, m.index) +
+                            '<span class="highlight">' + escapeHtml(result.slice(m.index, m.endIndex)) + '</span>' +
+                            result.slice(m.endIndex);
+                }
+
+                highlightedResult.innerHTML = `<pre style="margin: 0; white-space: pre-wrap; word-wrap: break-word;">${result}</pre>`;
+                highlightedResult.innerHTML += `<div class="success-message">Found ${matches.length} match${matches.length !== 1 ? 'es' : ''}</div>`;
+
+                // Display match details
+                let matchHTML = '';
+                matches.forEach((m, idx) => {
+                    matchHTML += `<div class="match-item">
+                        <div class="match-text">${escapeHtml(m.text)}</div>
+                        <div class="match-position">Match ${idx + 1} at index ${m.index}-${m.endIndex}</div>`;
+
+                    if (m.groups.length > 0) {
+                        matchHTML += '<div class="match-groups">';
+                        m.groups.forEach((group, groupIdx) => {
+                            matchHTML += `<div class="group-item">
+                                <span class="group-index">Group ${groupIdx + 1}:</span>
+                                <span class="group-value">${group !== undefined ? escapeHtml(group) : '(undefined)'}</span>
+                            </div>`;
+                        });
+                        matchHTML += '</div>';
+                    }
+
+                    matchHTML += '</div>';
+                });
+
+                matchDetails.innerHTML = matchHTML;
+            } catch (e) {
+                highlightedResult.innerHTML = `<div class="error-message">Error: ${escapeHtml(e.message)}</div>`;
+            }
+        }
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        // Event listeners
+        patternInput.addEventListener('input', performTest);
+        testStringInput.addEventListener('input', performTest);
+        flagGlobal.addEventListener('change', performTest);
+        flagIgnoreCase.addEventListener('change', performTest);
+        flagMultiline.addEventListener('change', performTest);
+        flagDotAll.addEventListener('change', performTest);
+
+        // Initialize with empty state
+        performTest();
+    </script>
+</body>
+</html>

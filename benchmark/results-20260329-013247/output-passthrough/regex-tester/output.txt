@@ -1,0 +1,24 @@
+Done! I've created `regex.html` with a fully-featured regex tester. Here's what's included:
+
+**Core Features:**
+- **Pattern Input** — Enter any regex with real-time validation
+- **Test String** — Textarea for testing larger blocks of text
+- **Real-time Highlighting** — Matches are highlighted in yellow as you type
+- **Match Groups Display** — Shows all capture groups for each match with their values and positions
+- **Flags Support** — Global, case-insensitive, multiline, and dot-all flags with checkboxes
+
+**Cheatsheet Sidebar** with collapsible sections:
+- Character classes (`\d`, `\w`, `\s`, character sets)
+- Quantifiers (`*`, `+`, `?`, `{n,m}`)
+- Anchors & groups (`^`, `$`, `\b`, `()`, `|`)
+- Common patterns (email, URL, phone, IP address, hex color)
+- **Copy buttons** to instantly populate the pattern input
+
+**UX Details:**
+- Shows match count
+- Displays index positions for each match
+- Error messages for invalid regex
+- Responsive layout with sidebar collapse on smaller screens
+- Clean purple gradient header with monospace fonts for code
+
+The file is completely standalone — no dependencies, just open it in a browser and start testing!

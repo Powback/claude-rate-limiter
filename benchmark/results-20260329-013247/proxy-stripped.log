@@ -1,0 +1,216 @@
+[00:32:47] 🚀 claude-rate-limiter listening on :3129
+[00:32:47]    Upstream: https://api.anthropic.com
+[00:32:47]    Queue threshold: 85% utilization
+[00:32:47]    Max queue: 100
+[00:32:47] 
+[00:32:47]    Usage: ANTHROPIC_BASE_URL=http://localhost:3129 claude ...
+[00:32:50] 📡 / ? 156ms 
+[90m[00:32:51] 📝 System prompt saved: benchmark/results-20260329-013247/stripped/system-prompt-2026-03-29T00-32-51-632Z.txt (27869 chars)[0m
+[90m[00:32:51] ✂️ Replaced default system block: 12951 → 933 chars[0m
+[90m[00:32:51] ✂️ Dropped system block: 14340 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[00:32:51] ✂️ Stripped 83.0KB (~21256 tokens): 103119 → 18095 chars [total saved: ~21256 tokens across 1 requests]
+[00:32:52] 🟢 Utilization: 5h=11% 7d=8% [five_hour] status=allowed
+[90m[00:33:11] 📊 SSE message_start: in=10 cache_read=0 cache_create=5815[0m
+[90m[00:33:11] 📊 SSE message_delta: out=4052[0m
+[00:33:11] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 20309ms in=10 out=4052 cache_create=5815
+[90m[00:33:11] 📝 System prompt saved: benchmark/results-20260329-013247/stripped/system-prompt-2026-03-29T00-33-11-943Z.txt (27869 chars)[0m
+[90m[00:33:11] ✂️ Replaced default system block: 12951 → 933 chars[0m
+[90m[00:33:11] ✂️ Dropped system block: 14340 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[00:33:11] ✂️ Stripped 83.0KB (~21256 tokens): 119163 → 34139 chars [total saved: ~42512 tokens across 2 requests]
+[00:33:12] 🟢 Utilization: 5h=12% 7d=8% [five_hour] status=allowed
+[90m[00:33:17] 📊 SSE message_start: in=8 cache_read=5815 cache_create=4091[0m
+[90m[00:33:17] 📊 SSE message_delta: out=547[0m
+[00:33:17] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 5320ms in=8 out=547 cache_read=5815 cache_create=4091
+[00:33:45] 📡 / ? 121ms 
+[90m[00:33:46] 📝 System prompt saved: benchmark/results-20260329-013247/stripped/system-prompt-2026-03-29T00-33-46-092Z.txt (27863 chars)[0m
+[90m[00:33:46] ✂️ Replaced default system block: 12951 → 933 chars[0m
+[90m[00:33:46] ✂️ Dropped system block: 14334 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[00:33:46] ✂️ Stripped 83.0KB (~21255 tokens): 103164 → 18146 chars [total saved: ~63767 tokens across 3 requests]
+[00:33:46] 🟢 Utilization: 5h=12% 7d=8% [five_hour] status=allowed
+[90m[00:34:01] 📊 SSE message_start: in=10 cache_read=0 cache_create=5842[0m
+[90m[00:34:01] 📊 SSE message_delta: out=3510[0m
+[00:34:01] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 15337ms in=10 out=3510 cache_create=5842
+[90m[00:34:01] 📝 System prompt saved: benchmark/results-20260329-013247/stripped/system-prompt-2026-03-29T00-34-01-433Z.txt (27863 chars)[0m
+[90m[00:34:01] ✂️ Replaced default system block: 12951 → 933 chars[0m
+[90m[00:34:01] ✂️ Dropped system block: 14334 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[00:34:01] ✂️ Stripped 83.0KB (~21255 tokens): 122452 → 37434 chars [total saved: ~85022 tokens across 4 requests]
+[00:34:02] 🟢 Utilization: 5h=12% 7d=8% [five_hour] status=allowed
+[90m[00:34:03] 📊 SSE message_start: in=8 cache_read=5842 cache_create=3540[0m
+[90m[00:34:03] 📊 SSE message_delta: out=275[0m
+[00:34:03] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 2440ms in=8 out=275 cache_read=5842 cache_create=3540
+[00:34:14] 📡 / ? 128ms 
+[90m[00:34:15] 📝 System prompt saved: benchmark/results-20260329-013247/stripped/system-prompt-2026-03-29T00-34-15-289Z.txt (27870 chars)[0m
+[90m[00:34:15] ✂️ Replaced default system block: 12951 → 933 chars[0m
+[90m[00:34:15] ✂️ Dropped system block: 14341 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[00:34:15] ✂️ Stripped 83.0KB (~21256 tokens): 103200 → 18175 chars [total saved: ~106278 tokens across 5 requests]
+[00:34:17] 🟢 Utilization: 5h=12% 7d=8% [five_hour] status=allowed
+[90m[00:34:30] 📊 SSE message_start: in=10 cache_read=0 cache_create=5835[0m
+[90m[00:34:30] 📊 SSE message_delta: out=2474[0m
+[00:34:30] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 15220ms in=10 out=2474 cache_create=5835
+[90m[00:34:30] 📝 System prompt saved: benchmark/results-20260329-013247/stripped/system-prompt-2026-03-29T00-34-30-515Z.txt (27870 chars)[0m
+[90m[00:34:30] ✂️ Replaced default system block: 12951 → 933 chars[0m
+[90m[00:34:30] ✂️ Dropped system block: 14341 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[00:34:30] ✂️ Stripped 83.0KB (~21256 tokens): 113796 → 28771 chars [total saved: ~127534 tokens across 6 requests]
+[00:34:32] 🟢 Utilization: 5h=12% 7d=8% [five_hour] status=allowed
+[90m[00:34:35] 📊 SSE message_start: in=8 cache_read=5835 cache_create=2508[0m
+[90m[00:34:35] 📊 SSE message_delta: out=452[0m
+[00:34:35] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 5196ms in=8 out=452 cache_read=5835 cache_create=2508
+[00:34:56] 📡 / ? 126ms 
+[90m[00:34:56] 📝 System prompt saved: benchmark/results-20260329-013247/stripped/system-prompt-2026-03-29T00-34-56-871Z.txt (27865 chars)[0m
+[90m[00:34:56] ✂️ Replaced default system block: 12951 → 933 chars[0m
+[90m[00:34:56] ✂️ Dropped system block: 14336 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[00:34:56] ✂️ Stripped 83.0KB (~21255 tokens): 103116 → 18096 chars [total saved: ~148789 tokens across 7 requests]
+[00:34:57] 🟢 Utilization: 5h=12% 7d=8% [five_hour] status=allowed
+[90m[00:35:15] 📊 SSE message_start: in=10 cache_read=0 cache_create=5815[0m
+[90m[00:35:15] 📊 SSE message_delta: out=3828[0m
+[00:35:15] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 18544ms in=10 out=3828 cache_create=5815
+[90m[00:35:15] 📝 System prompt saved: benchmark/results-20260329-013247/stripped/system-prompt-2026-03-29T00-35-15-442Z.txt (27865 chars)[0m
+[90m[00:35:15] ✂️ Replaced default system block: 12951 → 933 chars[0m
+[90m[00:35:15] ✂️ Dropped system block: 14336 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[00:35:15] ✂️ Stripped 83.0KB (~21255 tokens): 118410 → 33390 chars [total saved: ~170044 tokens across 8 requests]
+[00:35:16] 🟢 Utilization: 5h=12% 7d=8% [five_hour] status=allowed
+[90m[00:35:19] 📊 SSE message_start: in=8 cache_read=5815 cache_create=3861[0m
+[90m[00:35:19] 📊 SSE message_delta: out=419[0m
+[00:35:19] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 4531ms in=8 out=419 cache_read=5815 cache_create=3861
+[00:35:41] 📡 / ? 125ms 
+[90m[00:35:42] 📝 System prompt saved: benchmark/results-20260329-013247/stripped/system-prompt-2026-03-29T00-35-42-128Z.txt (27867 chars)[0m
+[90m[00:35:42] ✂️ Replaced default system block: 12951 → 933 chars[0m
+[90m[00:35:42] ✂️ Dropped system block: 14338 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[00:35:42] ✂️ Stripped 83.0KB (~21256 tokens): 103158 → 18136 chars [total saved: ~191300 tokens across 9 requests]
+[00:35:42] 🟢 Utilization: 5h=12% 7d=8% [five_hour] status=allowed
+[90m[00:36:07] 📊 SSE message_start: in=10 cache_read=0 cache_create=5832[0m
+[90m[00:36:07] 📊 SSE message_delta: out=5015[0m
+[00:36:07] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 25689ms in=10 out=5015 cache_create=5832
+[90m[00:36:07] 📝 System prompt saved: benchmark/results-20260329-013247/stripped/system-prompt-2026-03-29T00-36-07-834Z.txt (27867 chars)[0m
+[90m[00:36:07] ✂️ Replaced default system block: 12951 → 933 chars[0m
+[90m[00:36:07] ✂️ Dropped system block: 14338 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[00:36:07] ✂️ Stripped 83.0KB (~21256 tokens): 124261 → 39239 chars [total saved: ~212556 tokens across 10 requests]
+[00:36:08] 🟢 Utilization: 5h=12% 7d=8% [five_hour] status=allowed
+[90m[00:36:12] 📊 SSE message_start: in=8 cache_read=5832 cache_create=5042[0m
+[90m[00:36:12] 📊 SSE message_delta: out=403[0m
+[00:36:12] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 4942ms in=8 out=403 cache_read=5832 cache_create=5042
+[00:36:42] 📡 / ? 122ms 
+[90m[00:36:43] 📝 System prompt saved: benchmark/results-20260329-013247/stripped/system-prompt-2026-03-29T00-36-43-046Z.txt (27862 chars)[0m
+[90m[00:36:43] ✂️ Replaced default system block: 12951 → 933 chars[0m
+[90m[00:36:43] ✂️ Dropped system block: 14333 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[00:36:43] ✂️ Stripped 83.0KB (~21254 tokens): 103187 → 18170 chars [total saved: ~233810 tokens across 11 requests]
+[00:36:43] 🟢 Utilization: 5h=12% 7d=8% [five_hour] status=allowed
+[90m[00:37:02] 📊 SSE message_start: in=10 cache_read=0 cache_create=5835[0m
+[90m[00:37:02] 📊 SSE message_delta: out=3659[0m
+[00:37:02] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 19331ms in=10 out=3659 cache_create=5835
+[90m[00:37:02] 📝 System prompt saved: benchmark/results-20260329-013247/stripped/system-prompt-2026-03-29T00-37-02-380Z.txt (27862 chars)[0m
+[90m[00:37:02] ✂️ Replaced default system block: 12951 → 933 chars[0m
+[90m[00:37:02] ✂️ Dropped system block: 14333 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[00:37:02] ✂️ Stripped 83.0KB (~21254 tokens): 119537 → 34520 chars [total saved: ~255064 tokens across 12 requests]
+[00:37:03] 🟢 Utilization: 5h=12% 7d=8% [five_hour] status=allowed
+[90m[00:37:06] 📊 SSE message_start: in=8 cache_read=5835 cache_create=3683[0m
+[90m[00:37:06] 📊 SSE message_delta: out=427[0m
+[00:37:06] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 4345ms in=8 out=427 cache_read=5835 cache_create=3683
+[00:37:35] 📡 / ? 128ms 
+[90m[00:37:35] 📝 System prompt saved: benchmark/results-20260329-013247/stripped/system-prompt-2026-03-29T00-37-35-827Z.txt (27867 chars)[0m
+[90m[00:37:35] ✂️ Replaced default system block: 12951 → 933 chars[0m
+[90m[00:37:35] ✂️ Dropped system block: 14338 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[00:37:35] ✂️ Stripped 83.0KB (~21256 tokens): 103161 → 18139 chars [total saved: ~276320 tokens across 13 requests]
+[00:37:36] 🟢 Utilization: 5h=12% 7d=8% [five_hour] status=allowed
+[90m[00:38:02] 📊 SSE message_start: in=10 cache_read=0 cache_create=5824[0m
+[90m[00:38:02] 📊 SSE message_delta: out=5644[0m
+[00:38:02] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 27102ms in=10 out=5644 cache_create=5824
+[90m[00:38:02] 📝 System prompt saved: benchmark/results-20260329-013247/stripped/system-prompt-2026-03-29T00-38-02-936Z.txt (27867 chars)[0m
+[90m[00:38:02] ✂️ Replaced default system block: 12951 → 933 chars[0m
+[90m[00:38:02] ✂️ Dropped system block: 14338 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[00:38:02] ✂️ Stripped 83.0KB (~21256 tokens): 125675 → 40653 chars [total saved: ~297576 tokens across 14 requests]
+[00:38:03] 🟢 Utilization: 5h=12% 7d=8% [five_hour] status=allowed
+[90m[00:38:06] 📊 SSE message_start: in=8 cache_read=5824 cache_create=5666[0m
+[90m[00:38:06] 📊 SSE message_delta: out=400[0m
+[00:38:06] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 3944ms in=8 out=400 cache_read=5824 cache_create=5666
+[00:38:50] 📡 / ? 149ms 
+[90m[00:38:50] 📝 System prompt saved: benchmark/results-20260329-013247/stripped/system-prompt-2026-03-29T00-38-50-717Z.txt (27866 chars)[0m
+[90m[00:38:50] ✂️ Replaced default system block: 12951 → 933 chars[0m
+[90m[00:38:50] ✂️ Dropped system block: 14337 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[00:38:50] ✂️ Stripped 83.0KB (~21255 tokens): 103169 → 18148 chars [total saved: ~318831 tokens across 15 requests]
+[00:38:51] 🟢 Utilization: 5h=12% 7d=8% [five_hour] status=allowed
+[90m[00:39:17] 📊 SSE message_start: in=10 cache_read=0 cache_create=5824[0m
+[90m[00:39:17] 📊 SSE message_delta: out=5547[0m
+[00:39:17] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 27160ms in=10 out=5547 cache_create=5824
+[90m[00:39:17] 📝 System prompt saved: benchmark/results-20260329-013247/stripped/system-prompt-2026-03-29T00-39-17-892Z.txt (27866 chars)[0m
+[90m[00:39:17] ✂️ Replaced default system block: 12951 → 933 chars[0m
+[90m[00:39:17] ✂️ Dropped system block: 14337 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[00:39:17] ✂️ Stripped 83.0KB (~21255 tokens): 125778 → 40757 chars [total saved: ~340086 tokens across 16 requests]
+[00:39:18] 🟢 Utilization: 5h=12% 7d=8% [five_hour] status=allowed
+[90m[00:39:23] 📊 SSE message_start: in=8 cache_read=5824 cache_create=5581[0m
+[90m[00:39:23] 📊 SSE message_delta: out=548[0m
+[00:39:23] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 5278ms in=8 out=548 cache_read=5824 cache_create=5581
+[00:39:53] 📡 / ? 126ms 
+[90m[00:39:54] 📝 System prompt saved: benchmark/results-20260329-013247/stripped/system-prompt-2026-03-29T00-39-54-247Z.txt (27865 chars)[0m
+[90m[00:39:54] ✂️ Replaced default system block: 12951 → 933 chars[0m
+[90m[00:39:54] ✂️ Dropped system block: 14336 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[00:39:54] ✂️ Stripped 83.0KB (~21255 tokens): 103143 → 18123 chars [total saved: ~361341 tokens across 17 requests]
+[00:39:54] 🟢 Utilization: 5h=12% 7d=8% [five_hour] status=allowed
+[90m[00:40:21] 📊 SSE message_start: in=10 cache_read=0 cache_create=5823[0m
+[90m[00:40:21] 📊 SSE message_delta: out=4971[0m
+[00:40:21] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 27333ms in=10 out=4971 cache_create=5823
+[90m[00:40:21] 📝 System prompt saved: benchmark/results-20260329-013247/stripped/system-prompt-2026-03-29T00-40-21-594Z.txt (27865 chars)[0m
+[90m[00:40:21] ✂️ Replaced default system block: 12951 → 933 chars[0m
+[90m[00:40:21] ✂️ Dropped system block: 14336 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[00:40:21] ✂️ Stripped 83.0KB (~21255 tokens): 125788 → 40768 chars [total saved: ~382596 tokens across 18 requests]
+[00:40:24] 🟢 Utilization: 5h=13% 7d=8% [five_hour] status=allowed
+[90m[00:40:29] 📊 SSE message_start: in=8 cache_read=5823 cache_create=5006[0m
+[90m[00:40:29] 📊 SSE message_delta: out=566[0m
+[00:40:29] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 8077ms in=8 out=566 cache_read=5823 cache_create=5006
+[00:41:04] 📡 / ? 124ms 
+[90m[00:41:04] 📝 System prompt saved: benchmark/results-20260329-013247/stripped/system-prompt-2026-03-29T00-41-04-410Z.txt (27872 chars)[0m
+[90m[00:41:04] ✂️ Replaced default system block: 12951 → 933 chars[0m
+[90m[00:41:04] ✂️ Dropped system block: 14343 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[00:41:04] ✂️ Stripped 83.0KB (~21257 tokens): 103186 → 18159 chars [total saved: ~403853 tokens across 19 requests]
+[00:41:04] 🟢 Utilization: 5h=13% 7d=8% [five_hour] status=allowed
+[90m[00:41:32] 📊 SSE message_start: in=10 cache_read=0 cache_create=5830[0m
+[90m[00:41:32] 📊 SSE message_delta: out=6208[0m
+[00:41:32] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 28561ms in=10 out=6208 cache_create=5830
+[90m[00:41:33] 📝 System prompt saved: benchmark/results-20260329-013247/stripped/system-prompt-2026-03-29T00-41-33-014Z.txt (27872 chars)[0m
+[90m[00:41:33] ✂️ Replaced default system block: 12951 → 933 chars[0m
+[90m[00:41:33] ✂️ Dropped system block: 14343 chars (# auto memory
+
+You have a persistent, fi...)[0m
+[00:41:33] ✂️ Stripped 83.0KB (~21257 tokens): 126843 → 41816 chars [total saved: ~425110 tokens across 20 requests]
+[00:41:33] 🟢 Utilization: 5h=13% 7d=8% [five_hour] status=allowed
+[90m[00:41:38] 📊 SSE message_start: in=8 cache_read=5830 cache_create=6207[0m
+[90m[00:41:38] 📊 SSE message_delta: out=521[0m
+[00:41:38] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 5176ms in=8 out=521 cache_read=5830 cache_create=6207

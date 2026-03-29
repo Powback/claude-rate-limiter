@@ -1,0 +1,14 @@
+{
+  "task_id": "regex-tester",
+  "mode": "stripped",
+  "exit_code": 0,
+  "valid": false,
+  "duration_ms": 31901,
+  "api_calls": 3,
+  "input_tokens": 18,
+  "output_tokens": 6044,
+  "cache_read": 5824,
+  "cache_creation": 11490,
+  "output_file_bytes": 0,
+  "cost_usd": 0.036146
+}

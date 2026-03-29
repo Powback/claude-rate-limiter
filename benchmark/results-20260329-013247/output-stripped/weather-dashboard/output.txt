@@ -1,0 +1,17 @@
+Created **weather.html** — a fully responsive weather dashboard with:
+
+**Features:**
+- **Current Weather** — Large temperature display, condition, humidity, wind speed, UV index, feels-like temp, pressure, visibility
+- **5-Day Forecast Cards** — Hover animations, high/low temps, weather icons, conditions
+- **Temperature Chart** — Canvas-based line graph showing 7-day temperature trend with grid lines and labels
+- **Search Bar** — Works with 5 pre-loaded cities (San Francisco, New York, Miami, Seattle, Denver) — case-insensitive
+- **Mock Data** — No API calls, all hardcoded sample data
+- **Responsive Design** — Mobile-first, adapts to desktop/tablet/phone (tested down to 480px)
+
+**Styling:**
+- Purple gradient background
+- White cards with subtle shadows
+- Smooth hover effects and transitions
+- Mobile-optimized grid layouts
+
+Open in any browser — fully standalone, no dependencies needed. Try searching for: San Francisco, New York, Miami, Seattle, or Denver.

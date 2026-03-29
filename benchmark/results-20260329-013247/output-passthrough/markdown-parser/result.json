@@ -1,0 +1,14 @@
+{
+  "task_id": "markdown-parser",
+  "mode": "passthrough",
+  "exit_code": 0,
+  "valid": true,
+  "duration_ms": 20098,
+  "api_calls": 3,
+  "input_tokens": 18,
+  "output_tokens": 2935,
+  "cache_read": 47878,
+  "cache_creation": 8729,
+  "output_file_bytes": 7525,
+  "cost_usd": 0.024314
+}

@@ -1,0 +1,19 @@
+Created **csv-tool.html** — a standalone CSV parser with these features:
+
+**Core Features:**
+- **Drag-and-drop** upload zone (or click to select)
+- **CSV parsing** using Papa Parse library (handles quotes, escapes, empty lines)
+- **Sortable table** — click any column header to sort ascending/descending
+- **Stats panel** showing:
+  - Row count & column count
+  - Column type detection (numeric, text, boolean, empty)
+- **Download** — export the parsed data back as CSV
+
+**Extras:**
+- Numeric values styled and right-aligned for clarity
+- Responsive design (works on mobile)
+- Visual feedback on drag-over
+- Error handling for invalid files
+- "Load Another File" to reset
+
+Open it in any browser and start dragging CSV files. The file is 100% client-side — nothing gets uploaded anywhere.

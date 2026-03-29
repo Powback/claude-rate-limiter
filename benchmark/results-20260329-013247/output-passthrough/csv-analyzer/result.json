@@ -1,0 +1,14 @@
+{
+  "task_id": "csv-analyzer",
+  "mode": "passthrough",
+  "exit_code": 0,
+  "valid": true,
+  "duration_ms": 29165,
+  "api_calls": 3,
+  "input_tokens": 18,
+  "output_tokens": 4475,
+  "cache_read": 47875,
+  "cache_creation": 10115,
+  "output_file_bytes": 13975,
+  "cost_usd": 0.031859
+}

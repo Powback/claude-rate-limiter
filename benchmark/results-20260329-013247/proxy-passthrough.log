@@ -1,0 +1,116 @@
+[00:32:47] 🚀 claude-rate-limiter listening on :3130
+[00:32:47]    Upstream: https://api.anthropic.com
+[00:32:47]    Queue threshold: 85% utilization
+[00:32:47]    Max queue: 100
+[00:32:47] 
+[00:32:47]    Usage: ANTHROPIC_BASE_URL=http://localhost:3130 claude ...
+[00:33:17] 📡 / ? 137ms 
+[90m[00:33:18] 📝 System prompt saved: benchmark/results-20260329-013247/passthrough/system-prompt-2026-03-29T00-33-18-287Z.txt (27872 chars)[0m
+[00:33:19] 🟢 Utilization: 5h=12% 7d=8% [five_hour] status=allowed
+[90m[00:33:39] 📊 SSE message_start: in=10 cache_read=20965 cache_create=5929[0m
+[90m[00:33:39] 📊 SSE message_delta: out=4132[0m
+[00:33:39] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 20881ms in=10 out=4132 cache_read=20965 cache_create=5929
+[90m[00:33:39] 📝 System prompt saved: benchmark/results-20260329-013247/passthrough/system-prompt-2026-03-29T00-33-39-181Z.txt (27872 chars)[0m
+[00:33:40] 🟢 Utilization: 5h=12% 7d=8% [five_hour] status=allowed
+[90m[00:33:45] 📊 SSE message_start: in=8 cache_read=26894 cache_create=4069[0m
+[90m[00:33:45] 📊 SSE message_delta: out=468[0m
+[00:33:45] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 5854ms in=8 out=468 cache_read=26894 cache_create=4069
+[00:34:04] 📡 / ? 140ms 
+[90m[00:34:05] 📝 System prompt saved: benchmark/results-20260329-013247/passthrough/system-prompt-2026-03-29T00-34-05-033Z.txt (27866 chars)[0m
+[00:34:05] 🟢 Utilization: 5h=12% 7d=8% [five_hour] status=allowed
+[90m[00:34:11] 📊 SSE message_start: in=10 cache_read=20965 cache_create=5955[0m
+[90m[00:34:11] 📊 SSE message_delta: out=1096[0m
+[00:34:11] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 6350ms in=10 out=1096 cache_read=20965 cache_create=5955
+[90m[00:34:11] 📝 System prompt saved: benchmark/results-20260329-013247/passthrough/system-prompt-2026-03-29T00-34-11-411Z.txt (27866 chars)[0m
+[00:34:12] 🟢 Utilization: 5h=12% 7d=8% [five_hour] status=allowed
+[90m[00:34:14] 📊 SSE message_start: in=8 cache_read=26920 cache_create=1163[0m
+[90m[00:34:14] 📊 SSE message_delta: out=292[0m
+[00:34:14] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 2788ms in=8 out=292 cache_read=26920 cache_create=1163
+[00:34:36] 📡 / ? 133ms 
+[90m[00:34:36] 📝 System prompt saved: benchmark/results-20260329-013247/passthrough/system-prompt-2026-03-29T00-34-36-671Z.txt (27873 chars)[0m
+[00:34:37] 🟢 Utilization: 5h=12% 7d=8% [five_hour] status=allowed
+[90m[00:34:52] 📊 SSE message_start: in=10 cache_read=20965 cache_create=5948[0m
+[90m[00:34:52] 📊 SSE message_delta: out=2715[0m
+[00:34:52] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 16321ms in=10 out=2715 cache_read=20965 cache_create=5948
+[90m[00:34:53] 📝 System prompt saved: benchmark/results-20260329-013247/passthrough/system-prompt-2026-03-29T00-34-53-018Z.txt (27873 chars)[0m
+[00:34:53] 🟢 Utilization: 5h=12% 7d=8% [five_hour] status=allowed
+[90m[00:34:55] 📊 SSE message_start: in=8 cache_read=26913 cache_create=2781[0m
+[90m[00:34:55] 📊 SSE message_delta: out=220[0m
+[00:34:55] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 2922ms in=8 out=220 cache_read=26913 cache_create=2781
+[00:35:20] 📡 / ? 127ms 
+[90m[00:35:21] 📝 System prompt saved: benchmark/results-20260329-013247/passthrough/system-prompt-2026-03-29T00-35-21-033Z.txt (27868 chars)[0m
+[00:35:21] 🟢 Utilization: 5h=12% 7d=8% [five_hour] status=allowed
+[90m[00:35:36] 📊 SSE message_start: in=10 cache_read=20965 cache_create=5928[0m
+[90m[00:35:36] 📊 SSE message_delta: out=3099[0m
+[00:35:36] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 15595ms in=10 out=3099 cache_read=20965 cache_create=5928
+[90m[00:35:36] 📝 System prompt saved: benchmark/results-20260329-013247/passthrough/system-prompt-2026-03-29T00-35-36-645Z.txt (27868 chars)[0m
+[00:35:37] 🟢 Utilization: 5h=12% 7d=8% [five_hour] status=allowed
+[90m[00:35:40] 📊 SSE message_start: in=8 cache_read=26893 cache_create=3160[0m
+[90m[00:35:40] 📊 SSE message_delta: out=351[0m
+[00:35:40] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 4082ms in=8 out=351 cache_read=26893 cache_create=3160
+[00:36:13] 📡 / ? 120ms 
+[90m[00:36:13] 📝 System prompt saved: benchmark/results-20260329-013247/passthrough/system-prompt-2026-03-29T00-36-13-717Z.txt (27870 chars)[0m
+[00:36:16] 🟢 Utilization: 5h=12% 7d=8% [five_hour] status=allowed
+[90m[00:36:37] 📊 SSE message_start: in=10 cache_read=20965 cache_create=5945[0m
+[90m[00:36:37] 📊 SSE message_delta: out=4106[0m
+[00:36:37] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 23505ms in=10 out=4106 cache_read=20965 cache_create=5945
+[90m[00:36:37] 📝 System prompt saved: benchmark/results-20260329-013247/passthrough/system-prompt-2026-03-29T00-36-37-231Z.txt (27870 chars)[0m
+[00:36:38] 🟢 Utilization: 5h=12% 7d=8% [five_hour] status=allowed
+[90m[00:36:41] 📊 SSE message_start: in=8 cache_read=26910 cache_create=4170[0m
+[90m[00:36:41] 📊 SSE message_delta: out=369[0m
+[00:36:41] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 4764ms in=8 out=369 cache_read=26910 cache_create=4170
+[00:37:07] 📡 / ? 201ms 
+[90m[00:37:07] 📝 System prompt saved: benchmark/results-20260329-013247/passthrough/system-prompt-2026-03-29T00-37-07-798Z.txt (27865 chars)[0m
+[00:37:08] 🟢 Utilization: 5h=12% 7d=8% [five_hour] status=allowed
+[90m[00:37:29] 📊 SSE message_start: in=10 cache_read=20965 cache_create=5948[0m
+[90m[00:37:29] 📊 SSE message_delta: out=4130[0m
+[00:37:29] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 22126ms in=10 out=4130 cache_read=20965 cache_create=5948
+[90m[00:37:29] 📝 System prompt saved: benchmark/results-20260329-013247/passthrough/system-prompt-2026-03-29T00-37-29-932Z.txt (27865 chars)[0m
+[00:37:30] 🟢 Utilization: 5h=12% 7d=8% [five_hour] status=allowed
+[90m[00:37:34] 📊 SSE message_start: in=8 cache_read=26913 cache_create=4173[0m
+[90m[00:37:34] 📊 SSE message_delta: out=427[0m
+[00:37:34] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 4919ms in=8 out=427 cache_read=26913 cache_create=4173
+[00:38:07] 📡 / ? 126ms 
+[90m[00:38:07] 📝 System prompt saved: benchmark/results-20260329-013247/passthrough/system-prompt-2026-03-29T00-38-07-873Z.txt (27870 chars)[0m
+[00:38:08] 🟢 Utilization: 5h=12% 7d=8% [five_hour] status=allowed
+[90m[00:38:42] 📊 SSE message_start: in=10 cache_read=20965 cache_create=5938[0m
+[90m[00:38:42] 📊 SSE message_delta: out=7068[0m
+[00:38:42] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 35118ms in=10 out=7068 cache_read=20965 cache_create=5938
+[90m[00:38:43] 📝 System prompt saved: benchmark/results-20260329-013247/passthrough/system-prompt-2026-03-29T00-38-43-015Z.txt (27870 chars)[0m
+[00:38:43] 🟢 Utilization: 5h=12% 7d=8% [five_hour] status=allowed
+[90m[00:38:49] 📊 SSE message_start: in=8 cache_read=26903 cache_create=7123[0m
+[90m[00:38:49] 📊 SSE message_delta: out=629[0m
+[00:38:49] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 6523ms in=8 out=629 cache_read=26903 cache_create=7123
+[00:39:23] 📡 / ? 140ms 
+[90m[00:39:24] 📝 System prompt saved: benchmark/results-20260329-013247/passthrough/system-prompt-2026-03-29T00-39-24-150Z.txt (27869 chars)[0m
+[00:39:24] 🟢 Utilization: 5h=12% 7d=8% [five_hour] status=allowed
+[90m[00:39:48] 📊 SSE message_start: in=10 cache_read=20965 cache_create=5937[0m
+[90m[00:39:48] 📊 SSE message_delta: out=4963[0m
+[00:39:48] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 24307ms in=10 out=4963 cache_read=20965 cache_create=5937
+[90m[00:39:48] 📝 System prompt saved: benchmark/results-20260329-013247/passthrough/system-prompt-2026-03-29T00-39-48-473Z.txt (27869 chars)[0m
+[00:39:48] 🟢 Utilization: 5h=12% 7d=8% [five_hour] status=allowed
+[90m[00:39:53] 📊 SSE message_start: in=8 cache_read=26902 cache_create=5026[0m
+[90m[00:39:53] 📊 SSE message_delta: out=527[0m
+[00:39:53] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 4748ms in=8 out=527 cache_read=26902 cache_create=5026
+[00:40:30] 📡 / ? 129ms 
+[90m[00:40:30] 📝 System prompt saved: benchmark/results-20260329-013247/passthrough/system-prompt-2026-03-29T00-40-30-643Z.txt (27868 chars)[0m
+[00:40:31] 🟢 Utilization: 5h=13% 7d=8% [five_hour] status=allowed
+[90m[00:40:58] 📊 SSE message_start: in=10 cache_read=20965 cache_create=5934[0m
+[90m[00:40:58] 📊 SSE message_delta: out=5161[0m
+[00:40:58] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 27435ms in=10 out=5161 cache_read=20965 cache_create=5934
+[90m[00:40:58] 📝 System prompt saved: benchmark/results-20260329-013247/passthrough/system-prompt-2026-03-29T00-40-58-110Z.txt (27868 chars)[0m
+[00:40:59] 🟢 Utilization: 5h=13% 7d=8% [five_hour] status=allowed
+[90m[00:41:03] 📊 SSE message_start: in=8 cache_read=26899 cache_create=5207[0m
+[90m[00:41:03] 📊 SSE message_delta: out=589[0m
+[00:41:03] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 5357ms in=8 out=589 cache_read=26899 cache_create=5207
+[00:41:38] 📡 / ? 121ms 
+[90m[00:41:39] 📝 System prompt saved: benchmark/results-20260329-013247/passthrough/system-prompt-2026-03-29T00-41-39-274Z.txt (27875 chars)[0m
+[00:41:39] 🟢 Utilization: 5h=13% 7d=8% [five_hour] status=allowed
+[90m[00:42:07] 📊 SSE message_start: in=10 cache_read=20965 cache_create=5943[0m
+[90m[00:42:07] 📊 SSE message_delta: out=6026[0m
+[00:42:07] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 28679ms in=10 out=6026 cache_read=20965 cache_create=5943
+[90m[00:42:07] 📝 System prompt saved: benchmark/results-20260329-013247/passthrough/system-prompt-2026-03-29T00-42-07-993Z.txt (27875 chars)[0m
+[00:42:09] 🟢 Utilization: 5h=13% 7d=8% [five_hour] status=allowed
+[90m[00:42:14] 📊 SSE message_start: in=8 cache_read=26908 cache_create=6085[0m
+[90m[00:42:14] 📊 SSE message_delta: out=581[0m
+[00:42:14] 📡 /v1/messages?beta=true claude-haiku-4-5-20251001 6675ms in=8 out=581 cache_read=26908 cache_create=6085

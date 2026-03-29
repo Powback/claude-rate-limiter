@@ -1,0 +1,13 @@
+Created **csv-tool.html** with all the features you requested:
+
+**Features:**
+- **Drag-and-drop upload** — Drop CSV file or click to browse
+- **CSV parser** — Handles quoted fields and special characters correctly
+- **Sortable table** — Click any column header to sort ascending/descending
+- **Live statistics** — Row count, column count, and column type inference
+- **Numeric stats** — Min, max, and average for numeric columns
+- **Column analysis** — Type detection (Numeric/Text/Empty) for each column
+- **Error handling** — User-friendly error messages
+- **Responsive design** — Works on desktop and mobile
+
+Just open the file in any browser and start dragging CSV files onto it. No server or dependencies needed.

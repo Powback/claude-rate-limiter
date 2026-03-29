@@ -1,0 +1,16 @@
+Done! I've created a **weather.html** file with a fully functional weather dashboard. Here's what it includes:
+
+**Features:**
+- **Search bar** — Try searching for "San Francisco, CA", "New York, NY", or "Los Angeles, CA"
+- **Current weather** — Temperature, condition, feels-like, humidity, wind speed, pressure, UV index, visibility
+- **5-day forecast cards** — With high/low temps, weather icons, and conditions
+- **7-day temperature chart** — Canvas-based line chart with grid lines and temperature points
+- **Responsive design** — Works on desktop, tablet, and mobile (breakpoints at 768px and 480px)
+- **Beautiful UI** — Gradient background, smooth animations, hover effects
+
+**Sample data includes:**
+- San Francisco (72°F, Sunny)
+- New York (58°F, Partly Cloudy)
+- Los Angeles (78°F, Sunny)
+
+The file is self-contained with embedded CSS and JavaScript — just open it in any browser. No API calls or external dependencies needed.

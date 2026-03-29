@@ -1,0 +1,14 @@
+{
+  "task_id": "calculator",
+  "mode": "passthrough",
+  "exit_code": 0,
+  "valid": true,
+  "duration_ms": 33658,
+  "api_calls": 3,
+  "input_tokens": 18,
+  "output_tokens": 5750,
+  "cache_read": 47864,
+  "cache_creation": 11141,
+  "output_file_bytes": 17980,
+  "cost_usd": 0.037985
+}

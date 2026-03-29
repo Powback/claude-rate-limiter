@@ -1,0 +1,12 @@
+Created **markdown-preview.html** with a professional split-pane editor:
+
+**Features:**
+- **Left pane**: Textarea for markdown input
+- **Right pane**: Live HTML preview (updates in real-time)
+- **Markdown support**: Headers, bold, italic, links, code blocks (inline & multi-line), lists (ordered/unordered with nesting), blockquotes, tables, horizontal rules
+- **Styling**: Clean layout with syntax-highlighted code blocks, styled headers, lists, and blockquotes
+- **Responsive**: Stacks vertically on mobile
+
+**Parser**: Uses [marked.js](https://cdn.jsdelivr.net/npm/marked/marked.min.js) from CDN (reliable, battle-tested)
+
+Open it in any browser to start editing — preview updates as you type. Includes sample markdown to demonstrate all features.

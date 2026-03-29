@@ -1,0 +1,11 @@
+Done! I've created **markdown-preview.html** with a split-pane markdown editor featuring:
+
+**Features:**
+- **Left pane**: Textarea for markdown input with sample text
+- **Right pane**: Live HTML preview that updates in real-time
+- **Supported markdown**: Headers (h1-h6), bold, italic, links, code (inline & blocks), lists (ordered & unordered), blockquotes, tables, and more
+- **Syntax highlighting**: Code blocks use highlight.js with dark theme
+- **Styled output**: Professional typography, proper spacing, and custom link/code styling
+- **CDN libraries**: Uses marked.js for markdown parsing and highlight.js for syntax highlighting
+
+Just open the file in your browser and start typing markdown on the left—the preview renders instantly on the right!

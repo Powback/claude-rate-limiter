@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header with Search */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        /* Current Weather */
+        .current-weather {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .weather-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 20px;
+        }
+
+        .location-info h2 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .location-info p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .weather-main {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .temp-display {
+            text-align: center;
+        }
+
+        .temperature {
+            font-size: 72px;
+            font-weight: 700;
+            color: #667eea;
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+
+        .weather-condition {
+            font-size: 24px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .weather-icon {
+            font-size: 80px;
+            margin: 20px 0;
+        }
+
+        .weather-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            flex: 1;
+        }
+
+        .detail-item {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .detail-value {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        /* 5-Day Forecast */
+        .forecast-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            color: white;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .forecast-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .forecast-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .forecast-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .forecast-day {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .forecast-icon {
+            font-size: 40px;
+            margin: 10px 0;
+        }
+
+        .forecast-temp {
+            margin: 12px 0;
+        }
+
+        .forecast-high {
+            font-size: 18px;
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .forecast-low {
+            font-size: 14px;
+            color: #999;
+        }
+
+        .forecast-condition {
+            font-size: 12px;
+            color: #666;
+            margin-top: 8px;
+        }
+
+        /* Temperature Chart */
+        .chart-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .chart-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        canvas {
+            width: 100%;
+            height: auto;
+            max-height: 300px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .weather-main {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .weather-details {
+                grid-template-columns: repeat(2, 1fr);
+                width: 100%;
+            }
+
+            .temperature {
+                font-size: 48px;
+            }
+
+            .forecast-cards {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            }
+
+            .section-title {
+                font-size: 20px;
+            }
+
+            header {
+                padding: 16px;
+            }
+
+            .current-weather {
+                padding: 20px;
+            }
+
+            .chart-section {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .search-box {
+                flex-direction: column;
+            }
+
+            input[type="text"],
+            button {
+                width: 100%;
+            }
+
+            .temperature {
+                font-size: 40px;
+            }
+
+            .forecast-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .weather-details {
+                grid-template-columns: 1fr;
+            }
+
+            .detail-item {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header with Search -->
+        <header>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search for a city..." />
+                <button onclick="handleSearch()">Search</button>
+            </div>
+        </header>
+
+        <!-- Current Weather -->
+        <div class="current-weather">
+            <div class="weather-header">
+                <div class="location-info">
+                    <h2 id="cityName">San Francisco, CA</h2>
+                    <p id="currentDate">Today at 2:30 PM</p>
+                </div>
+            </div>
+
+            <div class="weather-main">
+                <div class="temp-display">
+                    <div class="weather-icon">☀️</div>
+                    <div class="temperature"><span id="currentTemp">72</span>°F</div>
+                    <div class="weather-condition" id="condition">Sunny</div>
+                </div>
+
+                <div class="weather-details">
+                    <div class="detail-item">
+                        <div class="detail-label">Feels Like</div>
+                        <div class="detail-value"><span id="feelsLike">70</span>°F</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Humidity</div>
+                        <div class="detail-value"><span id="humidity">65</span>%</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Wind Speed</div>
+                        <div class="detail-value"><span id="windSpeed">12</span> mph</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Pressure</div>
+                        <div class="detail-value"><span id="pressure">1013</span> mb</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">UV Index</div>
+                        <div class="detail-value"><span id="uvIndex">5</span></div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Visibility</div>
+                        <div class="detail-value"><span id="visibility">10</span> mi</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5-Day Forecast -->
+        <div class="forecast-section">
+            <h3 class="section-title">5-Day Forecast</h3>
+            <div class="forecast-cards" id="forecastCards">
+                <!-- Forecast cards will be generated here -->
+            </div>
+        </div>
+
+        <!-- Temperature Chart -->
+        <div class="chart-section">
+            <h3 class="chart-title">Temperature Trend (7-Day)</h3>
+            <canvas id="temperatureChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        // Sample weather data
+        const weatherData = {
+            'San Francisco, CA': {
+                current: {
+                    temp: 72,
+                    condition: 'Sunny',
+                    icon: '☀️',
+                    feelsLike: 70,
+                    humidity: 65,
+                    windSpeed: 12,
+                    pressure: 1013,
+                    uvIndex: 5,
+                    visibility: 10
+                },
+                forecast: [
+                    { day: 'Mon', high: 75, low: 62, condition: 'Sunny', icon: '☀️' },
+                    { day: 'Tue', high: 73, low: 60, condition: 'Partly Cloudy', icon: '⛅' },
+                    { day: 'Wed', high: 68, low: 58, condition: 'Rainy', icon: '🌧️' },
+                    { day: 'Thu', high: 70, low: 59, condition: 'Cloudy', icon: '☁️' },
+                    { day: 'Fri', high: 76, low: 63, condition: 'Sunny', icon: '☀️' }
+                ],
+                temperatureTrend: [68, 70, 72, 73, 71, 69, 72]
+            },
+            'New York, NY': {
+                current: {
+                    temp: 58,
+                    condition: 'Partly Cloudy',
+                    icon: '⛅',
+                    feelsLike: 55,
+                    humidity: 72,
+                    windSpeed: 18,
+                    pressure: 1015,
+                    uvIndex: 3,
+                    visibility: 9
+                },
+                forecast: [
+                    { day: 'Mon', high: 62, low: 52, condition: 'Partly Cloudy', icon: '⛅' },
+                    { day: 'Tue', high: 65, low: 54, condition: 'Sunny', icon: '☀️' },
+                    { day: 'Wed', high: 60, low: 50, condition: 'Rainy', icon: '🌧️' },
+                    { day: 'Thu', high: 58, low: 48, condition: 'Cloudy', icon: '☁️' },
+                    { day: 'Fri', high: 64, low: 53, condition: 'Sunny', icon: '☀️' }
+                ],
+                temperatureTrend: [52, 54, 56, 58, 57, 55, 58]
+            },
+            'Los Angeles, CA': {
+                current: {
+                    temp: 78,
+                    condition: 'Sunny',
+                    icon: '☀️',
+                    feelsLike: 76,
+                    humidity: 45,
+                    windSpeed: 8,
+                    pressure: 1012,
+                    uvIndex: 8,
+                    visibility: 11
+                },
+                forecast: [
+                    { day: 'Mon', high: 80, low: 68, condition: 'Sunny', icon: '☀️' },
+                    { day: 'Tue', high: 82, low: 70, condition: 'Sunny', icon: '☀️' },
+                    { day: 'Wed', high: 75, low: 65, condition: 'Cloudy', icon: '☁️' },
+                    { day: 'Thu', high: 77, low: 66, condition: 'Partly Cloudy', icon: '⛅' },
+                    { day: 'Fri', high: 81, low: 69, condition: 'Sunny', icon: '☀️' }
+                ],
+                temperatureTrend: [68, 71, 74, 76, 78, 77, 79]
+            }
+        };
+
+        let currentCity = 'San Francisco, CA';
+
+        // Initialize
+        function init() {
+            updateWeather(currentCity);
+            drawChart(weatherData[currentCity].temperatureTrend);
+            setCurrentDate();
+        }
+
+        // Set current date and time
+        function setCurrentDate() {
+            const now = new Date();
+            const options = { weekday: 'long', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit' };
+            document.getElementById('currentDate').textContent = 'Today at ' + now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+        }
+
+        // Update weather display
+        function updateWeather(city) {
+            if (!weatherData[city]) {
+                alert('City not found. Try: San Francisco CA, New York NY, or Los Angeles CA');
+                return;
+            }
+
+            currentCity = city;
+            const data = weatherData[city];
+            const current = data.current;
+
+            // Update current weather
+            document.getElementById('cityName').textContent = city;
+            document.getElementById('currentTemp').textContent = current.temp;
+            document.getElementById('condition').textContent = current.condition;
+            document.getElementById('feelsLike').textContent = current.feelsLike;
+            document.getElementById('humidity').textContent = current.humidity;
+            document.getElementById('windSpeed').textContent = current.windSpeed;
+            document.getElementById('pressure').textContent = current.pressure;
+            document.getElementById('uvIndex').textContent = current.uvIndex;
+            document.getElementById('visibility').textContent = current.visibility;
+
+            // Update weather icon
+            document.querySelector('.weather-icon').textContent = current.icon;
+
+            // Update forecast
+            updateForecast(data.forecast);
+
+            // Update chart
+            drawChart(data.temperatureTrend);
+        }
+
+        // Update forecast cards
+        function updateForecast(forecast) {
+            const container = document.getElementById('forecastCards');
+            container.innerHTML = '';
+
+            forecast.forEach(day => {
+                const card = document.createElement('div');
+                card.className = 'forecast-card';
+                card.innerHTML = `
+                    <div class="forecast-day">${day.day}</div>
+                    <div class="forecast-icon">${day.icon}</div>
+                    <div class="forecast-temp">
+                        <div class="forecast-high">${day.high}°F</div>
+                        <div class="forecast-low">${day.low}°F</div>
+                    </div>
+                    <div class="forecast-condition">${day.condition}</div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Draw temperature chart
+        function drawChart(temps) {
+            const canvas = document.getElementById('temperatureChart');
+            const ctx = canvas.getContext('2d');
+
+            // Set canvas size
+            canvas.width = canvas.offsetWidth;
+            canvas.height = 300;
+
+            const width = canvas.width;
+            const height = canvas.height;
+            const padding = 40;
+            const graphWidth = width - 2 * padding;
+            const graphHeight = height - 2 * padding;
+
+            // Clear canvas
+            ctx.fillStyle = '#fff';
+            ctx.fillRect(0, 0, width, height);
+
+            // Find min and max temps
+            const minTemp = Math.min(...temps);
+            const maxTemp = Math.max(...temps);
+            const tempRange = maxTemp - minTemp;
+
+            // Draw grid and axes
+            ctx.strokeStyle = '#e0e0e0';
+            ctx.lineWidth = 1;
+            ctx.fillStyle = '#999';
+            ctx.font = '12px sans-serif';
+            ctx.textAlign = 'center';
+
+            // X-axis labels
+            const days = ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7'];
+            for (let i = 0; i < temps.length; i++) {
+                const x = padding + (i / (temps.length - 1)) * graphWidth;
+                ctx.fillText(days[i], x, height - 20);
+
+                // Vertical grid lines
+                ctx.beginPath();
+                ctx.moveTo(x, padding);
+                ctx.lineTo(x, height - padding);
+                ctx.stroke();
+            }
+
+            // Y-axis labels and horizontal grid
+            const tempSteps = 5;
+            for (let i = 0; i <= tempSteps; i++) {
+                const temp = minTemp + (tempRange / tempSteps) * i;
+                const y = height - padding - (i / tempSteps) * graphHeight;
+                ctx.fillText(Math.round(temp) + '°F', padding - 25, y + 4);
+
+                // Horizontal grid lines
+                ctx.beginPath();
+                ctx.moveTo(padding, y);
+                ctx.lineTo(width - padding, y);
+                ctx.stroke();
+            }
+
+            // Draw temperature line
+            ctx.strokeStyle = '#667eea';
+            ctx.lineWidth = 3;
+            ctx.lineJoin = 'round';
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+
+            for (let i = 0; i < temps.length; i++) {
+                const x = padding + (i / (temps.length - 1)) * graphWidth;
+                const y = height - padding - ((temps[i] - minTemp) / tempRange) * graphHeight;
+
+                if (i === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            }
+            ctx.stroke();
+
+            // Draw temperature points
+            ctx.fillStyle = '#667eea';
+            for (let i = 0; i < temps.length; i++) {
+                const x = padding + (i / (temps.length - 1)) * graphWidth;
+                const y = height - padding - ((temps[i] - minTemp) / tempRange) * graphHeight;
+                ctx.beginPath();
+                ctx.arc(x, y, 5, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        // Handle search
+        function handleSearch() {
+            const input = document.getElementById('searchInput').value.trim();
+            if (input) {
+                updateWeather(input);
+                document.getElementById('searchInput').value = '';
+            }
+        }
+
+        // Allow Enter key to search
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                handleSearch();
+            }
+        });
+
+        // Redraw chart on window resize
+        window.addEventListener('resize', function() {
+            drawChart(weatherData[currentCity].temperatureTrend);
+        });
+
+        // Initialize on page load
+        init();
+    </script>
+</body>
+</html>

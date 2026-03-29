@@ -1,0 +1,34 @@
+Done! I've created a fully functional sorting algorithm visualizer as a standalone HTML file.
+
+**Features:**
+
+📊 **Three Sorting Algorithms**
+- Bubble Sort — simple, clear visualization
+- Quick Sort — efficient partitioning
+- Merge Sort — divide-and-conquer approach
+
+🎮 **Interactive Controls**
+- Algorithm selector dropdown
+- Array size input (10–500 elements)
+- Speed slider (1–100%)
+- Generate, Start, and Reset buttons
+
+📈 **Real-time Statistics**
+- Comparison count
+- Swap count  
+- Elapsed time (ms)
+
+🎨 **Color-Coded Visualization**
+- Blue: unsorted bars
+- Red: comparing bars
+- Orange: swapping bars
+- Green: sorted bars
+
+**How to use:**
+1. Open `sort-viz.html` in any modern browser
+2. Adjust array size and speed as desired
+3. Click "Generate Array" to shuffle
+4. Select a sorting algorithm
+5. Click "Start Sorting" to watch it animate
+
+The visualization uses Canvas for smooth 60fps animation and includes responsive design that works on mobile devices.

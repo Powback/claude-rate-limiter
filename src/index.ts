@@ -243,7 +243,7 @@ function updateStateFromHeaders(headers: Record<string, string | string[] | unde
 
 // ── Request rewriting — strip bloat from system prompt + tools ──────────────
 
-const STRIP_ENABLED = process.env.STRIP_BLOAT !== 'false'; // on by default
+const STRIP_ENABLED = process.env.STRIP_BLOAT === 'true'; // off by default — benchmarks show prompt caching makes stripping unnecessary, and it breaks CWD awareness
 const KEEP_TOOLS = new Set((process.env.KEEP_TOOLS || 'Bash,Read,Edit,Write,Glob,Grep,Agent,Skill,WebSearch,WebFetch').split(','));
 // System prompt blocks larger than this are considered "default bloat" and replaced
 const BLOAT_THRESHOLD = parseInt(process.env.BLOAT_THRESHOLD || '3000', 10);

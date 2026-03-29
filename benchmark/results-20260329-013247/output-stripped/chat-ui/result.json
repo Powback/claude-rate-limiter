@@ -1,0 +1,14 @@
+{
+  "task_id": "chat-ui",
+  "mode": "stripped",
+  "exit_code": 0,
+  "valid": false,
+  "duration_ms": 24576,
+  "api_calls": 3,
+  "input_tokens": 18,
+  "output_tokens": 4086,
+  "cache_read": 5835,
+  "cache_creation": 9518,
+  "output_file_bytes": 0,
+  "cost_usd": 0.026343
+}

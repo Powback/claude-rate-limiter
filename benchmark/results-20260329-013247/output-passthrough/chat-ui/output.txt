@@ -1,0 +1,13 @@
+Done! I've created `chat.html` with a full iMessage-like chat UI:
+
+**Features:**
+- **Dark theme** with iOS-style colors (black background, dark grays)
+- **Message bubbles** — blue on the right (sent), gray on the left (received)
+- **Timestamps** — formatted times for each message
+- **Typing indicator** — animated bouncing dots
+- **Input field** — auto-growing textarea with send button (Shift+Enter for newline, Enter to send)
+- **Smooth animations** — message entrance effects
+- **Responsive** — works on desktop and mobile
+- **Pure HTML/CSS/JS** — no dependencies
+
+Open it in any browser. The UI includes sample messages and a simulated auto-reply that sends after you type a message. The plus button and send button are fully functional—customize the message handling in the JavaScript as needed.

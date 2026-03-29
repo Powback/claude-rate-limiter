@@ -1,0 +1,12 @@
+Created **regex.html** — a standalone regex tester with:
+
+✅ **Pattern & Test String inputs** — real-time updates as you type
+✅ **Flag toggles** — g (global), i (case insensitive), m (multiline), s (dotAll)
+✅ **Highlighted matches** — shows test string with all matches in yellow
+✅ **Match & group display** — lists all matches with their capture groups
+✅ **Live stats** — match count, max group depth, character count
+✅ **Regex cheatsheet sidebar** — quick reference for common patterns
+✅ **Error handling** — validates regex and shows error messages
+✅ **Responsive design** — works on mobile and desktop
+
+No external dependencies—pure HTML/CSS/JavaScript. Open it in any browser to start testing regexes immediately.

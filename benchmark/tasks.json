@@ -1,0 +1,72 @@
+[
+  {
+    "id": "space-invaders",
+    "prompt": "Create a standalone HTML file with a complete Space Invaders game. Use canvas, keyboard controls, scoring, lives, and wave progression. Save it as space-invaders.html",
+    "model": "haiku",
+    "maxTurns": 10,
+    "validate": "test -f space-invaders.html && grep -c 'canvas' space-invaders.html"
+  },
+  {
+    "id": "todo-api",
+    "prompt": "Create a single-file todo REST API in Node.js (todo-api.mjs) using only built-in modules (http). Support GET/POST/PUT/DELETE /todos with JSON body. Include in-memory storage. Make it runnable with 'node todo-api.mjs'.",
+    "model": "haiku",
+    "maxTurns": 10,
+    "validate": "test -f todo-api.mjs && grep -c 'createServer' todo-api.mjs"
+  },
+  {
+    "id": "markdown-parser",
+    "prompt": "Create a standalone HTML file (markdown-preview.html) with a split-pane markdown editor and live preview. Left side is a textarea, right side renders the markdown as HTML in real-time. Support headers, bold, italic, links, code blocks, and lists.",
+    "model": "haiku",
+    "maxTurns": 10,
+    "validate": "test -f markdown-preview.html && grep -c 'textarea' markdown-preview.html"
+  },
+  {
+    "id": "snake-game",
+    "prompt": "Create a standalone HTML file with a Snake game (snake.html). Canvas-based, arrow key controls, food spawning, score tracking, game over detection, and restart button.",
+    "model": "haiku",
+    "maxTurns": 10,
+    "validate": "test -f snake.html && grep -c 'canvas' snake.html"
+  },
+  {
+    "id": "csv-analyzer",
+    "prompt": "Create a standalone HTML file (csv-tool.html) that lets users drag-and-drop a CSV file, parses it, shows a sortable table, and displays basic stats (row count, column types, min/max/avg for numeric columns).",
+    "model": "haiku",
+    "maxTurns": 10,
+    "validate": "test -f csv-tool.html && grep -c 'drop' csv-tool.html"
+  },
+  {
+    "id": "chat-ui",
+    "prompt": "Create a standalone HTML file (chat.html) with a chat UI that looks like iMessage. Dark theme, message bubbles (sent=blue right, received=gray left), input field with send button, timestamps, typing indicator animation. Use only HTML/CSS/JS.",
+    "model": "haiku",
+    "maxTurns": 10,
+    "validate": "test -f chat.html && grep -c 'message' chat.html"
+  },
+  {
+    "id": "regex-tester",
+    "prompt": "Create a standalone HTML file (regex.html) with a regex tester tool. Input for regex pattern, input for test string, real-time highlighting of matches, match groups display, and common regex cheatsheet sidebar.",
+    "model": "haiku",
+    "maxTurns": 10,
+    "validate": "test -f regex.html && grep -c 'RegExp' regex.html"
+  },
+  {
+    "id": "sorting-viz",
+    "prompt": "Create a standalone HTML file (sort-viz.html) that visualizes sorting algorithms. Show bars being sorted with animation. Support bubble sort, quicksort, and merge sort. Include speed control slider and array size input.",
+    "model": "haiku",
+    "maxTurns": 10,
+    "validate": "test -f sort-viz.html && grep -c 'canvas\\|svg\\|animation' sort-viz.html"
+  },
+  {
+    "id": "calculator",
+    "prompt": "Create a standalone HTML file (calc.html) with a scientific calculator. Support basic ops, parentheses, trig functions, log, sqrt, pi, e. Dark theme, keyboard input support, calculation history.",
+    "model": "haiku",
+    "maxTurns": 10,
+    "validate": "test -f calc.html && grep -c 'Math\\.' calc.html"
+  },
+  {
+    "id": "weather-dashboard",
+    "prompt": "Create a standalone HTML file (weather.html) with a mock weather dashboard. Show current weather, 5-day forecast cards, temperature chart using canvas, and a search bar. Use hardcoded sample data (no API calls). Responsive design.",
+    "model": "haiku",
+    "maxTurns": 10,
+    "validate": "test -f weather.html && grep -c 'forecast\\|temperature' weather.html"
+  }
+]

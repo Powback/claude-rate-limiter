@@ -1,0 +1,18 @@
+Done! Created `/Users/macback/Projects/chat.html` with:
+
+✓ **iMessage-style dark theme** — black background, dark gray accents  
+✓ **Message bubbles** — blue (right) for sent, gray (left) for received  
+✓ **Input field + send button** — fully functional  
+✓ **Timestamps** — HH:MM format per message  
+✓ **Typing indicator** — animated bouncing dots  
+✓ **Pure HTML/CSS/JS** — no dependencies  
+
+**Features:**
+- Auto-reply simulation with random delays
+- Date separators between days
+- Send with Enter key (Shift+Enter for newline)
+- Scrolls to latest message
+- Responsive layout
+- Empty state indicator
+
+Open it in any browser to test. Messages persist during the session; auto-replies trigger after each sent message.

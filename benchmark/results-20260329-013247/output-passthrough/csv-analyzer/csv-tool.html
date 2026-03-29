@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #222;
+        }
+
+        .drop-zone {
+            border: 2px dashed #999;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+
+        .drop-zone:hover {
+            border-color: #0066cc;
+            background: #f0f5ff;
+        }
+
+        .drop-zone.dragover {
+            border-color: #0066cc;
+            background: #e6f2ff;
+        }
+
+        .drop-zone p {
+            margin: 0 0 10px 0;
+            font-size: 16px;
+            color: #666;
+        }
+
+        .drop-zone input {
+            display: none;
+        }
+
+        .drop-zone button {
+            background: #0066cc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .drop-zone button:hover {
+            background: #0052a3;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #0066cc;
+        }
+
+        .column-stats {
+            margin-top: 20px;
+        }
+
+        .column-stats h3 {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .column-stat-item {
+            background: white;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            border-left: 3px solid #0066cc;
+            font-size: 13px;
+        }
+
+        .column-stat-item strong {
+            color: #333;
+        }
+
+        .table-wrapper {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #f0f0f0;
+        }
+
+        th {
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+            color: #333;
+            border-bottom: 1px solid #ddd;
+            cursor: pointer;
+            user-select: none;
+            white-space: nowrap;
+            position: relative;
+            background: #f0f0f0;
+        }
+
+        th:hover {
+            background: #e0e0e0;
+        }
+
+        th.sortable:after {
+            content: ' ⇅';
+            opacity: 0.3;
+            font-size: 12px;
+        }
+
+        th.sorted-asc:after {
+            content: ' ↑';
+            opacity: 1;
+        }
+
+        th.sorted-desc:after {
+            content: ' ↓';
+            opacity: 1;
+        }
+
+        td {
+            padding: 10px 12px;
+            font-size: 13px;
+            border-bottom: 1px solid #eee;
+        }
+
+        tbody tr:hover {
+            background: #f9f9f9;
+        }
+
+        .error {
+            background: #fee;
+            color: #c33;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            border-left: 4px solid #c33;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .info-text {
+            font-size: 13px;
+            color: #999;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 CSV Tool</h1>
+
+        <div class="drop-zone" id="dropZone">
+            <p>Drag and drop a CSV file here</p>
+            <button>or Click to Select</button>
+            <input type="file" id="fileInput" accept=".csv" />
+            <p class="info-text">Supported format: .csv</p>
+        </div>
+
+        <div id="errorContainer"></div>
+
+        <div id="resultsContainer" class="hidden">
+            <div class="stats" id="stats"></div>
+            <div class="column-stats" id="columnStats"></div>
+            <div class="table-wrapper">
+                <table id="dataTable">
+                    <thead id="tableHead"></thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const errorContainer = document.getElementById('errorContainer');
+
+        // Drag and drop handlers
+        dropZone.addEventListener('click', () => fileInput.click());
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragover');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            handleFile(e.dataTransfer.files[0]);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            handleFile(e.target.files[0]);
+        });
+
+        function parseCSV(text) {
+            const rows = [];
+            let current = '';
+            let insideQuotes = false;
+
+            for (let i = 0; i < text.length; i++) {
+                const char = text[i];
+                const nextChar = text[i + 1];
+
+                if (char === '"') {
+                    if (insideQuotes && nextChar === '"') {
+                        current += '"';
+                        i++;
+                    } else {
+                        insideQuotes = !insideQuotes;
+                    }
+                } else if (char === ',' && !insideQuotes) {
+                    rows.push(current.trim());
+                    current = '';
+                } else if ((char === '\n' || char === '\r') && !insideQuotes) {
+                    if (current || rows.length > 0) {
+                        rows.push(current.trim());
+                        if (rows.length > 0) {
+                            yield rows;
+                            rows = [];
+                        }
+                    }
+                    if (char === '\r' && nextChar === '\n') i++;
+                } else {
+                    current += char;
+                }
+            }
+
+            if (current) rows.push(current.trim());
+            if (rows.length > 0) yield rows;
+        }
+
+        function handleFile(file) {
+            errorContainer.innerHTML = '';
+
+            if (!file) {
+                showError('No file selected');
+                return;
+            }
+
+            if (!file.name.endsWith('.csv')) {
+                showError('Please select a CSV file');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const text = e.target.result;
+                    const rows = Array.from(parseCSV(text)).filter(row => row.length > 0);
+
+                    if (rows.length < 1) {
+                        showError('CSV file is empty');
+                        return;
+                    }
+
+                    const headers = rows[0];
+                    const data = rows.slice(1);
+
+                    displayResults(headers, data);
+                } catch (error) {
+                    showError('Error parsing CSV: ' + error.message);
+                }
+            };
+
+            reader.onerror = () => {
+                showError('Error reading file');
+            };
+
+            reader.readAsText(file);
+        }
+
+        function showError(message) {
+            errorContainer.innerHTML = `<div class="error">${message}</div>`;
+            resultsContainer.classList.add('hidden');
+        }
+
+        function displayResults(headers, data) {
+            renderStats(headers, data);
+            renderColumnStats(headers, data);
+            renderTable(headers, data);
+            resultsContainer.classList.remove('hidden');
+        }
+
+        function renderStats(headers, data) {
+            const stats = document.getElementById('stats');
+            stats.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-label">Rows</div>
+                    <div class="stat-value">${data.length}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Columns</div>
+                    <div class="stat-value">${headers.length}</div>
+                </div>
+            `;
+        }
+
+        function renderColumnStats(headers, data) {
+            const columnStatsContainer = document.getElementById('columnStats');
+            let statsHTML = '<h3>Column Types & Stats</h3>';
+
+            headers.forEach((header, idx) => {
+                const column = data.map(row => row[idx]);
+                const type = inferColumnType(column);
+                const stats = getColumnStats(column, type);
+
+                statsHTML += `
+                    <div class="column-stat-item">
+                        <strong>${header}</strong> — ${type}
+                        ${stats ? ` — ${stats}` : ''}
+                    </div>
+                `;
+            });
+
+            columnStatsContainer.innerHTML = statsHTML;
+        }
+
+        function inferColumnType(column) {
+            const nonEmpty = column.filter(v => v !== '' && v !== null);
+            if (nonEmpty.length === 0) return 'Empty';
+
+            const allNumbers = nonEmpty.every(v => !isNaN(v) && v !== '');
+            if (allNumbers) return 'Numeric';
+
+            return 'Text';
+        }
+
+        function getColumnStats(column, type) {
+            if (type !== 'Numeric') return null;
+
+            const numbers = column
+                .filter(v => v !== '' && v !== null)
+                .map(v => parseFloat(v))
+                .filter(v => !isNaN(v));
+
+            if (numbers.length === 0) return null;
+
+            const min = Math.min(...numbers);
+            const max = Math.max(...numbers);
+            const avg = (numbers.reduce((a, b) => a + b, 0) / numbers.length).toFixed(2);
+
+            return `min: ${min}, max: ${max}, avg: ${avg}`;
+        }
+
+        function renderTable(headers, data) {
+            const tableHead = document.getElementById('tableHead');
+            const tableBody = document.getElementById('tableBody');
+
+            // Render headers
+            tableHead.innerHTML = headers
+                .map(header => `<th class="sortable" data-column="${header}">${header}</th>`)
+                .join('');
+
+            // Render body
+            renderTableBody(headers, data);
+
+            // Add sort handlers
+            Array.from(tableHead.querySelectorAll('th')).forEach(th => {
+                th.addEventListener('click', () => {
+                    const column = th.getAttribute('data-column');
+                    sortAndRender(headers, data, column, th);
+                });
+            });
+        }
+
+        function renderTableBody(headers, data) {
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = data
+                .map(row => `<tr>${row.map(cell => `<td>${escapeHtml(cell)}</td>`).join('')}</tr>`)
+                .join('');
+        }
+
+        function sortAndRender(headers, data, column, headerElement) {
+            const columnIndex = headers.indexOf(column);
+            const isSorted = headerElement.classList.contains('sorted-asc') || headerElement.classList.contains('sorted-desc');
+            const isAsc = headerElement.classList.contains('sorted-asc');
+
+            // Remove sort classes from all headers
+            Array.from(document.querySelectorAll('#tableHead th')).forEach(th => {
+                th.classList.remove('sorted-asc', 'sorted-desc');
+            });
+
+            // Sort data
+            data.sort((a, b) => {
+                const valA = a[columnIndex];
+                const valB = b[columnIndex];
+                const numA = parseFloat(valA);
+                const numB = parseFloat(valB);
+
+                if (!isNaN(numA) && !isNaN(numB)) {
+                    return isSorted && isAsc ? numB - numA : numA - numB;
+                }
+
+                const cmp = valA.localeCompare(valB);
+                return isSorted && isAsc ? -cmp : cmp;
+            });
+
+            // Update sort indicator
+            headerElement.classList.add(isSorted && isAsc ? 'sorted-desc' : 'sorted-asc');
+
+            // Re-render table
+            renderTableBody(headers, data);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>

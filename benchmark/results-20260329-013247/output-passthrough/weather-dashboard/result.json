@@ -1,0 +1,14 @@
+{
+  "task_id": "weather-dashboard",
+  "mode": "passthrough",
+  "exit_code": 0,
+  "valid": true,
+  "duration_ms": 36295,
+  "api_calls": 3,
+  "input_tokens": 18,
+  "output_tokens": 6607,
+  "cache_read": 47873,
+  "cache_creation": 12028,
+  "output_file_bytes": 20165,
+  "cost_usd": 0.0423
+}

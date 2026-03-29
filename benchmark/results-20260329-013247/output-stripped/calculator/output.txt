@@ -1,0 +1,12 @@
+Done! Created `/Users/macback/Projects/calc.html` with a fully-featured scientific calculator.
+
+**Features:**
+- **Operations**: +, −, ×, ÷, x^y
+- **Functions**: sin, cos, tan, log, ln, √
+- **Constants**: π, e
+- **Parentheses**: Full expression nesting support
+- **Dark theme**: Modern blue/gray color scheme
+- **Keyboard support**: Numbers, operators, Enter (calc), Backspace (delete), Escape (clear)
+- **History panel**: Last 50 calculations stored in localStorage; click to reuse results
+
+Open it in your browser to use. The calculator safely evaluates expressions with proper error handling and formats large results in exponential notation.

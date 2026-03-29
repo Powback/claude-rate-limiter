@@ -1,0 +1,21 @@
+Done! I've created a complete Space Invaders game as a standalone HTML file at `/Users/macback/Projects/space-invaders.html`.
+
+**Features:**
+- **Canvas rendering** — All graphics drawn with HTML5 Canvas
+- **Keyboard controls** — Arrow keys/A/D to move, Space to shoot, P to pause
+- **Scoring** — 10 points per enemy × wave multiplier
+- **Lives system** — Start with 3, lose one when hit
+- **Wave progression** — Difficulty increases each wave (more enemies, faster speed, higher fire rate)
+- **Game mechanics**:
+  - Enemy formation with side-to-side movement
+  - Both player and enemy bullets with collision detection
+  - Enemies advance down when reaching screen edges
+  - Game over if enemies reach the bottom or lives depleted
+  - Victory/Game Over screen with final stats
+
+**Controls:**
+- `← →` or `A/D` — Move
+- `SPACE` — Shoot
+- `P` — Pause
+
+The game has a retro aesthetic with green CRT-style text and glow effects. Just open it in a browser and start playing!

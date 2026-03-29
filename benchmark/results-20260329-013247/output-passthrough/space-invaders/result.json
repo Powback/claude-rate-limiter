@@ -1,0 +1,14 @@
+{
+  "task_id": "space-invaders",
+  "mode": "passthrough",
+  "exit_code": 0,
+  "valid": true,
+  "duration_ms": 27656,
+  "api_calls": 3,
+  "input_tokens": 18,
+  "output_tokens": 4600,
+  "cache_read": 47859,
+  "cache_creation": 9998,
+  "output_file_bytes": 12823,
+  "cost_usd": 0.032241
+}

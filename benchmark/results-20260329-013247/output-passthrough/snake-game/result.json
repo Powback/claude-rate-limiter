@@ -1,0 +1,14 @@
+{
+  "task_id": "snake-game",
+  "mode": "passthrough",
+  "exit_code": 0,
+  "valid": true,
+  "duration_ms": 20967,
+  "api_calls": 3,
+  "input_tokens": 18,
+  "output_tokens": 3450,
+  "cache_read": 47858,
+  "cache_creation": 9088,
+  "output_file_bytes": 9871,
+  "cost_usd": 0.026731
+}

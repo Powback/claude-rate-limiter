@@ -1,0 +1,17 @@
+Done! I've created a complete Space Invaders game with:
+
+**Features:**
+- **Player ship** — Control with arrow keys (or WASD), shoot with spacebar
+- **Scoring system** — 10 points × current wave per enemy destroyed
+- **Lives** — Start with 3, lose one when hit by enemy fire
+- **Wave progression** — Enemies increase in count and speed with each wave
+- **Collision detection** — Player bullets hit enemies, enemy bullets hit player
+- **Game over screen** — Shows final score and wave reached, restart with spacebar
+
+**Gameplay:**
+- Enemies move side-to-side and shoot randomly
+- When all enemies are defeated, the next wave spawns with more enemies
+- Enemies move down when hitting screen edges (classic style)
+- Game ends if enemies reach the bottom or you lose all lives
+
+Open `space-invaders.html` in any browser to play!

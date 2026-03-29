@@ -1,0 +1,14 @@
+{
+  "task_id": "todo-api",
+  "mode": "passthrough",
+  "exit_code": 0,
+  "valid": true,
+  "duration_ms": 10307,
+  "api_calls": 3,
+  "input_tokens": 18,
+  "output_tokens": 1388,
+  "cache_read": 47885,
+  "cache_creation": 7118,
+  "output_file_bytes": 2420,
+  "cost_usd": 0.016515
+}

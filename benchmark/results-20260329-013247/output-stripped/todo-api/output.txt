@@ -1,0 +1,20 @@
+Done! Created `/Users/macback/Projects/todo-api.mjs`. Run it with:
+
+```bash
+node todo-api.mjs
+```
+
+It listens on port 3000 (or `$PORT` env var). Supports:
+
+- **GET /todos** → list all
+- **POST /todos** → create (JSON: `{title: "..."}`), returns 201 with id
+- **PUT /todos/:id** → update (JSON: `{title, completed}`), returns 200
+- **DELETE /todos/:id** → delete, returns 204
+
+Test with curl:
+```bash
+curl -X POST http://localhost:3000/todos -H "Content-Type: application/json" -d '{"title":"My task"}'
+curl http://localhost:3000/todos
+curl -X PUT http://localhost:3000/todos/1 -H "Content-Type: application/json" -d '{"completed":true}'
+curl -X DELETE http://localhost:3000/todos/1
+```

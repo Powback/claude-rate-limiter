@@ -1,0 +1,12 @@
+Done! Created **snake.html** with:
+
+- **Canvas rendering** (400×400 grid with 20px tiles)
+- **Arrow key controls** with direction validation (prevents 180° turns)
+- **Random food spawning** (red circles)
+- **Score tracking** (+10 per food, updates in real-time)
+- **Level system** (increases every 50 points, speeds up game)
+- **Collision detection** (walls and self-collision trigger game over)
+- **Game over modal** with final score display
+- **Restart button** to replay immediately
+
+Open the file in any browser—it's entirely self-contained with embedded CSS and JavaScript. The snake accelerates as you level up (max 50ms per frame), and the game prevents invalid moves.
