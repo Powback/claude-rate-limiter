@@ -443,6 +443,156 @@ interface SessionStats {
 const cchSessions = new Map<string, SessionStats>();
 const MAX_CCH_SESSIONS = 50;
 
+// ── Conversation Content Tracking ────────────────────────────────────────────
+// Stores full message content in-memory for conversation grid display.
+// Content is extracted from proxied requests/responses – NOT persisted to disk.
+
+const MAX_CONTENT_TEXT        = 50_000;  // max chars per text/tool_result block
+const MAX_CONTENT_CONVS       = 100;     // max conversations with stored content
+const MAX_CONTENT_MESSAGES    = 1_000;   // max messages stored per conversation
+
+type ContentBlock =
+  | { type: 'text'; text: string }
+  | { type: 'tool_use'; id: string; name: string; input: unknown }
+  | { type: 'tool_result'; tool_use_id: string; content: string; is_error?: boolean }
+  | { type: 'image'; source: unknown }
+  | { type: 'document'; source: unknown }
+  | { type: string; [key: string]: unknown };
+
+interface ConversationMessage {
+  role: 'user' | 'assistant';
+  content: ContentBlock[];
+  timestamp: number;
+  model?: string;
+  latencyMs?: number;
+  inputTokens?: number;
+  outputTokens?: number;
+  cacheRead?: number;
+  cacheCreation?: number;
+  stopReason?: string;
+}
+
+interface ConversationContent {
+  conversationId: string;
+  messages: ConversationMessage[];
+  /** True while the assistant response is being streamed */
+  isStreaming: boolean;
+  /** Partial blocks assembled during active SSE stream */
+  streamingBlocks: ContentBlock[];
+  lastUpdatedAt: number;
+}
+
+const conversationContents = new Map<string, ConversationContent>();
+// Per-conversation SSE clients for real-time content updates
+const contentSseClients = new Map<string, Set<ServerResponse>>();
+
+function getOrCreateConvContent(conversationId: string): ConversationContent {
+  if (conversationContents.has(conversationId)) return conversationContents.get(conversationId)!;
+  const cc: ConversationContent = {
+    conversationId, messages: [], isStreaming: false, streamingBlocks: [], lastUpdatedAt: Date.now(),
+  };
+  conversationContents.set(conversationId, cc);
+  if (conversationContents.size > MAX_CONTENT_CONVS) {
+    const oldest = [...conversationContents.values()].sort((a, b) => a.lastUpdatedAt - b.lastUpdatedAt)[0];
+    if (oldest) conversationContents.delete(oldest.conversationId);
+  }
+  return cc;
+}
+
+function truncateBlock(text: string): string {
+  if (text.length <= MAX_CONTENT_TEXT) return text;
+  return text.slice(0, MAX_CONTENT_TEXT) + `\n…[truncated ${(text.length - MAX_CONTENT_TEXT).toLocaleString()} chars]`;
+}
+
+function extractBlocksFromContent(content: unknown): ContentBlock[] {
+  const blocks: ContentBlock[] = [];
+  if (typeof content === 'string') {
+    blocks.push({ type: 'text', text: truncateBlock(content) });
+  } else if (Array.isArray(content)) {
+    for (const block of content) {
+      if (!block?.type) continue;
+      if (block.type === 'text') {
+        blocks.push({ type: 'text', text: truncateBlock(block.text || '') });
+      } else if (block.type === 'tool_use') {
+        blocks.push({ type: 'tool_use', id: block.id || '', name: block.name || '', input: block.input ?? {} });
+      } else if (block.type === 'tool_result') {
+        let resultText = '';
+        if (typeof block.content === 'string') {
+          resultText = truncateBlock(block.content);
+        } else if (Array.isArray(block.content)) {
+          resultText = truncateBlock(
+            block.content.filter((b: any) => b.type === 'text').map((b: any) => b.text || '').join('\n')
+          );
+        }
+        blocks.push({ type: 'tool_result', tool_use_id: block.tool_use_id || '', content: resultText, is_error: !!block.is_error });
+      } else if (block.type === 'image') {
+        // Don't embed base64 data — return source type + media_type only
+        const src = block.source || {};
+        blocks.push({ type: 'image', source: src.type === 'base64'
+          ? { type: 'base64', media_type: src.media_type, data: '[base64 omitted]' }
+          : src });
+      } else {
+        blocks.push({ type: block.type, ...block });
+      }
+    }
+  }
+  return blocks;
+}
+
+function extractMessagesFromBody(json: any, now: number): ConversationMessage[] {
+  if (!Array.isArray(json.messages)) return [];
+  return json.messages.map((msg: any) => ({
+    role: msg.role as 'user' | 'assistant',
+    content: extractBlocksFromContent(msg.content),
+    timestamp: now,
+  }));
+}
+
+/** Parse accumulated SSE text into assistant content blocks + metadata */
+function parseSSEBlocks(text: string): { blocks: ContentBlock[]; stopReason: string; outputTokens: number } {
+  const blocks: ContentBlock[] = [];
+  let currentBlock: any = null;
+  let jsonAccum = '';
+  let stopReason = '';
+  let outputTokens = 0;
+  const dataRe = /^data: (.+)$/gm;
+  let m;
+  while ((m = dataRe.exec(text)) !== null) {
+    try {
+      const ev = JSON.parse(m[1]);
+      if (ev.type === 'content_block_start') {
+        const b = ev.content_block;
+        if (b.type === 'text') { currentBlock = { type: 'text', text: '' }; jsonAccum = ''; }
+        else if (b.type === 'tool_use') { currentBlock = { type: 'tool_use', id: b.id || '', name: b.name || '', input: {} }; jsonAccum = ''; }
+        else { currentBlock = { ...b }; jsonAccum = ''; }
+      } else if (ev.type === 'content_block_delta' && currentBlock) {
+        if (ev.delta?.type === 'text_delta') currentBlock.text = (currentBlock.text || '') + (ev.delta.text || '');
+        else if (ev.delta?.type === 'input_json_delta') jsonAccum += ev.delta.partial_json || '';
+      } else if (ev.type === 'content_block_stop' && currentBlock) {
+        if (currentBlock.type === 'tool_use' && jsonAccum) {
+          try { currentBlock.input = JSON.parse(jsonAccum); } catch { currentBlock.input = jsonAccum; }
+        }
+        if (currentBlock.type === 'text') currentBlock.text = truncateBlock(currentBlock.text || '');
+        blocks.push(currentBlock);
+        currentBlock = null; jsonAccum = '';
+      } else if (ev.type === 'message_delta') {
+        if (ev.delta?.stop_reason) stopReason = ev.delta.stop_reason;
+        if (ev.usage?.output_tokens) outputTokens = ev.usage.output_tokens;
+      }
+    } catch { /* malformed SSE line — skip */ }
+  }
+  return { blocks, stopReason, outputTokens };
+}
+
+function broadcastContentEvent(conversationId: string, eventData: object) {
+  const clients = contentSseClients.get(conversationId);
+  if (!clients?.size) return;
+  const payload = `data: ${JSON.stringify(eventData)}\n\n`;
+  for (const client of clients) {
+    try { client.write(payload); } catch { clients.delete(client); }
+  }
+}
+
 // ── Rate limit event tracking ───────────────────────────────────────────────
 
 interface RateLimitEvent {
@@ -818,6 +968,29 @@ function forwardRequest(req: IncomingMessage, res: ServerResponse, body: Buffer)
   // Capture session/conversation metadata before rewriting (rewrite may strip content)
   const reqMeta = extractRequestMeta(body);
 
+  // ── Content capture: extract full messages before rewrite strips them ──────
+  let capturedConvId: string | undefined;
+  let capturedMessages: ConversationMessage[] | undefined;
+  if (path.includes('/messages')) {
+    try {
+      const rawJson = JSON.parse(body.toString());
+      capturedConvId = reqInfo.conversationId;
+      if (capturedConvId) {
+        capturedMessages = extractMessagesFromBody(rawJson, startTime);
+        const cc = getOrCreateConvContent(capturedConvId);
+        // Replace stored messages with full history snapshot from this request
+        // (Anthropic resends full history each turn, so latest = complete history)
+        if (capturedMessages.length > 0) {
+          cc.messages = capturedMessages.slice(-MAX_CONTENT_MESSAGES);
+          cc.isStreaming = rawJson.stream === true;
+          cc.streamingBlocks = [];
+          cc.lastUpdatedAt = startTime;
+          broadcastContentEvent(capturedConvId, { type: 'request_start', conversationId: capturedConvId, messageCount: capturedMessages.length, isStreaming: cc.isStreaming });
+        }
+      }
+    } catch { /* parse failure — skip content capture */ }
+  }
+
   // Rewrite request — strip system prompt bloat + useless tools
   body = rewriteRequest(body);
   headers['content-length'] = String(body.length);
@@ -893,6 +1066,33 @@ function forwardRequest(req: IncomingMessage, res: ServerResponse, body: Buffer)
 
           recentRequests.push(entry);
           if (recentRequests.length > MAX_REQUEST_LOG) recentRequests.shift();
+
+          // ── Capture assistant response content ────────────────────────────
+          if (capturedConvId && entry.statusCode && entry.statusCode < 400) {
+            const { blocks, stopReason } = parseSSEBlocks(responseText);
+            const cc = getOrCreateConvContent(capturedConvId);
+            if (blocks.length > 0) {
+              const assistantMsg: ConversationMessage = {
+                role: 'assistant',
+                content: blocks,
+                timestamp: startTime + (entry.latencyMs || 0),
+                model: entry.model,
+                latencyMs: entry.latencyMs,
+                inputTokens: entry.inputTokens,
+                outputTokens: entry.outputTokens,
+                cacheRead: entry.cacheRead,
+                cacheCreation: entry.cacheCreation,
+                stopReason,
+              };
+              // Append to the stored messages (user messages already stored above)
+              cc.messages.push(assistantMsg);
+              if (cc.messages.length > MAX_CONTENT_MESSAGES) cc.messages = cc.messages.slice(-MAX_CONTENT_MESSAGES);
+            }
+            cc.isStreaming = false;
+            cc.streamingBlocks = [];
+            cc.lastUpdatedAt = Date.now();
+            broadcastContentEvent(capturedConvId, { type: 'response_complete', conversationId: capturedConvId, blockCount: blocks.length, stopReason, model: entry.model });
+          }
 
           // Update cch-based sessions store
           if (entry.conversationId) {
@@ -1228,17 +1428,171 @@ const server = createServer((req, res) => {
     return;
   }
 
-  // GET /conversations/:id  — single conversation with all turns
+  // GET /conversations/:id  — single conversation with all turns (+optional message preview)
   const convRouteMatch = pathname.match(/^\/conversations\/([^/]+)$/);
   if (convRouteMatch && req.method === 'GET') {
-    const conv = conversationIndex.get(decodeURIComponent(convRouteMatch[1]));
+    const convId = decodeURIComponent(convRouteMatch[1]);
+    const conv = conversationIndex.get(convId);
     if (!conv) {
       res.writeHead(404, { 'content-type': 'application/json' });
       res.end(JSON.stringify({ error: 'conversation_not_found', id: convRouteMatch[1] }));
       return;
     }
+    const urlParams = new URL(path, 'http://localhost').searchParams;
+    const includeMessages = urlParams.get('messages') === 'true';
+    const result: any = { ...conv };
+    if (includeMessages) {
+      const cc = conversationContents.get(convId);
+      if (cc) {
+        result.content = {
+          messageCount: cc.messages.length,
+          isStreaming: cc.isStreaming,
+          lastUpdatedAt: new Date(cc.lastUpdatedAt).toISOString(),
+          // Preview: last 2 messages (user prompt + assistant response)
+          preview: cc.messages.slice(-2).map(m => ({
+            role: m.role,
+            model: m.model,
+            timestamp: new Date(m.timestamp).toISOString(),
+            blockCount: m.content.length,
+            textPreview: m.content.filter(b => b.type === 'text').map(b => (b as any).text || '').join('').slice(0, 500),
+            toolCalls: m.content.filter(b => b.type === 'tool_use').map(b => ({ name: (b as any).name, id: (b as any).id })),
+            stopReason: m.stopReason,
+            inputTokens: m.inputTokens,
+            outputTokens: m.outputTokens,
+          })),
+        };
+      }
+    }
     res.writeHead(200, { 'content-type': 'application/json' });
-    res.end(JSON.stringify(conv));
+    res.end(JSON.stringify(result));
+    return;
+  }
+
+  // GET /conversations/:id/messages  — full message content for a conversation
+  const convMessagesMatch = pathname.match(/^\/conversations\/([^/]+)\/messages$/);
+  if (convMessagesMatch && req.method === 'GET') {
+    const convId = decodeURIComponent(convMessagesMatch[1]);
+    const urlParams = new URL(path, 'http://localhost').searchParams;
+    const offset = Math.max(0, parseInt(urlParams.get('offset') || '0', 10));
+    const limit  = Math.min(200, Math.max(1, parseInt(urlParams.get('limit') || '50', 10)));
+    const rolesFilter = urlParams.get('roles');  // e.g. "user,assistant"
+    const typesFilter = urlParams.get('types');  // e.g. "text,tool_use"
+
+    const cc = conversationContents.get(convId);
+    if (!cc) {
+      // No content captured — check if conversation exists at all
+      const convExists = conversationIndex.has(convId);
+      res.writeHead(convExists ? 200 : 404, { 'content-type': 'application/json' });
+      res.end(JSON.stringify(convExists
+        ? { conversationId: convId, total: 0, offset: 0, limit, isStreaming: false, messages: [], note: 'No content captured yet — messages are recorded as requests arrive.' }
+        : { error: 'conversation_not_found', id: convId }
+      ));
+      return;
+    }
+
+    let msgs = cc.messages;
+    if (rolesFilter) {
+      const roles = new Set(rolesFilter.split(','));
+      msgs = msgs.filter(m => roles.has(m.role));
+    }
+
+    // Optionally filter content blocks by type
+    const typeSet = typesFilter ? new Set(typesFilter.split(',')) : null;
+    const formatted = msgs.slice(offset, offset + limit).map(m => ({
+      role: m.role,
+      timestamp: new Date(m.timestamp).toISOString(),
+      model: m.model,
+      latencyMs: m.latencyMs,
+      inputTokens: m.inputTokens,
+      outputTokens: m.outputTokens,
+      cacheRead: m.cacheRead,
+      cacheCreation: m.cacheCreation,
+      stopReason: m.stopReason,
+      content: typeSet ? m.content.filter(b => typeSet.has(b.type)) : m.content,
+    }));
+
+    res.writeHead(200, {
+      'content-type': 'application/json',
+      'access-control-allow-origin': '*',
+    });
+    res.end(JSON.stringify({
+      conversationId: convId,
+      total: msgs.length,
+      offset,
+      limit,
+      isStreaming: cc.isStreaming,
+      streamingBlocks: cc.isStreaming ? cc.streamingBlocks : undefined,
+      lastUpdatedAt: new Date(cc.lastUpdatedAt).toISOString(),
+      messages: formatted,
+    }));
+    return;
+  }
+
+  // GET /conversations/:id/messages/stream  — SSE for real-time content updates
+  const convStreamMatch = pathname.match(/^\/conversations\/([^/]+)\/messages\/stream$/);
+  if (convStreamMatch && req.method === 'GET') {
+    const convId = decodeURIComponent(convStreamMatch[1]);
+    res.writeHead(200, {
+      'content-type': 'text/event-stream',
+      'cache-control': 'no-cache',
+      'connection': 'keep-alive',
+      'access-control-allow-origin': '*',
+    });
+
+    // Send current state snapshot on connect
+    const cc = conversationContents.get(convId);
+    const snapshot = {
+      type: 'snapshot',
+      conversationId: convId,
+      messageCount: cc?.messages.length ?? 0,
+      isStreaming: cc?.isStreaming ?? false,
+      lastUpdatedAt: cc ? new Date(cc.lastUpdatedAt).toISOString() : null,
+    };
+    res.write(`data: ${JSON.stringify(snapshot)}\n\n`);
+
+    // Register SSE client
+    if (!contentSseClients.has(convId)) contentSseClients.set(convId, new Set());
+    contentSseClients.get(convId)!.add(res);
+
+    req.on('close', () => {
+      const clients = contentSseClients.get(convId);
+      if (clients) {
+        clients.delete(res);
+        if (clients.size === 0) contentSseClients.delete(convId);
+      }
+    });
+    return;
+  }
+
+  // GET /content  — list all conversations with captured content
+  if (pathname === '/content' && req.method === 'GET') {
+    const urlParams = new URL(path, 'http://localhost').searchParams;
+    const limit = Math.min(100, Math.max(1, parseInt(urlParams.get('limit') || '20', 10)));
+    const summary = [...conversationContents.values()]
+      .sort((a, b) => b.lastUpdatedAt - a.lastUpdatedAt)
+      .slice(0, limit)
+      .map(cc => {
+        const lastMsg = cc.messages[cc.messages.length - 1];
+        const firstUserMsg = cc.messages.find(m => m.role === 'user');
+        const promptPreview = firstUserMsg?.content
+          .filter(b => b.type === 'text')
+          .map(b => (b as any).text || '').join('').slice(0, 200) || '';
+        return {
+          conversationId: cc.conversationId,
+          messageCount: cc.messages.length,
+          isStreaming: cc.isStreaming,
+          lastUpdatedAt: new Date(cc.lastUpdatedAt).toISOString(),
+          lastModel: lastMsg?.model,
+          promptPreview,
+          // Include conversation metadata if we have it
+          conversationMeta: conversationIndex.has(cc.conversationId) ? (() => {
+            const c = conversationIndex.get(cc.conversationId)!;
+            return { turnCount: c.turnCount, totalInputTokens: c.totalInputTokens, totalOutputTokens: c.totalOutputTokens };
+          })() : undefined,
+        };
+      });
+    res.writeHead(200, { 'content-type': 'application/json', 'access-control-allow-origin': '*' });
+    res.end(JSON.stringify({ total: conversationContents.size, limit, conversations: summary }));
     return;
   }
 
