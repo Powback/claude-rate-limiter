@@ -137,6 +137,51 @@ tr:hover { background:#15151f; }
 .nav-btn { flex:1; padding:4px; background:#12121a; border:1px solid #1e1e2e; border-radius:4px; color:#666; cursor:pointer; font-family:inherit; font-size:11px; transition:all 0.1s; text-align:center; }
 .nav-btn:hover { color:#e0e0e0; border-color:#333; }
 .msg-highlight { background:#8b5cf622; outline:2px solid #8b5cf644; }
+
+/* ── Conversations Grid ──────────────────────────────────────────────────── */
+.conv-toolbar { display:flex; gap:8px; align-items:center; margin-bottom:12px; flex-wrap:wrap; }
+.conv-count { font-size:11px; color:#555; margin-left:auto; }
+.conv-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:12px; }
+.conv-card { background:#0d0d14; border:1px solid #1e1e2e; border-radius:8px; overflow:hidden; cursor:pointer; transition:border-color 0.2s,transform 0.1s,box-shadow 0.2s; display:flex; flex-direction:column; }
+.conv-card:hover { border-color:#3a3a5e; transform:translateY(-1px); box-shadow:0 4px 20px rgba(0,0,0,0.3); }
+.conv-card.live { border-color:#22c55e44; }
+.conv-card.live:hover { border-color:#22c55e88; }
+.conv-card-header { display:flex; align-items:center; gap:7px; padding:8px 12px; background:#12121a; border-bottom:1px solid #1e1e2e; }
+.conv-card-id { font-family:'SF Mono',monospace; font-size:10px; color:#6366f1; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.conv-card-task { padding:7px 12px; font-size:12px; color:#b0b0c0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; border-bottom:1px solid #111; min-height:30px; line-height:1.5; }
+.conv-card-messages { flex:1; padding:8px 10px; display:flex; flex-direction:column; gap:5px; min-height:72px; max-height:140px; overflow:hidden; }
+.conv-mini-msg { border-radius:5px; padding:4px 7px; font-size:11px; line-height:1.45; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+.conv-mini-user { background:#1a1a2e; border-left:2px solid #6366f1; color:#a0a0c0; }
+.conv-mini-asst { background:#0f1a0f; border-left:2px solid #22c55e; color:#90b890; }
+.conv-mini-role { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:2px; opacity:0.55; }
+.role-mini-user { color:#6366f1; }
+.role-mini-asst { color:#22c55e; }
+.conv-card-footer { display:flex; align-items:center; gap:6px; padding:6px 12px; background:#0a0a12; border-top:1px solid #111; font-size:10px; color:#444; flex-wrap:wrap; }
+.conv-live-dot { width:6px; height:6px; border-radius:50%; background:#22c55e; box-shadow:0 0 5px #22c55e; animation:pulse 1.5s infinite; flex-shrink:0; }
+.conv-empty { padding:48px 24px; text-align:center; color:#333; grid-column:1/-1; font-size:13px; }
+.conv-empty-icon { font-size:40px; margin-bottom:12px; opacity:0.3; }
+.conv-loading { padding:32px; text-align:center; color:#444; grid-column:1/-1; font-size:12px; }
+
+/* ── Conversation Modal ───────────────────────────────────────────────────── */
+.conv-modal-backdrop { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:100; backdrop-filter:blur(3px); }
+.conv-modal-backdrop.open { display:flex; align-items:center; justify-content:center; padding:20px; }
+.conv-modal { background:#0d0d14; border:1px solid #2a2a4a; border-radius:10px; width:100%; max-width:700px; max-height:88vh; display:flex; flex-direction:column; box-shadow:0 24px 64px rgba(0,0,0,0.7); }
+.conv-modal-header { display:flex; align-items:flex-start; gap:10px; padding:13px 16px; border-bottom:1px solid #1e1e2e; background:#12121a; border-radius:10px 10px 0 0; flex-shrink:0; }
+.conv-modal-info { flex:1; min-width:0; }
+.conv-modal-id { font-size:10px; color:#6366f1; font-family:monospace; margin-bottom:3px; }
+.conv-modal-task { font-size:13px; font-weight:600; color:#e0e0e0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.conv-modal-meta { font-size:10px; color:#555; margin-top:3px; display:flex; gap:8px; flex-wrap:wrap; }
+.conv-modal-close { background:none; border:none; color:#555; cursor:pointer; font-size:17px; padding:2px 6px; border-radius:4px; flex-shrink:0; transition:color 0.1s; }
+.conv-modal-close:hover { color:#e0e0e0; background:#1e1e2e; }
+.conv-modal-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:#1e1e2e; border-bottom:1px solid #1e1e2e; flex-shrink:0; }
+.conv-modal-stat { background:#12121a; padding:6px 10px; text-align:center; }
+.conv-modal-stat .cs-label { font-size:9px; color:#555; text-transform:uppercase; letter-spacing:0.8px; }
+.conv-modal-stat .cs-value { font-size:14px; font-weight:700; margin-top:2px; }
+.conv-modal-search { display:flex; align-items:center; gap:6px; padding:6px 14px; border-bottom:1px solid #111; background:#0d0d14; flex-shrink:0; }
+.conv-modal-search-input { background:none; border:none; outline:none; color:#e0e0e0; font-family:inherit; font-size:11px; flex:1; }
+.conv-modal-search-input::placeholder { color:#333; }
+.conv-modal-messages { flex:1; overflow-y:auto; padding:10px 12px; display:flex; flex-direction:column; gap:8px; }
+.conv-modal-footer { display:flex; gap:4px; padding:7px 12px; border-top:1px solid #111; background:#0a0a12; flex-shrink:0; border-radius:0 0 10px 10px; }
 </style>
 </head>
 <body>
@@ -147,6 +192,7 @@ tr:hover { background:#15151f; }
 <div class="tab-nav">
   <button class="tab-btn active" onclick="switchTab('overview')">Overview</button>
   <button class="tab-btn" onclick="switchTab('sessions')" id="tab-sessions-btn">Sessions <span id="sessions-badge" style="display:none;font-size:10px;color:#8b5cf6;margin-left:4px"></span></button>
+  <button class="tab-btn" onclick="switchTab('conversations')" id="tab-conversations-btn">Conversations <span id="conversations-badge" style="display:none;font-size:10px;color:#22c55e;margin-left:4px"></span></button>
 </div>
 
 <!-- ── Tab: Overview ──────────────────────────────────────────────────────── -->
@@ -287,6 +333,51 @@ tr:hover { background:#15151f; }
 
 </div><!-- end tab-sessions -->
 
+<!-- ── Tab: Conversations ─────────────────────────────────────────────────── -->
+<div id="tab-conversations" class="tab-panel">
+
+  <div class="conv-toolbar">
+    <input class="search-input" id="conv-search" placeholder="Search conversations, tasks, models…" oninput="filterConversations()" />
+    <button class="filter-btn active" id="conv-filter-all" onclick="setConvFilter('all')">All</button>
+    <button class="filter-btn" id="conv-filter-live" onclick="setConvFilter('live')">Live</button>
+    <button class="filter-btn" id="conv-filter-active" onclick="setConvFilter('active')">Active</button>
+    <button class="filter-btn" id="conv-filter-idle" onclick="setConvFilter('idle')">Idle</button>
+    <span class="conv-count" id="conv-count"></span>
+  </div>
+
+  <div class="conv-grid" id="conv-grid">
+    <div class="conv-loading">Loading conversations…</div>
+  </div>
+
+</div><!-- end tab-conversations -->
+
+<!-- ── Conversation Detail Modal ─────────────────────────────────────────── -->
+<div class="conv-modal-backdrop" id="conv-modal-backdrop" onclick="closeConvModal(event)">
+  <div class="conv-modal" onclick="event.stopPropagation()">
+    <div class="conv-modal-header">
+      <div class="conv-modal-info">
+        <div class="conv-modal-id" id="cmod-id"></div>
+        <div class="conv-modal-task" id="cmod-task"></div>
+        <div class="conv-modal-meta" id="cmod-meta"></div>
+      </div>
+      <button class="conv-modal-close" onclick="closeConvModal()" title="Close (Esc)">✕</button>
+    </div>
+    <div class="conv-modal-stats" id="cmod-stats"></div>
+    <div class="conv-modal-search">
+      <span style="color:#444;font-size:12px">⌕</span>
+      <input class="conv-modal-search-input" id="cmod-search" placeholder="Search messages…" oninput="filterConvModalMessages()" />
+    </div>
+    <div class="conv-modal-messages" id="cmod-messages"></div>
+    <div class="conv-modal-footer" id="cmod-nav" style="display:none">
+      <button class="nav-btn" onclick="convModalJump('first')">⬆ First</button>
+      <button class="nav-btn" onclick="convModalJump('prev')">↑ Prev</button>
+      <span style="font-size:10px;color:#444;align-self:center;flex:none;padding:0 4px" id="cmod-nav-pos"></span>
+      <button class="nav-btn" onclick="convModalJump('next')">↓ Next</button>
+      <button class="nav-btn" onclick="convModalJump('last')">⬇ Last</button>
+    </div>
+  </div>
+</div>
+
 <script>
 const $ = id => document.getElementById(id);
 function utilColor(v) { return v >= 0.85 ? '#ef4444' : v >= 0.6 ? '#eab308' : '#22c55e'; }
@@ -327,12 +418,16 @@ function esc(s) {
 // ── Tab switching ─────────────────────────────────────────────────────────
 let activeTab = 'overview';
 function switchTab(tab) {
+  const prev = activeTab;
   activeTab = tab;
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
   $('tab-'+tab).classList.add('active');
   event.target.classList.add('active');
   if (tab === 'sessions') pollSessions();
+  if (tab === 'conversations') { clearTimeout(convPollTimer); pollConversations(); startConvSSE(); }
+  // Stop SSE when leaving conversations tab
+  if (prev === 'conversations' && tab !== 'conversations') stopConvSSE();
 }
 
 // ── Overview polling ──────────────────────────────────────────────────────
@@ -818,6 +913,387 @@ function closePanel() {
   $('session-panel').style.display = 'none';
   document.querySelectorAll('.sessions-table tr').forEach(tr => tr.classList.remove('selected'));
 }
+
+// ── Conversations Grid ────────────────────────────────────────────────────
+let allConversations = [];
+let filteredConversations = [];
+let convFilter = 'all';
+let convPollTimer = null;
+let convSseSource = null;
+let openConvId = null;
+let convModalMessages = [];
+let convModalMatchIndices = [];
+let convModalNavPos = 0;
+let convModalSearchTerm = '';
+
+function convIsLive(s) {
+  const ts = s.lastSeen || s.lastActivityAt || s.lastActivity;
+  if (!ts) return false;
+  return Date.now() - (typeof ts === 'number' ? ts : new Date(ts).getTime()) < 90_000;
+}
+
+function convIsActive(s) {
+  const ts = s.lastSeen || s.lastActivityAt || s.lastActivity;
+  if (!ts) return false;
+  return Date.now() - (typeof ts === 'number' ? ts : new Date(ts).getTime()) < 10 * 60_000;
+}
+
+function getConvLastMessages(s) {
+  const items = s.requests || s.conversations || [];
+  const msgs = [];
+  // Walk backwards to get up to 2 message previews
+  for (let i = items.length - 1; i >= 0 && msgs.length < 4; i--) {
+    const r = items[i];
+    if (r.lastAssistantResponse) msgs.unshift({ role: 'assistant', content: r.lastAssistantResponse });
+    if (r.lastUserMessage) msgs.unshift({ role: 'user', content: r.lastUserMessage });
+  }
+  // Fallback for cch-sessions that only have token stats
+  if (msgs.length === 0 && items.length > 0) {
+    const last = items[items.length - 1];
+    const parts = [];
+    if (last.model) parts.push(shortModel(last.model));
+    if (last.inputTokens) parts.push(fmt(last.inputTokens) + ' in');
+    if (last.outputTokens) parts.push(fmt(last.outputTokens) + ' out');
+    if (last.cacheRead) parts.push('⚡' + fmt(last.cacheRead) + ' cache');
+    if (last.latencyMs) parts.push((last.latencyMs / 1000).toFixed(1) + 's');
+    if (parts.length) msgs.push({ role: 'assistant', content: parts.join(' · ') });
+  }
+  return msgs.slice(-2);
+}
+
+function renderConvCard(s) {
+  const live = convIsLive(s);
+  const active = convIsActive(s);
+  const status = s.status || (live ? 'active' : active ? 'idle' : 'completed');
+  const lastTs = s.lastSeen || s.lastActivityAt || s.lastActivity;
+  const lastNum = typeof lastTs === 'number' ? lastTs : lastTs ? new Date(lastTs).getTime() : 0;
+  const startRef = s.firstSeen || s.startedAt;
+  const startLabel = startRef ? new Date(typeof startRef === 'number' ? startRef : startRef).toLocaleString([], {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) : '';
+  const task = s.taskDescription || s.task || s.description || (startLabel ? 'Session ' + startLabel : '(session)');
+  const totalIn = s.totalInputTokens ?? 0;
+  const totalOut = s.totalOutputTokens ?? 0;
+  const cacheR = s.totalCacheRead ?? 0;
+  const reqCount = s.requestCount ?? s.totalRequests ?? 0;
+  const modelName = shortModel(s.model || (s.models && s.models[0]) || '');
+  const msgs = getConvLastMessages(s);
+
+  const card = document.createElement('div');
+  card.className = 'conv-card' + (live ? ' live' : '');
+  card.dataset.id = s.id;
+
+  const shortId = s.id ? s.id.slice(0, 18) + (s.id.length > 18 ? '…' : '') : '—';
+
+  let messagesHtml = '';
+  if (msgs.length === 0) {
+    messagesHtml = '<div style="color:#2a2a3a;font-size:11px;display:flex;align-items:center;justify-content:center;flex:1">No messages captured</div>';
+  } else {
+    messagesHtml = msgs.map(m => {
+      const isUser = m.role === 'user';
+      return '<div class="conv-mini-msg conv-mini-' + (isUser ? 'user' : 'asst') + '">' +
+        '<div class="conv-mini-role ' + (isUser ? 'role-mini-user' : 'role-mini-asst') + '">' + m.role + '</div>' +
+        esc((m.content || '').slice(0, 180)) + '</div>';
+    }).join('');
+  }
+
+  card.innerHTML =
+    '<div class="conv-card-header">' +
+      '<span class="conv-card-id" title="' + esc(s.id || '') + '">' + esc(shortId) + '</span>' +
+      (live ? '<div class="conv-live-dot" title="Live — active in last 90s"></div>' : '') +
+      statusBadge(status) +
+    '</div>' +
+    '<div class="conv-card-task" title="' + esc(task) + '">' + esc(task) + '</div>' +
+    '<div class="conv-card-messages">' + messagesHtml + '</div>' +
+    '<div class="conv-card-footer">' +
+      (modelName ? '<span style="color:#555">' + esc(modelName) + '</span><span style="color:#222">·</span>' : '') +
+      '<span>' + reqCount + ' req</span>' +
+      (totalIn ? '<span class="in">↓' + fmt(totalIn) + '</span>' : '') +
+      (totalOut ? '<span class="out">↑' + fmt(totalOut) + '</span>' : '') +
+      (cacheR ? '<span class="cyan">⚡' + fmt(cacheR) + '</span>' : '') +
+      '<span style="margin-left:auto">' + relTime(lastNum) + '</span>' +
+    '</div>';
+
+  card.onclick = () => openConvModal(s.id);
+  return card;
+}
+
+function setConvFilter(f) {
+  convFilter = f;
+  document.querySelectorAll('[id^="conv-filter-"]').forEach(b => b.classList.remove('active'));
+  $('conv-filter-' + f).classList.add('active');
+  filterConversations();
+}
+
+function filterConversations() {
+  const q = ($('conv-search').value || '').toLowerCase();
+  filteredConversations = allConversations.filter(s => {
+    const live = convIsLive(s);
+    const active = convIsActive(s);
+    const statusMatch =
+      convFilter === 'all' ||
+      (convFilter === 'live' && live) ||
+      (convFilter === 'active' && active) ||
+      (convFilter === 'idle' && !live && active);
+    const model = s.model || (s.models && s.models[0]) || '';
+    const taskText = s.taskDescription || s.task || s.description || '';
+    const searchMatch = !q ||
+      (s.id || '').toLowerCase().includes(q) ||
+      taskText.toLowerCase().includes(q) ||
+      model.toLowerCase().includes(q);
+    return statusMatch && searchMatch;
+  });
+  renderConvGrid();
+}
+
+function renderConvGrid() {
+  const sorted = [...filteredConversations].sort((a, b) => {
+    const ta = a.lastSeen || a.lastActivityAt || a.lastActivity || 0;
+    const tb = b.lastSeen || b.lastActivityAt || b.lastActivity || 0;
+    const tsa = typeof ta === 'number' ? ta : new Date(ta).getTime();
+    const tsb = typeof tb === 'number' ? tb : new Date(tb).getTime();
+    return tsb - tsa;
+  });
+
+  const grid = $('conv-grid');
+  grid.innerHTML = '';
+
+  if (sorted.length === 0) {
+    grid.innerHTML = '<div class="conv-empty"><div class="conv-empty-icon">💬</div>No conversations found</div>';
+  } else {
+    for (const s of sorted) grid.appendChild(renderConvCard(s));
+  }
+
+  const liveCount = allConversations.filter(convIsLive).length;
+  const badge = $('conversations-badge');
+  if (liveCount > 0) { badge.textContent = liveCount; badge.style.display = ''; }
+  else badge.style.display = 'none';
+
+  $('conv-count').textContent =
+    sorted.length + ' of ' + allConversations.length +
+    (liveCount > 0 ? ' · ' + liveCount + ' live' : '');
+}
+
+async function pollConversations() {
+  if (activeTab !== 'conversations') return;
+  try {
+    const [cchResp, sessResp] = await Promise.all([
+      fetch('/cch-sessions').then(r => r.ok ? r.json() : null).catch(() => null),
+      fetch('/sessions').then(r => r.ok ? r.json() : null).catch(() => null),
+    ]);
+    const cchList = Array.isArray(cchResp) ? cchResp : [];
+    const sessData = sessResp ? (Array.isArray(sessResp) ? sessResp : (sessResp.sessions || [])) : [];
+    const seen = new Set(cchList.map(s => s.id));
+    allConversations = [...cchList, ...sessData.filter(s => !seen.has(s.id))];
+    filterConversations();
+  } catch(e) {
+    console.warn('Conversations poll error:', e);
+  }
+  convPollTimer = setTimeout(pollConversations, 3000);
+}
+
+function startConvSSE() {
+  if (convSseSource) return;
+  try {
+    convSseSource = new EventSource('/sessions/stream');
+    convSseSource.onmessage = (e) => {
+      try {
+        const data = JSON.parse(e.data);
+        if (data.type !== 'turn' || !data.session) return;
+        const session = data.session;
+        const idx = allConversations.findIndex(s => s.id === session.id);
+        if (idx >= 0) {
+          allConversations[idx] = { ...allConversations[idx], ...session };
+        } else {
+          allConversations.unshift(session);
+        }
+        filterConversations();
+        // Refresh modal if open for this session
+        if (openConvId === session.id) refreshConvModal(session.id);
+      } catch {}
+    };
+    convSseSource.onerror = () => {
+      convSseSource?.close();
+      convSseSource = null;
+      if (activeTab === 'conversations') setTimeout(startConvSSE, 5000);
+    };
+  } catch(e) {
+    console.warn('SSE unavailable:', e);
+  }
+}
+
+function stopConvSSE() {
+  convSseSource?.close();
+  convSseSource = null;
+}
+
+// ── Conversation Modal ────────────────────────────────────────────────────
+async function openConvModal(id) {
+  openConvId = id;
+  $('cmod-id').textContent = '';
+  $('cmod-task').textContent = 'Loading…';
+  $('cmod-meta').innerHTML = '';
+  $('cmod-stats').innerHTML = '';
+  $('cmod-messages').innerHTML = '<div class="panel-loading">Loading conversation…</div>';
+  $('cmod-nav').style.display = 'none';
+  $('cmod-search').value = '';
+  convModalSearchTerm = '';
+  $('conv-modal-backdrop').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  await refreshConvModal(id);
+}
+
+async function refreshConvModal(id) {
+  if (openConvId !== id) return;
+  try {
+    // Try cch-session first (has requests array with message previews)
+    let data = null;
+    const cchResp = await fetch('/cch-sessions/' + encodeURIComponent(id));
+    if (cchResp.ok) {
+      data = await cchResp.json();
+    } else {
+      const sessResp = await fetch('/sessions/' + encodeURIComponent(id));
+      if (sessResp.ok) data = await sessResp.json();
+    }
+    if (data) renderConvModal(data);
+    else $('cmod-messages').innerHTML = '<div class="panel-empty" style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:32px;color:#444"><span style="font-size:28px;opacity:0.3">💬</span><span>Could not load conversation</span></div>';
+  } catch(e) {
+    $('cmod-messages').innerHTML = '<div class="panel-empty" style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:32px;color:#444">Could not load</div>';
+  }
+}
+
+function renderConvModal(session) {
+  $('cmod-id').textContent = session.id || '';
+  const startRef = session.firstSeen || session.startedAt;
+  const startLabel = startRef ? new Date(typeof startRef === 'number' ? startRef : startRef).toLocaleString([], {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) : '';
+  $('cmod-task').textContent = session.taskDescription || session.task || session.description || (startLabel ? 'Session ' + startLabel : '(session)');
+
+  const lastTs = session.lastSeen || session.lastActivityAt;
+  const live = lastTs && Date.now() - (typeof lastTs === 'number' ? lastTs : new Date(lastTs).getTime()) < 90_000;
+  const status = session.status || (live ? 'active' : 'idle');
+  const metaParts = [];
+  const model = session.model || (session.models && session.models[0]);
+  if (model) metaParts.push('<span style="color:#8b5cf6">' + esc(shortModel(model)) + '</span>');
+  if (startRef) metaParts.push('Started ' + relTime(typeof startRef === 'number' ? startRef : new Date(startRef).getTime()));
+  metaParts.push(statusBadge(status));
+  if (live) metaParts.push('<div class="conv-live-dot" style="display:inline-block" title="Live"></div>');
+  $('cmod-meta').innerHTML = metaParts.join('<span style="color:#333"> · </span>');
+
+  const convs = session.requests || session.conversations || [];
+  const totalIn  = session.totalInputTokens  ?? convs.reduce((a, c) => a + (c.inputTokens  || 0), 0);
+  const totalOut = session.totalOutputTokens ?? convs.reduce((a, c) => a + (c.outputTokens || 0), 0);
+  const cacheR   = session.totalCacheRead    ?? convs.reduce((a, c) => a + (c.cacheRead    || 0), 0);
+  const reqCount = session.requestCount ?? session.totalRequests ?? convs.length;
+  const avgLat   = session.avgLatencyMs ? session.avgLatencyMs + 'ms' : (session.totalLatencyMs && reqCount ? Math.round(session.totalLatencyMs / reqCount) + 'ms' : '—');
+
+  $('cmod-stats').innerHTML =
+    '<div class="conv-modal-stat"><div class="cs-label">Requests</div><div class="cs-value" style="color:#e0e0e0">' + reqCount + '</div></div>' +
+    '<div class="conv-modal-stat"><div class="cs-label">Input tok</div><div class="cs-value blue">' + fmt(totalIn) + '</div></div>' +
+    '<div class="conv-modal-stat"><div class="cs-label">Cache read</div><div class="cs-value cyan">' + fmt(cacheR) + '</div></div>' +
+    '<div class="conv-modal-stat"><div class="cs-label">Avg latency</div><div class="cs-value purple">' + avgLat + '</div></div>';
+
+  convModalMessages = conversationsToMessages(convs);
+  convModalSearchTerm = $('cmod-search').value || '';
+  renderConvModalMessages();
+}
+
+function renderConvModalMessages() {
+  const container = $('cmod-messages');
+  container.innerHTML = '';
+  const query = convModalSearchTerm.toLowerCase();
+  convModalMatchIndices = [];
+
+  if (convModalMessages.length === 0) {
+    container.innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:32px;color:#333;font-size:12px"><span style="font-size:28px;opacity:0.3">💬</span>No messages captured</div>';
+    return;
+  }
+
+  convModalMessages.forEach((msg, idx) => {
+    const role = (msg.role || 'user').toLowerCase();
+    const content = extractContent(msg);
+    const isMatch = query && content.toLowerCase().includes(query);
+    if (isMatch) convModalMatchIndices.push(idx);
+
+    const div = document.createElement('div');
+    div.id = 'cmod-msg-' + idx;
+    div.className = 'message-bubble msg-' + role + (isMatch ? ' msg-highlight' : '');
+
+    const metaItems = [];
+    if (msg.timestamp) metaItems.push(relTime(typeof msg.timestamp === 'number' ? msg.timestamp : new Date(msg.timestamp).getTime()));
+    if (msg.inputTokens) metaItems.push('<span class="in">' + fmt(msg.inputTokens) + '</span> in');
+    if (msg.outputTokens) metaItems.push('<span class="out">' + fmt(msg.outputTokens) + '</span> out');
+    if (msg.latencyMs) metaItems.push((msg.latencyMs / 1000).toFixed(1) + 's');
+
+    const isTruncatable = content.length > 400;
+    const displayContent = isTruncatable ? content.slice(0, 400) + '…' : content;
+
+    div.innerHTML =
+      '<div class="msg-role role-' + role + '">' + esc(role) + '</div>' +
+      '<div class="msg-content' + (isTruncatable ? ' msg-content-truncated' : '') + '" id="cmod-mc-' + idx + '">' + esc(displayContent) + '</div>' +
+      (isTruncatable ? '<button class="msg-expand" onclick="expandConvMsg(' + idx + ',this)">Show more (' + content.length + ' chars)</button>' : '') +
+      (metaItems.length ? '<div class="msg-meta">' + metaItems.join(' · ') + '</div>' : '');
+
+    container.appendChild(div);
+  });
+
+  if (convModalMatchIndices.length > 0) {
+    convModalNavPos = 0;
+    $('cmod-nav').style.display = 'flex';
+    updateConvModalNavPos();
+    convModalScrollToMatch(0);
+  } else {
+    $('cmod-nav').style.display = query ? 'flex' : 'none';
+    $('cmod-nav-pos').textContent = query ? 'No matches' : '';
+  }
+}
+
+function expandConvMsg(idx, btn) {
+  const mc = $('cmod-mc-' + idx);
+  mc.classList.remove('msg-content-truncated');
+  mc.textContent = extractContent(convModalMessages[idx]);
+  btn.remove();
+}
+
+function filterConvModalMessages() {
+  convModalSearchTerm = $('cmod-search').value || '';
+  renderConvModalMessages();
+}
+
+function updateConvModalNavPos() {
+  $('cmod-nav-pos').textContent = convModalMatchIndices.length > 0
+    ? (convModalNavPos + 1) + '/' + convModalMatchIndices.length
+    : 'No matches';
+}
+
+function convModalScrollToMatch(pos) {
+  const el = $('cmod-msg-' + convModalMatchIndices[pos]);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function convModalJump(dir) {
+  if (convModalMatchIndices.length === 0) {
+    const c = $('cmod-messages');
+    if (dir === 'first') c.scrollTop = 0;
+    else if (dir === 'last') c.scrollTop = c.scrollHeight;
+    return;
+  }
+  if (dir === 'first') convModalNavPos = 0;
+  else if (dir === 'last') convModalNavPos = convModalMatchIndices.length - 1;
+  else if (dir === 'next') convModalNavPos = Math.min(convModalNavPos + 1, convModalMatchIndices.length - 1);
+  else if (dir === 'prev') convModalNavPos = Math.max(convModalNavPos - 1, 0);
+  updateConvModalNavPos();
+  convModalScrollToMatch(convModalNavPos);
+}
+
+function closeConvModal(event) {
+  if (event && event.target !== $('conv-modal-backdrop')) return;
+  openConvId = null;
+  $('conv-modal-backdrop').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// Keyboard: Escape closes modal
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && openConvId) { openConvId = null; $('conv-modal-backdrop').classList.remove('open'); document.body.style.overflow = ''; }
+});
 
 // ── Init ──────────────────────────────────────────────────────────────────
 poll();
