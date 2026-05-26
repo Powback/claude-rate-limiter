@@ -32,6 +32,16 @@ ANTHROPIC_BASE_URL=http://localhost:3128 claude ...
 
 Dashboard at `http://localhost:3128/`
 
+### Docker (via Traefik)
+
+```bash
+docker compose up -d
+# Route Claude through it
+ANTHROPIC_BASE_URL=http://rate-limiter.pow claude ...
+```
+
+Dashboard at `http://rate-limiter.pow/`
+
 ## What It Tracks
 
 Anthropic uses a **unified utilization-based** rate limit system (not the `x-ratelimit-*` headers from their docs). The proxy reads the actual headers:
@@ -113,7 +123,7 @@ Rate limit events are logged with:
 
 ## Live Dashboard
 
-`http://localhost:3128/` — auto-refreshes every 2 seconds:
+`http://localhost:3128/` (direct) or `http://rate-limiter.pow/` (Docker via Traefik) — auto-refreshes every 2 seconds:
 
 - Rate limit status with color-coded utilization bars (5h + 7d windows)
 - Request log with model, status, latency, input/output tokens per request

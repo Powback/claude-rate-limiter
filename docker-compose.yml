@@ -3,11 +3,21 @@
 services:
   rate-limiter:
     build: .
-    ports:
-      - "3128:3128"
     environment:
       - PORT=3128
       - QUEUE_THRESHOLD=0.85
       - MAX_QUEUE_SIZE=100
       - LOG_LEVEL=info
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.rate-limiter.rule=Host(`rate-limiter.pow`)"
+      - "traefik.http.routers.rate-limiter.entrypoints=web"
+      - "traefik.http.services.rate-limiter.loadbalancer.server.port=3128"
+    networks:
+      - default
+      - traefik
     restart: unless-stopped
+
+networks:
+  traefik:
+    external: true
