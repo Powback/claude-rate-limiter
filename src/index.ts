@@ -246,6 +246,7 @@ function updateStateFromHeaders(headers: Record<string, string | string[] | unde
 // ── Request rewriting — strip bloat from system prompt + tools ──────────────
 
 let STRIP_ENABLED = process.env.STRIP_BLOAT === 'true'; // off by default — toggleable via /config endpoint
+let REWRITE_ENTRYPOINT = process.env.REWRITE_ENTRYPOINT === 'true'; // rewrite sdk-cli → cli in billing header
 const KEEP_TOOLS = new Set((process.env.KEEP_TOOLS || 'Bash,Read,Edit,Write,Glob,Grep,Agent,Skill,WebSearch,WebFetch').split(','));
 // System prompt blocks larger than this are considered "default bloat" and replaced
 const BLOAT_THRESHOLD = parseInt(process.env.BLOAT_THRESHOLD || '3000', 10);
@@ -279,7 +280,7 @@ file_path:line_number for code refs. owner/repo#N for PRs/issues.
 Write files relative to CWD, never absolute paths.`;
 
 function rewriteRequest(body: Buffer): Buffer {
-  if (!STRIP_ENABLED) return body;
+  if (!STRIP_ENABLED && !REWRITE_ENTRYPOINT) return body;
 
   try {
     const json = JSON.parse(body.toString());
@@ -287,6 +288,19 @@ function rewriteRequest(body: Buffer): Buffer {
     let stripped = false;
     const origSize = body.length;
 
+    // 0. Rewrite cc_entrypoint in billing header (independent of STRIP_ENABLED)
+    if (REWRITE_ENTRYPOINT && Array.isArray(json.system)) {
+      for (const block of json.system) {
+        const text: string = block?.text || '';
+        if (text.includes('x-anthropic-billing-header') && text.includes('cc_entrypoint=sdk-cli')) {
+          block.text = text.replace('cc_entrypoint=sdk-cli', 'cc_entrypoint=cli');
+          stripped = true;
+          log('debug', `✏️ Rewrote cc_entrypoint: sdk-cli → cli`);
+        }
+      }
+    }
+
+    if (STRIP_ENABLED) {
     // 1. Replace system prompt with slim version
     if (json.system) {
       const blocks = Array.isArray(json.system) ? json.system : [{ type: 'text', text: json.system }];
@@ -384,6 +398,7 @@ function rewriteRequest(body: Buffer): Buffer {
         }
       }
     }
+    } // end STRIP_ENABLED
 
     if (stripped) {
       const newBody = Buffer.from(JSON.stringify(json));
@@ -1181,6 +1196,7 @@ const server = createServer((req, res) => {
     res.end(JSON.stringify({
       status: state.overall || 'unknown',
       stripEnabled: STRIP_ENABLED,
+      rewriteEntrypoint: REWRITE_ENTRYPOINT,
       upstream: UPSTREAM,
       queue: queue.length,
       threshold: THRESHOLD,
@@ -1606,10 +1622,13 @@ const server = createServer((req, res) => {
         if (body.strip === 'toggle') STRIP_ENABLED = !STRIP_ENABLED;
         else if (body.strip === true || body.strip === 'on') STRIP_ENABLED = true;
         else if (body.strip === false || body.strip === 'off') STRIP_ENABLED = false;
+        if (body.rewriteEntrypoint === 'toggle') REWRITE_ENTRYPOINT = !REWRITE_ENTRYPOINT;
+        else if (body.rewriteEntrypoint === true || body.rewriteEntrypoint === 'on') REWRITE_ENTRYPOINT = true;
+        else if (body.rewriteEntrypoint === false || body.rewriteEntrypoint === 'off') REWRITE_ENTRYPOINT = false;
         if (body.threshold !== undefined) (globalThis as any).__QUEUE_THRESHOLD = parseFloat(body.threshold);
-        log('info', `⚙️ Config updated: strip=${STRIP_ENABLED}`);
+        log('info', `⚙️ Config updated: strip=${STRIP_ENABLED} rewriteEntrypoint=${REWRITE_ENTRYPOINT}`);
         res.writeHead(200, { 'content-type': 'application/json' });
-        res.end(JSON.stringify({ stripEnabled: STRIP_ENABLED }));
+        res.end(JSON.stringify({ stripEnabled: STRIP_ENABLED, rewriteEntrypoint: REWRITE_ENTRYPOINT }));
       } catch {
         res.writeHead(400, { 'content-type': 'application/json' });
         res.end(JSON.stringify({ error: 'invalid json' }));
