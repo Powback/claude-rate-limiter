@@ -17,7 +17,7 @@
 //   anthropic-ratelimit-unified-representative-claim: five_hour | seven_day
 //   anthropic-ratelimit-unified-fallback-percentage: 0.0–1.0
 
-import { createServer, IncomingMessage, ServerResponse } from 'node:http';
+import { createServer, IncomingMessage, ServerResponse, request as httpRequest } from 'node:http';
 import { request as httpsRequest } from 'node:https';
 import { createGunzip, createBrotliDecompress, createInflate } from 'node:zlib';
 import { Transform } from 'node:stream';
@@ -30,6 +30,16 @@ const UPSTREAM = process.env.ANTHROPIC_API_URL || 'https://api.anthropic.com';
 const THRESHOLD = parseFloat(process.env.QUEUE_THRESHOLD || '0.85'); // queue when utilization > 85%
 const LOG_LEVEL = process.env.LOG_LEVEL || 'info';
 const MAX_QUEUE = parseInt(process.env.MAX_QUEUE_SIZE || '100', 10);
+
+// ── Alert config ─────────────────────────────────────────────────────────────
+const ALERT_UTIL_WARN      = parseFloat(process.env.ALERT_UTIL_WARN      || '0.70');  // warn at 70%
+const ALERT_UTIL_CRIT      = parseFloat(process.env.ALERT_UTIL_CRIT      || '0.80');  // critical at 80%
+const ALERT_QUEUE_THRESHOLD = parseInt(process.env.ALERT_QUEUE_THRESHOLD || '1', 10); // alert when queue ≥ N
+const ALERT_AUTH_WINDOW     = parseInt(process.env.ALERT_AUTH_WINDOW     || '3', 10); // auth failures per minute
+const ALERT_429_WINDOW      = parseInt(process.env.ALERT_429_WINDOW      || '3', 10); // 429s per minute
+const ALERT_COOLDOWN_MS     = parseInt(process.env.ALERT_COOLDOWN_MS     || '300000', 10); // 5 min between same-type alerts
+const ALERT_WEBHOOK_URL     = process.env.ALERT_WEBHOOK_URL     || '';
+const ALERT_WEBHOOK_SECRET  = process.env.ALERT_WEBHOOK_SECRET  || '';
 
 const upstream = new URL(UPSTREAM);
 
@@ -241,6 +251,8 @@ function updateStateFromHeaders(headers: Record<string, string | string[] | unde
   const rpmInfo = state.requests.limit < Infinity ? ` rpm=${state.requests.remaining}/${state.requests.limit}` : '';
   const tpmInfo = state.tokens.limit < Infinity ? ` tpm=${state.tokens.remaining}/${state.tokens.limit}` : '';
   log('info', `${symbol} Utilization: 5h=${(state.fiveHour.utilization * 100).toFixed(0)}% 7d=${(state.sevenDay.utilization * 100).toFixed(0)}%${rpmInfo}${tpmInfo} [${state.representativeClaim}] status=${state.overall}`);
+
+  checkAlerts();
 }
 
 // ── Request rewriting — strip bloat from system prompt + tools ──────────────
@@ -624,6 +636,148 @@ interface RateLimitEvent {
 
 const rateLimitEvents: RateLimitEvent[] = [];
 const MAX_EVENTS = 500;
+
+// ── Alert system ─────────────────────────────────────────────────────────────
+
+type AlertSeverity = 'warning' | 'critical';
+type AlertType =
+  | 'utilization_warning'
+  | 'utilization_critical'
+  | 'queue_backed_up'
+  | 'auth_failures'
+  | 'upstream_429s'
+  | 'error_spike';
+
+interface AlertRecord {
+  id: string;
+  type: AlertType;
+  severity: AlertSeverity;
+  message: string;
+  timestamp: number;
+  metadata?: Record<string, unknown>;
+}
+
+const alertHistory: AlertRecord[] = [];
+const MAX_ALERT_HISTORY = 200;
+const alertCooldowns = new Map<AlertType, number>(); // type → last fired timestamp
+
+// Sliding-window tracking (timestamps in ms)
+const recentAuthFailures: { ts: number; statusCode: number; ip?: string }[] = [];
+const recent429Timestamps: number[] = [];
+const AUTH_FAILURE_WINDOW_MS  = 60_000; // 1 minute
+const UPSTREAM_429_WINDOW_MS  = 60_000; // 1 minute
+
+function getActiveAlerts(): AlertRecord[] {
+  const now = Date.now();
+  const seenTypes = new Set<AlertType>();
+  const active: AlertRecord[] = [];
+  for (let i = alertHistory.length - 1; i >= 0; i--) {
+    const a = alertHistory[i];
+    if (!seenTypes.has(a.type) && now - a.timestamp < ALERT_COOLDOWN_MS * 2) {
+      seenTypes.add(a.type);
+      active.push(a);
+    }
+  }
+  return active;
+}
+
+function fireAlert(type: AlertType, severity: AlertSeverity, message: string, metadata?: Record<string, unknown>) {
+  const now = Date.now();
+  const lastFired = alertCooldowns.get(type) || 0;
+  if (now - lastFired < ALERT_COOLDOWN_MS) return; // still in cooldown
+
+  alertCooldowns.set(type, now);
+
+  const record: AlertRecord = {
+    id: `${type}-${now}`,
+    type,
+    severity,
+    message,
+    timestamp: now,
+    metadata,
+  };
+  alertHistory.push(record);
+  if (alertHistory.length > MAX_ALERT_HISTORY) alertHistory.shift();
+
+  const emoji = severity === 'critical' ? '🚨' : '⚠️';
+  log('warn', `${emoji} ALERT [${severity.toUpperCase()}] ${message}`);
+
+  if (ALERT_WEBHOOK_URL) {
+    sendWebhookAlert(record).catch(err => log('error', `Webhook error: ${err.message}`));
+  }
+}
+
+async function sendWebhookAlert(alert: AlertRecord): Promise<void> {
+  const url = new URL(ALERT_WEBHOOK_URL);
+  const body = JSON.stringify({
+    type: 'claude_rate_limiter_alert',
+    alert,
+    state: {
+      utilization5h: state.fiveHour.utilization,
+      utilization7d: state.sevenDay.utilization,
+      queueDepth: queue.length,
+      overall: state.overall,
+    },
+  });
+  const headers: Record<string, string> = {
+    'content-type': 'application/json',
+    'content-length': String(Buffer.byteLength(body)),
+  };
+  if (ALERT_WEBHOOK_SECRET) headers['x-alert-secret'] = ALERT_WEBHOOK_SECRET;
+
+  const makeRequest = url.protocol === 'https:' ? httpsRequest : httpRequest;
+  return new Promise<void>((resolve, reject) => {
+    const req = makeRequest(
+      { hostname: url.hostname, port: url.port || (url.protocol === 'https:' ? 443 : 80), path: url.pathname + url.search, method: 'POST', headers },
+      (res) => { res.resume(); resolve(); },
+    );
+    req.on('error', reject);
+    req.write(body);
+    req.end();
+  });
+}
+
+function checkAlerts() {
+  const now = Date.now();
+  const active = getActiveWindow();
+
+  // Utilization alerts (only when we have real data)
+  if (state.lastUpdated > 0) {
+    if (active.utilization >= ALERT_UTIL_CRIT) {
+      fireAlert('utilization_critical', 'critical',
+        `Utilization critical: ${(active.utilization * 100).toFixed(0)}% ≥ ${(ALERT_UTIL_CRIT * 100).toFixed(0)}% threshold`,
+        { utilization5h: state.fiveHour.utilization, utilization7d: state.sevenDay.utilization, representativeClaim: state.representativeClaim });
+    } else if (active.utilization >= ALERT_UTIL_WARN) {
+      fireAlert('utilization_warning', 'warning',
+        `Utilization high: ${(active.utilization * 100).toFixed(0)}% ≥ ${(ALERT_UTIL_WARN * 100).toFixed(0)}% warning threshold`,
+        { utilization5h: state.fiveHour.utilization, utilization7d: state.sevenDay.utilization, representativeClaim: state.representativeClaim });
+    }
+  }
+
+  // Queue depth alert
+  if (queue.length >= ALERT_QUEUE_THRESHOLD) {
+    fireAlert('queue_backed_up', 'warning',
+      `Queue backed up: ${queue.length} request${queue.length === 1 ? '' : 's'} waiting`,
+      { queueDepth: queue.length });
+  }
+
+  // Auth failure rate
+  const recentAuth = recentAuthFailures.filter(f => now - f.ts < AUTH_FAILURE_WINDOW_MS);
+  if (recentAuth.length >= ALERT_AUTH_WINDOW) {
+    const statusCounts = recentAuth.reduce<Record<number, number>>((acc, f) => { acc[f.statusCode] = (acc[f.statusCode] || 0) + 1; return acc; }, {});
+    fireAlert('auth_failures', 'critical',
+      `Auth failures: ${recentAuth.length} in last 60s (${Object.entries(statusCounts).map(([k,v]) => `${k}×${v}`).join(', ')})`,
+      { count: recentAuth.length, statusCounts });
+  }
+
+  // Upstream 429 rate
+  const recent429s = recent429Timestamps.filter(t => now - t < UPSTREAM_429_WINDOW_MS);
+  if (recent429s.length >= ALERT_429_WINDOW) {
+    fireAlert('upstream_429s', 'critical',
+      `Upstream rate limiting: ${recent429s.length} 429s in last 60s`,
+      { count: recent429s.length });
+  }
+}
 
 function recordRateLimitEvent(type: RateLimitEvent['type'], reason: string, model?: string) {
   const event: RateLimitEvent = {
@@ -1029,12 +1183,26 @@ function forwardRequest(req: IncomingMessage, res: ServerResponse, body: Buffer)
         log('warn', `🚫 429 from Anthropic! retry-after=${retryAfter}s queue=${queue.length}`);
         recordRateLimitEvent('429', `Upstream 429, retry-after=${retryAfter}s, 5h=${(state.fiveHour.utilization*100).toFixed(0)}%`, entry.model);
 
+        // Track for alert rate window
+        recent429Timestamps.push(Date.now());
+        if (recent429Timestamps.length > 1000) recent429Timestamps.shift();
+        checkAlerts();
+
         if (retryAfter) {
           const resetMs = Date.now() + parseFloat(retryAfter) * 1000;
           state.fiveHour.reset = Math.max(state.fiveHour.reset, resetMs);
           state.fiveHour.utilization = 1.0;
           state.overall = 'rejected';
         }
+      }
+
+      // Track auth failures for alerting
+      if (proxyRes.statusCode === 401 || proxyRes.statusCode === 403) {
+        const ip = req.socket?.remoteAddress;
+        recentAuthFailures.push({ ts: Date.now(), statusCode: proxyRes.statusCode, ip });
+        if (recentAuthFailures.length > 500) recentAuthFailures.shift();
+        log('warn', `🔑 Auth failure ${proxyRes.statusCode} from ${ip || 'unknown'} — path=${path}`);
+        checkAlerts();
       }
 
       state.totalForwarded++;
@@ -1227,6 +1395,14 @@ const server = createServer((req, res) => {
         tokensSaved: totalTokensSaved,
         requestsStripped: totalRequestsStripped,
       },
+      alerts: {
+        active: getActiveAlerts(),
+        count: alertHistory.length,
+        thresholds: {
+          utilizationWarning: ALERT_UTIL_WARN,
+          utilizationCritical: ALERT_UTIL_CRIT,
+        },
+      },
       lastUpdated: state.lastUpdated ? new Date(state.lastUpdated).toISOString() : null,
     }));
     return;
@@ -1256,6 +1432,21 @@ const server = createServer((req, res) => {
       `# HELP claude_proxy_utilization_7d Current 7-day utilization (0–1)`,
       `# TYPE claude_proxy_utilization_7d gauge`,
       `claude_proxy_utilization_7d ${state.sevenDay.utilization}`,
+      `# HELP claude_proxy_alert_active Active alerts by type (1=active, 0=inactive)`,
+      `# TYPE claude_proxy_alert_active gauge`,
+      ...['utilization_warning','utilization_critical','queue_backed_up','auth_failures','upstream_429s'].map(t => {
+        const active = getActiveAlerts().some(a => a.type === t) ? 1 : 0;
+        return `claude_proxy_alert_active{type="${t}"} ${active}`;
+      }),
+      `# HELP claude_proxy_auth_failures_total Auth failures (401/403) from upstream`,
+      `# TYPE claude_proxy_auth_failures_total counter`,
+      `claude_proxy_auth_failures_total ${recentAuthFailures.length}`,
+      `# HELP claude_proxy_auth_failures_1m Auth failures in last 60s`,
+      `# TYPE claude_proxy_auth_failures_1m gauge`,
+      `claude_proxy_auth_failures_1m ${recentAuthFailures.filter(f => Date.now() - f.ts < 60_000).length}`,
+      `# HELP claude_proxy_upstream_429s_1m Upstream 429s in last 60s`,
+      `# TYPE claude_proxy_upstream_429s_1m gauge`,
+      `claude_proxy_upstream_429s_1m ${recent429Timestamps.filter(t => Date.now() - t < 60_000).length}`,
     ];
     res.writeHead(200, { 'content-type': 'text/plain' });
     res.end(lines.join('\n') + '\n');
@@ -1330,6 +1521,35 @@ const server = createServer((req, res) => {
   if (path === '/events' && req.method === 'GET') {
     res.writeHead(200, { 'content-type': 'application/json' });
     res.end(JSON.stringify(rateLimitEvents.slice(-100).reverse()));
+    return;
+  }
+
+  // Alert status + history
+  if (path === '/alerts' && req.method === 'GET') {
+    const now = Date.now();
+    const recentAuth = recentAuthFailures.filter(f => now - f.ts < AUTH_FAILURE_WINDOW_MS);
+    const recent429s = recent429Timestamps.filter(t => now - t < UPSTREAM_429_WINDOW_MS);
+    res.writeHead(200, { 'content-type': 'application/json' });
+    res.end(JSON.stringify({
+      active: getActiveAlerts(),
+      history: alertHistory.slice(-100).reverse(),
+      thresholds: {
+        utilizationWarning: ALERT_UTIL_WARN,
+        utilizationCritical: ALERT_UTIL_CRIT,
+        queueDepth: ALERT_QUEUE_THRESHOLD,
+        authFailuresPerMinute: ALERT_AUTH_WINDOW,
+        upstream429sPerMinute: ALERT_429_WINDOW,
+        cooldownMs: ALERT_COOLDOWN_MS,
+      },
+      summary: {
+        authFailures1m: recentAuth.length,
+        upstream429s1m: recent429s.length,
+        currentQueueDepth: queue.length,
+        utilization5h: state.fiveHour.utilization,
+        utilization7d: state.sevenDay.utilization,
+        webhookConfigured: !!ALERT_WEBHOOK_URL,
+      },
+    }));
     return;
   }
 

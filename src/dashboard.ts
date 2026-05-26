@@ -138,6 +138,26 @@ tr:hover { background:#15151f; }
 .nav-btn:hover { color:#e0e0e0; border-color:#333; }
 .msg-highlight { background:#8b5cf622; outline:2px solid #8b5cf644; }
 
+/* ── Alerts ──────────────────────────────────────────────────────────────── */
+.alert-banner { display:none; margin-bottom:12px; border-radius:7px; overflow:hidden; }
+.alert-banner.visible { display:block; }
+.alert-item { display:flex; align-items:center; gap:8px; padding:8px 12px; font-size:12px; border-bottom:1px solid rgba(0,0,0,0.2); }
+.alert-item:last-child { border-bottom:none; }
+.alert-warning { background:#eab30818; border:1px solid #eab30833; }
+.alert-critical { background:#ef444418; border:1px solid #ef444433; }
+.alert-icon { font-size:14px; flex-shrink:0; }
+.alert-msg { flex:1; color:#e0e0e0; }
+.alert-time { font-size:10px; color:#555; flex-shrink:0; }
+.alert-type { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; padding:1px 5px; border-radius:3px; flex-shrink:0; }
+.alert-type-warning { color:#eab308; background:#eab30820; }
+.alert-type-critical { color:#ef4444; background:#ef444420; }
+.alerts-history-entry { display:grid; gap:4px; padding:3px 0; border-bottom:1px solid #111; font-size:11px; }
+.alerts-history-entry:last-child { border:none; }
+.alert-badge { display:inline-flex; align-items:center; gap:4px; padding:1px 6px; border-radius:10px; font-size:10px; font-weight:700; }
+.alert-badge-warning { background:#eab30820; color:#eab308; border:1px solid #eab30840; }
+.alert-badge-critical { background:#ef444420; color:#ef4444; border:1px solid #ef444440; }
+#alerts-tab-badge { display:none; font-size:10px; color:#ef4444; margin-left:4px; }
+
 /* ── Conversations Grid ──────────────────────────────────────────────────── */
 .conv-toolbar { display:flex; gap:8px; align-items:center; margin-bottom:12px; flex-wrap:wrap; }
 .conv-count { font-size:11px; color:#555; margin-left:auto; }
@@ -193,10 +213,14 @@ tr:hover { background:#15151f; }
   <button class="tab-btn active" onclick="switchTab('overview')">Overview</button>
   <button class="tab-btn" onclick="switchTab('sessions')" id="tab-sessions-btn">Sessions <span id="sessions-badge" style="display:none;font-size:10px;color:#8b5cf6;margin-left:4px"></span></button>
   <button class="tab-btn" onclick="switchTab('conversations')" id="tab-conversations-btn">Conversations <span id="conversations-badge" style="display:none;font-size:10px;color:#22c55e;margin-left:4px"></span></button>
+  <button class="tab-btn" onclick="switchTab('alerts')" id="tab-alerts-btn">Alerts <span id="alerts-tab-badge"></span></button>
 </div>
 
 <!-- ── Tab: Overview ──────────────────────────────────────────────────────── -->
 <div id="tab-overview" class="tab-panel active">
+
+<!-- Active alert banner (shown only when alerts firing) -->
+<div class="alert-banner" id="alert-banner"></div>
 
 <div class="controls">
   <label>Strip bloat:</label>
@@ -351,6 +375,57 @@ tr:hover { background:#15151f; }
 
 </div><!-- end tab-conversations -->
 
+<!-- ── Tab: Alerts ─────────────────────────────────────────────────────────── -->
+<div id="tab-alerts" class="tab-panel">
+
+  <h2 style="margin-top:0">Active Alerts</h2>
+  <div id="alerts-active-list" style="margin-bottom:16px">
+    <div style="color:#444;font-size:12px;padding:12px 0">No active alerts</div>
+  </div>
+
+  <h2>Alert Thresholds</h2>
+  <div class="grid" style="margin-bottom:16px">
+    <div class="card">
+      <div class="label">Util Warning</div>
+      <div class="value yellow" id="al-warn-pct">70%</div>
+      <div class="sub">ALERT_UTIL_WARN</div>
+    </div>
+    <div class="card">
+      <div class="label">Util Critical</div>
+      <div class="value red" id="al-crit-pct">80%</div>
+      <div class="sub">ALERT_UTIL_CRIT</div>
+    </div>
+    <div class="card">
+      <div class="label">Auth Fails / min</div>
+      <div class="value" id="al-auth-window">3</div>
+      <div class="sub" id="al-auth-cur">0 in last 60s</div>
+    </div>
+    <div class="card">
+      <div class="label">429s / min</div>
+      <div class="value" id="al-429-window">3</div>
+      <div class="sub" id="al-429-cur">0 in last 60s</div>
+    </div>
+    <div class="card">
+      <div class="label">Queue Depth</div>
+      <div class="value" id="al-queue-thr">1</div>
+      <div class="sub" id="al-queue-cur">0 current</div>
+    </div>
+    <div class="card">
+      <div class="label">Webhook</div>
+      <div class="value" id="al-webhook">—</div>
+      <div class="sub">ALERT_WEBHOOK_URL</div>
+    </div>
+  </div>
+
+  <h2>Alert History</h2>
+  <div class="log" id="alerts-history-log" style="max-height:400px">
+    <div class="log-entry" style="font-weight:600;color:#888;grid-template-columns:65px 90px 130px 1fr">
+      <span>Time</span><span>Severity</span><span>Type</span><span>Message</span>
+    </div>
+  </div>
+
+</div><!-- end tab-alerts -->
+
 <!-- ── Conversation Detail Modal ─────────────────────────────────────────── -->
 <div class="conv-modal-backdrop" id="conv-modal-backdrop" onclick="closeConvModal(event)">
   <div class="conv-modal" onclick="event.stopPropagation()">
@@ -426,6 +501,7 @@ function switchTab(tab) {
   event.target.classList.add('active');
   if (tab === 'sessions') pollSessions();
   if (tab === 'conversations') { clearTimeout(convPollTimer); pollConversations(); startConvSSE(); }
+  if (tab === 'alerts') fetchAlerts().then(data => renderAlertsTab(data));
   // Stop SSE when leaving conversations tab
   if (prev === 'conversations' && tab !== 'conversations') stopConvSSE();
 }
@@ -444,6 +520,7 @@ async function poll() {
       fetch('/requests').then(r=>r.json()),
       fetch('/events').then(r=>r.json()),
     ]);
+    fetchAlerts();
 
     const h = health;
     const dot = $('status-dot');
@@ -1294,6 +1371,110 @@ function closeConvModal(event) {
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape' && openConvId) { openConvId = null; $('conv-modal-backdrop').classList.remove('open'); document.body.style.overflow = ''; }
 });
+
+// ── Alerts ────────────────────────────────────────────────────────────────
+let alertData = null;
+
+function renderAlertBanner(active) {
+  const banner = $('alert-banner');
+  if (!active || active.length === 0) { banner.classList.remove('visible'); return; }
+  banner.classList.add('visible');
+  banner.innerHTML = active.map(a => {
+    const isCrit = a.severity === 'critical';
+    const icon = isCrit ? '🚨' : '⚠️';
+    const cls = isCrit ? 'alert-critical' : 'alert-warning';
+    const typeCls = isCrit ? 'alert-type-critical' : 'alert-type-warning';
+    return '<div class="alert-item ' + cls + '">' +
+      '<span class="alert-icon">' + icon + '</span>' +
+      '<span class="alert-type ' + typeCls + '">' + esc(a.type.replace(/_/g,' ')) + '</span>' +
+      '<span class="alert-msg">' + esc(a.message) + '</span>' +
+      '<span class="alert-time">' + relTime(a.timestamp) + '</span>' +
+    '</div>';
+  }).join('');
+}
+
+function renderAlertsTab(data) {
+  if (!data) return;
+  alertData = data;
+
+  // Active alerts list
+  const activeEl = $('alerts-active-list');
+  if (!data.active || data.active.length === 0) {
+    activeEl.innerHTML = '<div style="color:#444;font-size:12px;padding:12px 0;display:flex;align-items:center;gap:8px"><span style="font-size:18px;opacity:0.3">✅</span>No active alerts — all systems nominal</div>';
+  } else {
+    activeEl.innerHTML = data.active.map(a => {
+      const isCrit = a.severity === 'critical';
+      const icon = isCrit ? '🚨' : '⚠️';
+      const cls = isCrit ? 'alert-critical' : 'alert-warning';
+      return '<div class="alert-item ' + cls + '" style="border-radius:6px;margin-bottom:4px">' +
+        '<span class="alert-icon">' + icon + '</span>' +
+        '<div style="flex:1"><div style="color:#e0e0e0;font-size:12px">' + esc(a.message) + '</div>' +
+        '<div style="font-size:10px;color:#555;margin-top:2px">type: ' + esc(a.type) + ' · ' + relTime(a.timestamp) + '</div></div>' +
+      '</div>';
+    }).join('');
+  }
+
+  // Thresholds
+  const t = data.thresholds || {};
+  const s = data.summary || {};
+  if ($('al-warn-pct')) $('al-warn-pct').textContent = ((t.utilizationWarning || 0.7) * 100).toFixed(0) + '%';
+  if ($('al-crit-pct')) $('al-crit-pct').textContent = ((t.utilizationCritical || 0.8) * 100).toFixed(0) + '%';
+  if ($('al-auth-window')) $('al-auth-window').textContent = t.authFailuresPerMinute ?? 3;
+  if ($('al-auth-cur')) $('al-auth-cur').textContent = (s.authFailures1m ?? 0) + ' in last 60s';
+  if ($('al-429-window')) $('al-429-window').textContent = t.upstream429sPerMinute ?? 3;
+  if ($('al-429-cur')) $('al-429-cur').textContent = (s.upstream429s1m ?? 0) + ' in last 60s';
+  if ($('al-queue-thr')) $('al-queue-thr').textContent = t.queueDepth ?? 1;
+  if ($('al-queue-cur')) $('al-queue-cur').textContent = (s.currentQueueDepth ?? 0) + ' current';
+  if ($('al-webhook')) $('al-webhook').textContent = s.webhookConfigured ? 'Configured' : 'Not set';
+  if ($('al-webhook')) $('al-webhook').style.color = s.webhookConfigured ? '#22c55e' : '#555';
+
+  // Alert history log
+  const log = $('alerts-history-log');
+  if (!log) return;
+  const header = log.children[0];
+  log.innerHTML = '';
+  log.appendChild(header);
+  const history = data.history || [];
+  if (history.length === 0) {
+    const empty = document.createElement('div');
+    empty.style.cssText = 'padding:12px;color:#444;text-align:center';
+    empty.textContent = 'No alerts fired yet';
+    log.appendChild(empty);
+    return;
+  }
+  for (const a of history.slice(0, 100)) {
+    const row = document.createElement('div');
+    row.className = 'alerts-history-entry log-entry';
+    row.style.gridTemplateColumns = '65px 90px 130px 1fr';
+    const time = new Date(a.timestamp).toLocaleTimeString().slice(0,-3);
+    const isCrit = a.severity === 'critical';
+    const badgeCls = isCrit ? 'alert-badge-critical' : 'alert-badge-warning';
+    const icon = isCrit ? '🚨' : '⚠️';
+    row.innerHTML =
+      '<span style="color:#555">' + time + '</span>' +
+      '<span><span class="alert-badge ' + badgeCls + '">' + icon + ' ' + esc(a.severity) + '</span></span>' +
+      '<span style="color:#888;font-size:10px">' + esc(a.type.replace(/_/g,' ')) + '</span>' +
+      '<span style="color:#aaa">' + esc(a.message) + '</span>';
+    log.appendChild(row);
+  }
+}
+
+async function fetchAlerts() {
+  try {
+    const data = await fetch('/alerts').then(r => r.json());
+    renderAlertBanner(data.active);
+
+    // Update tab badge
+    const badge = $('alerts-tab-badge');
+    const critCount = (data.active || []).filter(a => a.severity === 'critical').length;
+    if (critCount > 0) { badge.textContent = critCount; badge.style.display = ''; }
+    else if ((data.active || []).length > 0) { badge.textContent = '!'; badge.style.display = ''; }
+    else badge.style.display = 'none';
+
+    if (activeTab === 'alerts') renderAlertsTab(data);
+    return data;
+  } catch(e) { return null; }
+}
 
 // ── Init ──────────────────────────────────────────────────────────────────
 poll();
